@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -54,24 +56,53 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
 
-   // m_carouselSubsystem.setDefaultCommand(new ToOpenSpaceCommand(m_carouselSubsystem));
+    m_carouselSubsystem.setDefaultCommand(new ToOpenSpaceCommand(m_carouselSubsystem));
 
-    // new JoystickButton(m_operatorController, 2).whenPressed(new LimelightCommand( // 2 is x
-    //     m_limelightSubsystem, m_driveSubsystem, 0, 178)); // last input is in units of inches
+    // new JoystickButton(m_operatorController, 2).whenPressed(new LimelightCommand(
+    // // 2 is x
+    // m_limelightSubsystem, m_driveSubsystem, 0, 178)); // last input is in units
+    // of inches
 
-    //turning to 0 and aligning to the center of circle
-    // new JoystickButton(m_operatorController, 3).whenPressed(new LimelightCommand( // 3 is circle
-    //     m_limelightSubsystem, m_driveSubsystem, 0, m_limelightSubsystem.getDistance())); // last input is in units of
-    //                                                                                      // inches
-    //putting it all together
-    new POVButton(m_operatorController, 180).whenHeld(new SequentialCommandGroup(
-        new LimelightCommand(m_limelightSubsystem, m_driveSubsystem, 0,
-            m_limelightSubsystem.getDistance()),
+    // turning to 0 and aligning to the center of circle
+    // new JoystickButton(m_operatorController, 3).whenPressed(new LimelightCommand(
+    // // 3 is circle
+    // m_limelightSubsystem, m_driveSubsystem, 0,
+    // m_limelightSubsystem.getDistance())); // last input is in units of
+    // // inches
+    // putting it all together
+    // new POVButton(m_operatorController, 180).whenHeld(new SequentialCommandGroup(
+    //     new LimelightCommand(m_limelightSubsystem, m_driveSubsystem, 0,
+    //         m_limelightSubsystem.getDistance()),
+    //     new ParallelCommandGroup(new ShootSetupCommand(
+    //         m_flywheelSubsystem, m_hoodSubsystem, m_limelightSubsystem.getDistance()),
+    //         new AutoFeederCommand(
+    //             m_feederSubsystem, m_carouselSubsystem::atOpenSpace,
+    //             m_flywheelSubsystem::atSetpoint),
+    //         new RunCarouselCommand(m_carouselSubsystem, 20))));
+
+    // new POVButton(m_operatorController, 180).whenHeld(new SequentialCommandGroup(new LimelightCommand(m_limelightSubsystem,
+    //  m_driveSubsystem, 0, m_limelightSubsystem.getDistance()),
+    //     new ParallelCommandGroup(new ShootSetupCommand(
+    //         m_flywheelSubsystem, m_hoodSubsystem, m_limelightSubsystem.getDistance() / 12.0, "REGRESSION"),
+    //         new AutoFeederCommand(
+    //             m_feederSubsystem, m_carouselSubsystem::atOpenSpace, m_flywheelSubsystem::atSetpoint),
+    //         new RunCarouselCommand(m_carouselSubsystem, 20))));
+
+    new POVButton(m_operatorController, 180).whenHeld(new SequentialCommandGroup(new LimelightCommand(m_limelightSubsystem
+    , m_driveSubsystem, 0, m_limelightSubsystem.getDistance()),
         new ParallelCommandGroup(new ShootSetupCommand(
-            m_flywheelSubsystem, m_hoodSubsystem, m_limelightSubsystem.getDistance()),
+            m_flywheelSubsystem, m_hoodSubsystem, ((m_limelightSubsystem.getDistance()/12.0)-(8.75/12.0)), "LINEAR"),
             new AutoFeederCommand(
                 m_feederSubsystem, m_carouselSubsystem::atOpenSpace, m_flywheelSubsystem::atSetpoint),
             new RunCarouselCommand(m_carouselSubsystem, 20))));
+
+    // new POVButton(m_operatorController, 180).whenHeld(
+    //     new ParallelCommandGroup(new ShootSetupCommand(
+    //         m_flywheelSubsystem, m_hoodSubsystem, ((m_limelightSubsystem.getDistance()/12.0)-(8.75/12.0)), "LINEAR"),
+    //         new AutoFeederCommand(
+    //             m_feederSubsystem, m_carouselSubsystem::atOpenSpace, m_flywheelSubsystem::atSetpoint),
+    //         new RunCarouselCommand(m_carouselSubsystem, 20)));
+// ((m_limelightSubsystem.getDistance()/12.0)-(8.75/12.0))
 
     // m_driveSubsystem.setDefaultCommand(
     // new ArcadeDriveCommand(m_driveSubsystem, () ->
@@ -81,8 +112,10 @@ public class RobotContainer {
 
     // new POVButton(m_operatorController, 180).whenHeld(new
     // ParallelCommandGroup(new ShootSetupCommand(
-    // m_flywheelSubsystem, m_hoodSubsystem, () -> FieldLocation.WALL), new
-    // FeederCommand(m_feederSubsystem), new RunCarouselCommand(m_carouselSubsystem, 20)));
+    // m_flywheelSubsystem, m_hoodSubsystem, () -> FieldLocation.WALL),
+    // new AutoFeederCommand(m_feederSubsystem, m_carouselSubsystem::atOpenSpace,
+    // m_flywheelSubsystem::atSetpoint),
+    // new RunCarouselCommand(m_carouselSubsystem, 20)));
 
     // new POVButton(m_operatorController, 180).whenHeld(new ParallelCommandGroup(
     // new ShootSetupCommand(m_flywheelSubsystem, m_hoodSubsystem, () ->

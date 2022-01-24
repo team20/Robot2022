@@ -1,5 +1,8 @@
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+
 public final class Constants {
 
     public static final class DriveConstants {
@@ -97,17 +100,18 @@ public final class Constants {
         public static final double kTurnP = 0.03;
         public static final double kTurnI = 0.0000;
         public static final double kTurnD = 0.0;
-        public static final double kTurnTolerance = 0.15; //TODO: this is the amount of error that is considered okay because obviously we can't get perfectly to the setpoint
+        public static final double kTurnTolerance = 1; //TODO: this is the amount of error that is considered okay because obviously we can't get perfectly to the setpoint
         public static final double kDistanceTolerance = 0.5;
         public static final double kCameraHeight = 22.5; //TODO: get height once mounted
-        public static final double kCameraAngle = 38.595540447462469140696601487777; //TODO: get angle once mounted
+        public static final double kCameraAngle = 25.453;//29.8394991; //TODO: get angle once mounted
         public static final double kTargetHeight = 104; //TODO: get height of target (inches)
         public static final double kRefreshRate = 0.01111; //matches with the max of 90 frames/second from the limelight
         public static final int kRollingAverageSize = 10; //TODO: change, experiment
     }
 
-    public enum FieldLocation {  
-		WALL(3300, 4, 20, 0, 0), TWOFEET(2850, 7, 25, 0, 0), INITLINE(3500, 23, 30, 0, 0),
+    public enum FieldLocation { 
+		
+		WALL(3700, 6.5, 20, 0, 0), TWOFEET(2850, 7, 25, 0, 0), INITLINE(3500, 23, 30, 0, 0),
 		CLOSETRENCH(/* 5500 */4700, /* 37.4 */33.5, 20, 0, 0), FARTWRENCH(6500, 40, 20, 0, 0);
 
 		//for over 113, rpm 4100, angle 15

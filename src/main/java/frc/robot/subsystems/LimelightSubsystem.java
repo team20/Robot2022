@@ -22,6 +22,10 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
     private double xAngle, yAngle, distance;
     private ArrayList<Double> averageDistance = new ArrayList<>();
 
+    private double[] rollingAverageStorage = new double[200];
+    private int rollingAverageIndex = 0;
+    private double totalRollingAverage = 0;
+
     public LimelightSubsystem() {
         turnOffLight();
     }
@@ -36,8 +40,9 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
         SmartDashboard.putNumber("Distance", getDistance());
         SmartDashboard.putBoolean("Target Visible", isTargetVisible());
 
-       // System.out.println("angle is: " + yAngle);
-        //System.out.println("distance is: " + distance);
+        //System.out.println("limelight y angle" + calculateRollingAverage(getYAngle()));
+
+        System.out.println("distance is: " + distance);
     }
 
     /**
@@ -62,7 +67,7 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
     }
 
     /**
-     * @return The estimated ground distance from the limelight to the target
+     * @return The estimated ground distance from the limelight to the target in inches
      */
     public double getDistance() {
         distance = isTargetVisible()
@@ -124,5 +129,16 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
         shuffleboardTab.addBoolean("Light On", () -> isLightOn()).withSize(1, 1).withPosition(1, 1)
                 .withWidget(BuiltInWidgets.kBooleanBox);
         //TODO: add in a y-value?
+    }
+
+    public double calculateRollingAverage(double updatedAngleMeasurement) {
+        totalRollingAverage -= rollingAverageStorage[rollingAverageIndex];
+        rollingAverageStorage[rollingAverageIndex] = updatedAngleMeasurement;
+        totalRollingAverage += rollingAverageStorage[rollingAverageIndex];
+        rollingAverageIndex++;
+        if (rollingAverageIndex >= rollingAverageStorage.length) {
+            rollingAverageIndex = 0;
+        }
+        return totalRollingAverage / rollingAverageStorage.length;
     }
 }
