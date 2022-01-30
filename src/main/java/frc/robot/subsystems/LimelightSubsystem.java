@@ -7,9 +7,9 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ShooterSubsystem extends SubsystemBase{
+public class LimelightSubsystem extends SubsystemBase{
   /** Creates a new ExampleSubsystem. */
-  public ShooterSubsystem() {}
+  public LimelightSubsystem() {}
 
   @Override
   public void periodic() {
