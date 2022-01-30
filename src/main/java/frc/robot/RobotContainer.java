@@ -162,7 +162,6 @@ public class RobotContainer {
     // FieldLocation.WALL),
     // new AutoFeederCommand(m_feederSubsystem, m_carouselSubsystem::atOpenSpace,
     // m_flywheelSubsystem::atSetpoint)));
-
   }
 
   public Command getAutonomousCommand() {

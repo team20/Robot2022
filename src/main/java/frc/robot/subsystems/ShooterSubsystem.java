@@ -1,11 +1,17 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
+import frc.robot.ShuffleboardLogging;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ClimberSubsystem extends SubsystemBase {
+public class ShooterSubsystem extends SubsystemBase{
   /** Creates a new ExampleSubsystem. */
-  public ClimberSubsystem() {}
+  public ShooterSubsystem() {}
 
   @Override
   public void periodic() {
