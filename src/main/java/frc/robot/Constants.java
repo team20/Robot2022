@@ -11,6 +11,23 @@ import edu.wpi.first.wpilibj.SPI;
 
 public final class Constants {
 
+	public static final class ArduinoConstants {	
+		public static final int kAddress = 0x1;
+        	public static final double kDistanceP = 0;
+        	public static final double kDistanceI = 0;
+        	public static final double kDistanceD = 0;
+        	public static final int kDistanceSetpoint = 0;
+        
+        	public static final double kAngleP = 0;
+        	public static final double kAngleI = 0;
+        	public static final double kAngleD = 0;
+        	public static final int kAngleSetpoint = 0;
+
+        	public static final int kReadTargetInView = 0;
+		public static final int[] kReadXValue = { 1, 2, 3 };
+		public static final int[] kReadDistance = { 4, 5, 6 };
+	}
+
 	public static final class ControllerConstants {
 		public static final int kDriverControllerPort = 0;
 		public static final int kOperatorControllerPort = 1;
@@ -235,3 +252,4 @@ public final class Constants {
 			this.hoodSetpoint = hoodSetpoint;
 		}
 	}
+}
