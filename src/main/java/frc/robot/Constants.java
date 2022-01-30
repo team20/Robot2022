@@ -117,12 +117,11 @@ public final class Constants {
 		public static final double kVoltageComp = 12;
 		public static final double kEncoderCounts = 4096;
 
-		//for Talons, don't use
-			// public static final double kEncoderPositionConversionFactor = (1 / DriveConstants.kEncoderCounts) *
-			// 		(1 / DriveConstants.kGearRatio) * Math.PI * DriveConstants.kWheelDiameterMeters;
+		public static final double kEncoderPositionConversionFactor =
+					(1 / DriveConstants.kGearRatio) * Math.PI * DriveConstants.kWheelDiameterMeters;
 
-			// public static final double kEncoderVelocityConversionFactor = (1 / DriveConstants.kEncoderCounts) *
-			// 		(1 / DriveConstants.kGearRatio) * Math.PI * DriveConstants.kWheelDiameterMeters * 1000;
+		public static final double kEncoderVelocityConversionFactor =
+					(1 / DriveConstants.kGearRatio) * Math.PI * DriveConstants.kWheelDiameterMeters * 60;
 
 	}
 
@@ -226,43 +225,14 @@ public final class Constants {
 
 	public enum FieldLocation {
 
-		WALL(3700, 6.5, 20, 0, 0), TWOFEET(2850, 7, 25, 0, 0), INITLINE(3500, 23, 30, 0, 0),
-		CLOSETRENCH(/* 5500 */4700, /* 37.4 */33.5, 20, 0, 0), FARTWRENCH(6500, 40, 20, 0, 0);
+		TARMACHIGH(0.0, 0.0), TARMACLOW(0, 0),
+		RINGHIGH(0, 0), TERMINALHIGH(0, 0);
 
-		// for over 113, rpm 4100, angle 15
-		// for under 113, rpm 3300, angle 4
+		public final double flywheelSetpoint, hoodSetpoint;
 
-		public final double flywheelSetpoint, hoodSetpoint, carouselSetpoint, distanceGoal, turnGoal;
-
-		private FieldLocation(double flywheelSetpoint, double hoodSetpoint, double carouselSetpoint,
-				double distanceGoal, double turnGoal) {
+		private FieldLocation(double flywheelSetpoint, double hoodSetpoint) {
 			this.flywheelSetpoint = flywheelSetpoint;
 			this.hoodSetpoint = hoodSetpoint;
-			this.carouselSetpoint = carouselSetpoint;
-			this.distanceGoal = distanceGoal;
-			this.turnGoal = turnGoal;
-		}
-
-		public static final FieldLocation fromDistance(double distance) {
-			FieldLocation closestDistance = WALL;
-			for (FieldLocation fieldLocation : FieldLocation.values()) {
-				if (Math.abs(distance - fieldLocation.distanceGoal) < Math
-						.abs(distance - closestDistance.distanceGoal)) {
-					closestDistance = fieldLocation;
-				}
-			}
-			return closestDistance;
-		}
-
-		public static final FieldLocation fromFlywheelSetpoint(double flywheelSetpoint) {
-			FieldLocation closestSetpoint = WALL;
-			for (FieldLocation fieldLocation : FieldLocation.values()) {
-				if (Math.abs(flywheelSetpoint - fieldLocation.flywheelSetpoint) < Math
-						.abs(flywheelSetpoint - closestSetpoint.flywheelSetpoint)) {
-					closestSetpoint = fieldLocation;
-				}
-			}
-			return closestSetpoint;
 		}
 	}
 

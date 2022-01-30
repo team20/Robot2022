@@ -24,17 +24,14 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FieldLocation;
 import frc.robot.commands.ArcadeDriveCommand;
-import frc.robot.commands.AutoFeederCommand;
-import frc.robot.commands.FeederCommand;
 import frc.robot.commands.LimelightCommand;
-import frc.robot.commands.RunCarouselCommand;
 import frc.robot.commands.ShootSetupCommand;
-import frc.robot.commands.ToOpenSpaceCommand;
-import frc.robot.subsystems.CarouselSubsystem;
+import frc.robot.commands.SitAndShootHigh;
+import frc.robot.commands.SitAndShootLow;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
+import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 
 /**
@@ -46,15 +43,15 @@ import frc.robot.subsystems.LimelightSubsystem;
  * the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
+
 public class RobotContainer {
   // subsystems
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
   private final LimelightSubsystem m_limelightSubsystem = new LimelightSubsystem();
-  private final FeederSubsystem m_feederSubsystem = new FeederSubsystem();
   private final HoodSubsystem m_hoodSubsystem = new HoodSubsystem();
   private final FlywheelSubsystem m_flywheelSubsystem = new FlywheelSubsystem();
-  private final CarouselSubsystem m_carouselSubsystem = new CarouselSubsystem();
-
+  private final IndexerSubsystem m_indexerSubsystem = new IndexerSubsystem();
+   
   // controllers
   private final Joystick m_driverController = new Joystick(ControllerConstants.kDriverControllerPort);
   private final Joystick m_operatorController = new Joystick(ControllerConstants.kOperatorControllerPort);
@@ -64,23 +61,37 @@ public class RobotContainer {
 
   // shuffleboard logging (driver visuals) TODO actually configure this to be
   // useful
-  private final ShuffleboardLogging[] m_subsystems = { m_carouselSubsystem,
-      m_feederSubsystem, m_flywheelSubsystem, m_hoodSubsystem,
-      m_limelightSubsystem };
+  private final ShuffleboardLogging[] m_subsystems = { m_driveSubsystem,
+      m_flywheelSubsystem, m_hoodSubsystem,
+      m_limelightSubsystem
+  };
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    m_autoChooser.addOption("Just follow path", COMMAND);
+    m_autoChooser.addOption("Sit and shoot high", new SitAndShootHigh(m_flywheelSubsystem, m_hoodSubsystem, m_indexerSubsystem));
+    m_autoChooser.addOption("Sit and shoot low", new SitAndShootLow(m_flywheelSubsystem, m_hoodSubsystem, m_indexerSubsystem));
+    m_autoChooser.addOption("Taxi" , new Taxi(m_driveSubsystem));
+    m_autoChooser.addOption("Taxi, shoot high");
+    m_autoChooser.addOption("Shoot high, taxi");
+    m_autoChooser.addOption("Shoot low, taxi");
+    m_autoChooser.addOption("Taxi, pick-up, shoot high (2x)");
+    m_autoChooser.addOption("Shoot high, taxi, pick-up, shoot high");
+
+    //TODO do we need shots from all possible positions? red and blue? do get fms info for the colors? choice in code not shuffleboard??
+    //DriverStation.Alliance getAlliance() will return Red or Blue (Alliance.Red or Alliance.Blue)
+
+    //taxi, taxi then shoot, shoot then taxi (both height considerations)
+    //shoot taxi pick up ball and shoot
+    //shoot both with taxiing
+
     SmartDashboard.putData(m_autoChooser);
 
     configureButtonBindings();
   }
 
   private void configureButtonBindings() {
-
-    m_carouselSubsystem.setDefaultCommand(new ToOpenSpaceCommand(m_carouselSubsystem));
 
     // new JoystickButton(m_operatorController, 2).whenPressed(new LimelightCommand(
     // // 2 is x
@@ -120,9 +131,8 @@ public class RobotContainer {
         new ParallelCommandGroup(new ShootSetupCommand(
             m_flywheelSubsystem, m_hoodSubsystem, ((m_limelightSubsystem.getDistance() / 12.0) - (8.75 / 12.0)),
             "LINEAR"),
-            new AutoFeederCommand(
-                m_feederSubsystem, m_carouselSubsystem::atOpenSpace, m_flywheelSubsystem::atSetpoint),
-            new RunCarouselCommand(m_carouselSubsystem, 20))));
+            new AutoIndexCommand(
+                m_feederSubsystem, m_flywheelSubsystem::atSetpoint))));
 
     // new POVButton(m_operatorController, 180).whenHeld(
     // new ParallelCommandGroup(new ShootSetupCommand(

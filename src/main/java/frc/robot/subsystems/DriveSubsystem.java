@@ -6,6 +6,7 @@ import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -20,9 +21,10 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.ShuffleboardLogging;
 import frc.robot.Constants.DriveConstants;
 
-public class DriveSubsystem extends SubsystemBase {
+public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging {
 
         private final CANSparkMax m_frontLeft = new CANSparkMax(DriveConstants.kFrontLeftPort, MotorType.kBrushless);
         private final CANSparkMax m_frontRight = new CANSparkMax(DriveConstants.kFrontRightPort, MotorType.kBrushless);
@@ -31,8 +33,8 @@ public class DriveSubsystem extends SubsystemBase {
 
         private final RelativeEncoder m_leftEncoder = m_frontLeft.getEncoder();
         private final RelativeEncoder m_rightEncoder = m_frontRight.getEncoder();
-        // private final SparkMaxPIDController m_leftPIDController = m_frontLeft.getPIDController();
-        // private final SparkMaxPIDController m_rightPIDController = m_frontRight.getPIDController();
+        private final SparkMaxPIDController m_leftPIDController = m_frontLeft.getPIDController();
+        private final SparkMaxPIDController m_rightPIDController = m_frontRight.getPIDController();
 
         private final AHRS m_gyro = new AHRS(DriveConstants.kGyroPort);
 
@@ -90,21 +92,23 @@ public class DriveSubsystem extends SubsystemBase {
                 m_rightEncoder.setVelocityConversionFactor(
                                 (1 / DriveConstants.kGearRatio) * Math.PI * DriveConstants.kWheelDiameterMeters / 60.0);
 
-                // m_leftPIDController.setP(DriveConstants.kP);
-                // m_leftPIDController.setI(DriveConstants.kI);
-                // m_leftPIDController.setIZone(DriveConstants.kIz);
-                // m_leftPIDController.setD(DriveConstants.kD);
-                // m_leftPIDController.setFF(DriveConstants.kFF);
-                // m_leftPIDController.setOutputRange(DriveConstants.kMinOutput, DriveConstants.kMaxOutput);
-                // m_leftPIDController.setFeedbackDevice(m_leftEncoder);
+               // m_backRight.setControlFramePeriodMs(10);
 
-                // m_rightPIDController.setP(DriveConstants.kP);
-                // m_rightPIDController.setI(DriveConstants.kI);
-                // m_rightPIDController.setIZone(DriveConstants.kIz);
-                // m_rightPIDController.setD(DriveConstants.kD);
-                // m_rightPIDController.setFF(DriveConstants.kFF);
-                // m_rightPIDController.setOutputRange(DriveConstants.kMinOutput, DriveConstants.kMaxOutput);
-                // m_rightPIDController.setFeedbackDevice(m_rightEncoder);
+                m_leftPIDController.setP(DriveConstants.kP);
+                m_leftPIDController.setI(DriveConstants.kI);
+                m_leftPIDController.setIZone(DriveConstants.kIz);
+                m_leftPIDController.setD(DriveConstants.kD);
+                m_leftPIDController.setFF(DriveConstants.kFF);
+                m_leftPIDController.setOutputRange(DriveConstants.kMinOutput, DriveConstants.kMaxOutput);
+                m_leftPIDController.setFeedbackDevice(m_leftEncoder);
+
+                m_rightPIDController.setP(DriveConstants.kP);
+                m_rightPIDController.setI(DriveConstants.kI);
+                m_rightPIDController.setIZone(DriveConstants.kIz);
+                m_rightPIDController.setD(DriveConstants.kD);
+                m_rightPIDController.setFF(DriveConstants.kFF);
+                m_rightPIDController.setOutputRange(DriveConstants.kMinOutput, DriveConstants.kMaxOutput);
+                m_rightPIDController.setFeedbackDevice(m_rightEncoder);
 
                 m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
                 // this is what they did in 2020 with the navX:
@@ -228,6 +232,19 @@ public class DriveSubsystem extends SubsystemBase {
                 m_drive.feed();
         }
 
+        public void tankDriveVelocity(DifferentialDriveWheelSpeeds wheelSpeeds){ 
+                
+                double leftNativeVelocity = wheelSpeeds.leftMetersPerSecond * (1/DriveConstants.kEncoderVelocityConversionFactor);
+                double rightNativeVelocity = wheelSpeeds.rightMetersPerSecond * (1/DriveConstants.kEncoderVelocityConversionFactor);
+
+                m_leftPIDController.setReference(leftNativeVelocity, CANSparkMax.ControlType.kVelocity);
+                m_rightPIDController.setReference(rightNativeVelocity, CANSparkMax.ControlType.kVelocity);
+       
+                //same as above except implementing a feed forward as well
+                // m_leftPIDController.setReference(leftNativeVelocity, CANSparkMax.ControlType.kVelocity,
+                // DriveConstants.kSlotID, DriveConstants.kFeedForward.calculate(wheelSpeeds.leftMetersPerSecond));
+        }
+
         /**
          * Sets the max output of the drive. Useful for scaling the drive to drive more
          * slowly.
@@ -250,5 +267,5 @@ public class DriveSubsystem extends SubsystemBase {
                         .withPosition(1, 2).withWidget(BuiltInWidgets.kTextView);
                 shuffleboardTab.addNumber("Heading", () -> getHeading()).withSize(1, 1).withPosition(2, 2)
                         .withWidget(BuiltInWidgets.kTextView);
-
+        }
 }

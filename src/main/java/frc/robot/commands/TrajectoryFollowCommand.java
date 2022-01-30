@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.Constants.DriveConstants;
@@ -34,6 +35,12 @@ public class TrajectoryFollowCommand extends RamseteCommand {
                 driveSubsystem::tankDriveVolts,
                 driveSubsystem);
         m_driveSubsystem = driveSubsystem;
+
+        //PID control with spark max PIDs
+        // new RamseteCommand(trajectory, driveSubsystem::getPose,
+        // new RamseteController(DriveConstants.kRamseteB, DriveConstants.kRamseteZeta),
+        // DriveConstants.kDriveKinematics, (left, right) -> driveSubsystem.tankDriveVelocity(
+        //     new DifferentialDriveWheelSpeeds(left, right)), driveSubsystem);
 
         // Reset odometry to the starting pose of the trajectory.
         m_driveSubsystem.resetOdometry(trajectory.getInitialPose());

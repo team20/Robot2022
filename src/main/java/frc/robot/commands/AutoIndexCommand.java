@@ -3,13 +3,12 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.FeederConstants;
-import frc.robot.subsystems.FeederSubsystem;
+import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.Constants.IndexerConstants;
 
-public class AutoFeederCommand extends CommandBase {
+public class AutoIndexCommand extends CommandBase {
 
-	private final FeederSubsystem m_feederSubsystem;
-	private final Supplier<Boolean> m_carouselReady;
+	private final IndexerSubsystem m_indexerSubsystem;
 	private final Supplier<Boolean> m_flywheelReady;
 
 	/**
@@ -20,20 +19,18 @@ public class AutoFeederCommand extends CommandBase {
 	 * @param carouselPosition The current position of the carousel
 	 * @param flywheelReady    Whether the flywheel is at speed
 	 */
-	public AutoFeederCommand(FeederSubsystem feederSubsystem, Supplier<Boolean> carouselReady,
-			Supplier<Boolean> flywheelReady) {
-		m_feederSubsystem = feederSubsystem;
-		m_carouselReady = carouselReady;
+	public AutoIndexCommand(IndexerSubsystem feederSubsystem, Supplier<Boolean> flywheelReady) {
+		m_indexerSubsystem = feederSubsystem;
 		m_flywheelReady = flywheelReady;
-		addRequirements(m_feederSubsystem);
+		addRequirements(m_indexerSubsystem);
 	}
 
 	/**
 	 * Run feeder motor at correct carousel position
 	 */
 	public void execute() {
-		if (m_carouselReady.get() && m_flywheelReady.get()) {
-			m_feederSubsystem.setPercentOutput(FeederConstants.kSpeed);
+		if (m_flywheelReady.get()) {
+			m_indexerSubsystem.setPercentOutput(IndexerConstants.kSpeed);
 		}
 	}
 
@@ -41,6 +38,6 @@ public class AutoFeederCommand extends CommandBase {
 	 * Stop the feeder at the end of the command
 	 */
 	public void end(boolean interrupted) {
-		m_feederSubsystem.setPercentOutput(0.0);
+		m_indexerSubsystem.setSpeed(0.0);
 	}
 }
