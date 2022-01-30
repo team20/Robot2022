@@ -7,9 +7,9 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ClimberSubsystem extends SubsystemBase{
+public class TelescopeSubsystem extends SubsystemBase{
   /** Creates a new ExampleSubsystem. */
-  public ClimberSubsystem() {}
+  public TelescopeSubsystem() {}
 
   @Override
   public void periodic() {
