@@ -208,6 +208,64 @@ public final class Constants {
 		public static final int kRollingAverageSize = 10; // TODO: change, experiment
 	}
 
+	public static final class TelescopeHookConstants{
+		public static final int kMotorPort=0;
+		public static final boolean kInvert=false;
+		public static final int kSmartCurrentLimit=60;//TODO: change
+		public static final double kP = 0; // TODO: tune PID
+		public static final double kI = 0;
+		public static final double kD = 0.0000;// 0.000_03;
+		public static final double kIz = 0.0;
+		public static final double kFF = .0;// 0.000_193;
+		public static final double kMaxOutput = 1;
+		public static final double kMinOutput = -1;
+		public static final int kSlotID = 0;
+		public static final double kMinVelocity = 0;
+		public static final double kMaxAcel = 20_000;
+		public static final double kMaxVelocity = 10_000;
+		public static final double kGearRatio = 1 / 2.4; //TODO: change this
+		public static final double kAllowedError = .2;
+
+		public static final double kExtendedPosition=0;
+		public static final double kRetractedPosition=0;
+	}
+
+	public static final class SlideHookConstants{
+		public static final int kMotorPort=0;
+		public static final boolean kInvert=false;
+		public static final int kSmartCurrentLimit=60;//TODO: change
+		public static final double kP = 0; // TODO: tune PID
+		public static final double kI = 0;
+		public static final double kD = 0.0000;// 0.000_03;
+		public static final double kIz = 0.0;
+		public static final double kFF = .0;// 0.000_193;
+		public static final double kMaxOutput = 1;
+		public static final double kMinOutput = -1;
+		public static final int kSlotID = 0;
+		public static final double kMinVelocity = 0;
+		public static final double kMaxAcel = 20_000;
+		public static final double kMaxVelocity = 10_000;
+		public static final double kGearRatio = 1 / 2.4; //TODO: change this
+		public static final double kAllowedError = .2;
+
+		public static final double kExtendedPosition=0;
+		public static final double kRetractedPosition=0;
+	}
+
+	public static final class IntakeConstants{
+		public static final int kMotorPort=0;
+		public static final boolean kInvert=false;
+	}
+
+	public static final class IndexerConstants{
+		public static final int kMotorPort=0;
+		public static final boolean kInvert=false;
+	}
+
+	public static final class ArmConstants{
+		public static final int kMotorPort=0;
+		public static final boolean kInvert=false;
+	}
 	public enum FieldLocation {
 
 		TARMACHIGH(0.0, 0.0), TARMACLOW(0, 0),
