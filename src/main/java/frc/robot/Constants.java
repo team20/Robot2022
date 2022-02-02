@@ -171,38 +171,6 @@ public final class Constants {
 		public static final double kSpeed = .9;
 	}
 
-	public static final class CarouselConstants {
-		public static final int kMotorPort = 14;
-		public static final boolean kInvert = true;
-		public static final int kSmartCurrentLimit = 20;
-		public static final double kP = 0.01; // .00001
-		public static final double kI = 0;
-		public static final double kD = 0.01;
-		public static final double kIz = 0;
-		public static final double kFF = 0.0138;// 000095;
-		public static final double kMaxOutput = 1;
-		public static final double kMinOutput = -1;
-
-		public static final double kPositionP = 0.0;// TODO - tune
-		public static final double kPositionI = 0.0;
-		public static final double kPositionD = 0.0;
-		public static final double kPositionIz = 0;
-		public static final double kPositionFF = 0;
-		public static final int kSlotID = 0;
-		public static final double kMinVelocity = 0;
-		public static final double kMaxAcel = 100;
-		public static final double kMaxVelocity = 20;
-		public static final double kAllowedError = 0.001;
-
-		public static final int kMagSensorPort = 0;
-
-		public static final double kVelocity = 20;
-		public static final double kIntakeVelocity = 30;
-		public static final double kJostleVelocity = -65;
-		public static final double kGearRatio = 141.0;
-		public static final double kStartPositionTolerance = .1; // 5
-	}
-
 	public static final class FlywheelConstants {
 		public static final int kMasterPort = 11;
 		public static final int kFollowerPort = 13;
