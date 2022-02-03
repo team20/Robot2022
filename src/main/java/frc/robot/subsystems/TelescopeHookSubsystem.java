@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController.AccelStrategy;
@@ -99,6 +100,13 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
         setPosition(0);
     }
 
+    /**
+     * 
+     * @param speed Percentage output of telescope hook motor
+     */
+    public void setSpeed(double speed){
+        m_motor.set(speed);
+    }
     public void configureShuffleboard() {
         ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Telescope Hook");
         shuffleboardTab.addNumber("Encoder Position", () -> getPosition()).withSize(4, 2).withPosition(0, 0)
