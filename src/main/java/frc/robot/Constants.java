@@ -209,8 +209,10 @@ public final class Constants {
 	}
 
 	public static final class TelescopeHookConstants{
-		public static final int kMotorPort=0;
-		public static final boolean kInvert=false;
+		public static final int kMasterPort=10;
+		public static final int kFollowerPort=20;
+		public static final boolean kMasterInvert=false;
+		public static final boolean kFollowerOppose=false;
 		public static final int kSmartCurrentLimit=60;//TODO: change
 		public static final double kP = 0; // TODO: tune PID
 		public static final double kI = 0;
@@ -231,8 +233,10 @@ public final class Constants {
 	}
 
 	public static final class SlideHookConstants{
-		public static final int kMotorPort=0;
-		public static final boolean kInvert=false;
+		public static final int kMasterPort=10;
+		public static final int kFollowerPort=20;
+		public static final boolean kMasterInvert=false;
+		public static final boolean kFollowerOppose=false;
 		public static final int kSmartCurrentLimit=60;//TODO: change
 		public static final double kP = 0; // TODO: tune PID
 		public static final double kI = 0;
@@ -245,9 +249,11 @@ public final class Constants {
 		public static final double kMinVelocity = 0;
 		public static final double kMaxAcel = 20_000;
 		public static final double kMaxVelocity = 10_000;
-		public static final double kGearRatio = 1 / 2.4; //TODO: change this
+		public static final double kGearRatio = 1 / 1; //TODO: change this
 		public static final double kAllowedError = .2;
 
+		public static final double kInchesPerQuarterTurn=.125; //.125 inches of travel per quarter turn (unit position)
+		
 		public static final double kExtendedPosition=0;
 		public static final double kRetractedPosition=0;
 	}

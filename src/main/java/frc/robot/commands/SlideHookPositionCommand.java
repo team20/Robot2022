@@ -1,22 +1,23 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.SlideHookConstants;
 import frc.robot.subsystems.SlideHookSubsystem;
 
 public class SlideHookPositionCommand extends CommandBase {
 
     private final SlideHookSubsystem m_slideHookSubsystem;
-    private final double m_setpoint;
+    private final double m_inches;
 
     /**
      * Drive the hood using setpoints
      * 
      * @param hoodSubsystem The hood subsystem to be used
-     * @param setpoint      The desired encoder position
+     * @param inches      The desired encoder position in inches
      */
-    public SlideHookPositionCommand(SlideHookSubsystem slideHookSubsystem, double setpoint) {
+    public SlideHookPositionCommand(SlideHookSubsystem slideHookSubsystem, double inches) {
         m_slideHookSubsystem = slideHookSubsystem;
-        m_setpoint = setpoint;
+        m_inches = inches;
         addRequirements(m_slideHookSubsystem);
     }
 
@@ -24,6 +25,7 @@ public class SlideHookPositionCommand extends CommandBase {
      * Update the setpoint
      */
     public void execute() {
-        m_slideHookSubsystem.setPosition(m_setpoint);
+        m_slideHookSubsystem.setPosition(m_inches/SlideHookConstants.kInchesPerQuarterTurn);
+        System.out.println("Setting slide hook position to "+m_inches+ " inches");
     }
 }

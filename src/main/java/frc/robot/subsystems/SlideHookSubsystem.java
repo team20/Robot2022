@@ -17,21 +17,30 @@ import frc.robot.ShuffleboardLogging;
 
 public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLogging {
 
-    private final CANSparkMax m_motor = new CANSparkMax(SlideHookConstants.kMotorPort, MotorType.kBrushless);
-    private final RelativeEncoder m_encoder = m_motor.getEncoder();
-    private final SparkMaxPIDController m_pidController = m_motor.getPIDController();
+    private final CANSparkMax m_masterMotor = new CANSparkMax(SlideHookConstants.kMasterPort, MotorType.kBrushless);
+    private final CANSparkMax m_followerMotor = new CANSparkMax(SlideHookConstants.kFollowerPort, MotorType.kBrushless);
+
+    private final RelativeEncoder m_encoder = m_masterMotor.getEncoder();
+    private final SparkMaxPIDController m_pidController = m_masterMotor.getPIDController();
     private double m_setPosition = 0;
 
     /**
      * Initializes a new instance of the {@link SlideHookSubsystem} class.
      */
     public SlideHookSubsystem() {
-        m_motor.restoreFactoryDefaults();
-        m_motor.setInverted(SlideHookConstants.kInvert);
-        m_motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        m_motor.enableVoltageCompensation(12);
-        m_motor.setSmartCurrentLimit(SlideHookConstants.kSmartCurrentLimit);
+        m_masterMotor.restoreFactoryDefaults();
+        m_masterMotor.setInverted(SlideHookConstants.kMasterInvert);
+        m_masterMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        m_masterMotor.enableVoltageCompensation(12);
+        m_masterMotor.setSmartCurrentLimit(SlideHookConstants.kSmartCurrentLimit);
 
+        m_followerMotor.restoreFactoryDefaults();
+        m_followerMotor.setInverted(SlideHookConstants.kMasterInvert);
+        m_followerMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        m_followerMotor.enableVoltageCompensation(12);
+        m_followerMotor.setSmartCurrentLimit(SlideHookConstants.kSmartCurrentLimit);
+        m_followerMotor.follow(m_masterMotor, SlideHookConstants.kFollowerOppose);
+        
         m_pidController.setP(SlideHookConstants.kP);
         m_pidController.setI(SlideHookConstants.kI);
         m_pidController.setIZone(SlideHookConstants.kIz);
@@ -78,9 +87,9 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
      */
     public void setPercentOutput(double speed) {
         if (speed < 0 && getPosition() < SlideHookConstants.kRetractedPosition)
-            m_motor.set(0);
+            m_masterMotor.set(0);
         else
-            m_motor.set(speed);
+            m_masterMotor.set(speed);
     }
 
     /**
@@ -103,7 +112,7 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
      * @param speed Percentage output of slide hook motor
      */
     public void setSpeed(double speed){
-      m_motor.set(speed);
+      m_masterMotor.set(speed);
   }
     public void configureShuffleboard() {
         ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Slide Hook");
