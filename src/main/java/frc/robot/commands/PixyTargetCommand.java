@@ -33,11 +33,10 @@ public class PixyTargetCommand extends CommandBase {
         if (m_arduinoSubsystem.getTargetInView()){
             // drive based on Arduino data
             System.out.println("SEEN A BALL");
-            m_driveSubsystem.arcadeDrive(((m_arduinoSubsystem.getDistance()-10)/10)*Math.max(m_speed.get(), 0.4), -m_arduinoSubsystem.getTurnSpeed(),
-                    m_arduinoSubsystem.getTurnSpeed());
+            m_driveSubsystem.arcadeDrive(((m_arduinoSubsystem.getDistance()-10)/10)*Math.max(m_speed.get(), 0.4), m_arduinoSubsystem.getTurnSpeed());
         }
         else{
-            m_driveSubsystem.tankDrive(0, 0);
+            m_driveSubsystem.tankDriveVolts(0, 0);
             System.out.println("NO BALL SEEN");
         }
         m_arduinoSubsystem.setMainLEDMode((byte)1);

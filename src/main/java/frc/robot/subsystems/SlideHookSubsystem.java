@@ -98,7 +98,13 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
         m_encoder.setPosition(0);
         setPosition(0);
     }
-
+    /**
+     * 
+     * @param speed Percentage output of slide hook motor
+     */
+    public void setSpeed(double speed){
+      m_motor.set(speed);
+  }
     public void configureShuffleboard() {
         ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Slide Hook");
         shuffleboardTab.addNumber("Encoder Position", () -> getPosition()).withSize(4, 2).withPosition(0, 0)
