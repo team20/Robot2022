@@ -18,20 +18,29 @@ import frc.robot.ShuffleboardLogging;
 
 public class TelescopeHookSubsystem extends SubsystemBase implements ShuffleboardLogging {
 
-    private final CANSparkMax m_motor = new CANSparkMax(TelescopeHookConstants.kMotorPort, MotorType.kBrushless);
-    private final RelativeEncoder m_encoder = m_motor.getEncoder();
-    private final SparkMaxPIDController m_pidController = m_motor.getPIDController();
+    private final CANSparkMax m_masterMotor = new CANSparkMax(TelescopeHookConstants.kMasterPort, MotorType.kBrushless);
+    private final CANSparkMax m_followerMotor = new CANSparkMax(TelescopeHookConstants.kFollowerPort, MotorType.kBrushless);
+
+    private final RelativeEncoder m_encoder = m_masterMotor.getEncoder();
+    private final SparkMaxPIDController m_pidController = m_masterMotor.getPIDController();
     private double m_setPosition = 0;
 
     /**
      * Initializes a new instance of the {@link TelescopeHookSubsystem} class.
      */
     public TelescopeHookSubsystem() {
-        m_motor.restoreFactoryDefaults();
-        m_motor.setInverted(TelescopeHookConstants.kInvert);
-        m_motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        m_motor.enableVoltageCompensation(12);
-        m_motor.setSmartCurrentLimit(TelescopeHookConstants.kSmartCurrentLimit);
+        m_masterMotor.restoreFactoryDefaults();
+        m_masterMotor.setInverted(TelescopeHookConstants.kMasterInvert);
+        m_masterMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        m_masterMotor.enableVoltageCompensation(12);
+        m_masterMotor.setSmartCurrentLimit(TelescopeHookConstants.kSmartCurrentLimit);
+
+        m_followerMotor.restoreFactoryDefaults();
+        m_followerMotor.setInverted(TelescopeHookConstants.kMasterInvert);
+        m_followerMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        m_followerMotor.enableVoltageCompensation(12);
+        m_followerMotor.setSmartCurrentLimit(TelescopeHookConstants.kSmartCurrentLimit);
+        m_followerMotor.follow(m_masterMotor, TelescopeHookConstants.kFollowerOppose);
 
         m_pidController.setP(TelescopeHookConstants.kP);
         m_pidController.setI(TelescopeHookConstants.kI);
@@ -79,9 +88,9 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
      */
     public void setPercentOutput(double speed) {
         if (speed < 0 && getPosition() < TelescopeHookConstants.kRetractedPosition)
-            m_motor.set(0);
+            m_masterMotor.set(0);
         else
-            m_motor.set(speed);
+            m_masterMotor.set(speed);
     }
 
     /**
@@ -105,8 +114,12 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
      * @param speed Percentage output of telescope hook motor
      */
     public void setSpeed(double speed){
-        m_motor.set(speed);
+        m_masterMotor.set(speed);
     }
+    public double getOutputCurrent(){
+        return m_masterMotor.getOutputCurrent();
+    }
+
     public void configureShuffleboard() {
         ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Telescope Hook");
         shuffleboardTab.addNumber("Encoder Position", () -> getPosition()).withSize(4, 2).withPosition(0, 0)

@@ -25,5 +25,6 @@ public class TelescopeHookPositionCommand extends CommandBase {
      */
     public void execute() {
         m_telescopeHookSubsystem.setPosition(m_setpoint);
+        System.out.println("Motor current is "+m_telescopeHookSubsystem.getOutputCurrent());
     }
 }

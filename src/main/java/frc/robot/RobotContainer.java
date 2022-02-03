@@ -28,11 +28,14 @@ import frc.robot.commands.LimelightCommand;
 import frc.robot.commands.ShootSetupCommand;
 import frc.robot.commands.SitAndShootHigh;
 import frc.robot.commands.SitAndShootLow;
+import frc.robot.commands.SlideHookMoveCommand;
+import frc.robot.commands.SlideHookPositionCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
+import frc.robot.subsystems.SlideHookSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -51,7 +54,7 @@ public class RobotContainer {
   private final HoodSubsystem m_hoodSubsystem = new HoodSubsystem();
   private final FlywheelSubsystem m_flywheelSubsystem = new FlywheelSubsystem();
   private final IndexerSubsystem m_indexerSubsystem = new IndexerSubsystem();
-   
+  private final SlideHookSubsystem m_slideHookSubsystem = new SlideHookSubsystem();
   // controllers
   private final Joystick m_driverController = new Joystick(ControllerConstants.kDriverControllerPort);
   private final Joystick m_operatorController = new Joystick(ControllerConstants.kOperatorControllerPort);
@@ -92,7 +95,8 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-
+    // new JoystickButton(m_driverController, 5).whenHeld(new SlideHookMoveCommand(m_slideHookSubsystem, .1));
+    new JoystickButton(m_driverController, 5).whenHeld(new SlideHookPositionCommand(m_slideHookSubsystem, 1));
     // new JoystickButton(m_operatorController, 2).whenPressed(new LimelightCommand(
     // // 2 is x
     // m_limelightSubsystem, m_driveSubsystem, 0, 178)); // last input is in units
