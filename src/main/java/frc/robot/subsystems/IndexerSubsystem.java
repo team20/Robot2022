@@ -1,107 +1,98 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMax.ControlType;
 
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants.IndexerConstants;
-import frc.robot.ShuffleboardLogging;
 
-public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLogging {
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-    private final CANSparkMax m_motor = new CANSparkMax(IndexerConstants.kMotorPort, MotorType.kBrushless);
-    private final RelativeEncoder m_encoder = m_motor.getEncoder();
-    private final SparkMaxPIDController m_pidController = m_motor.getPIDController();
-    private double m_setPosition = 0;
+public class IndexerSubsystem extends SubsystemBase{
+    // private final VictorSPX m_motor = new VictorSPX(Constants.IndexerConstants.kMotorPort);
+	private final CANSparkMax m_motor=new CANSparkMax(IndexerConstants.kMotorPort, MotorType.kBrushless);
+	private final SparkMaxPIDController m_neoController=m_motor.getPIDController();
+	private final RelativeEncoder m_neoEncoder=m_motor.getEncoder();
+	private double m_setPosition;
+
+	public IndexerSubsystem() {
+		// m_motor.setNeutralMode(NeutralMode.Coast);
+		// m_motor.enableVoltageCompensation(true);
+		// m_motor.setInverted(true);
+		m_motor.setIdleMode(IdleMode.kBrake);
+		m_motor.enableVoltageCompensation(12);
+		m_motor.setInverted(false);
+
+		m_neoController.setP(IndexerConstants.kP);
+        m_neoController.setI(IndexerConstants.kI);
+        m_neoController.setD(IndexerConstants.kD);
+        m_neoController.setIZone(IndexerConstants.kIz);
+        m_neoController.setFF(IndexerConstants.kFF);
+        m_neoController.setOutputRange(IndexerConstants.kMinOutput,IndexerConstants.kMaxOutput);
+	}
+	
+	public void periodic(){
+		if (m_setPosition == 0) {
+            m_motor.stopMotor();
+        } else {
+            m_neoController.setReference(m_setPosition, ControlType.kPosition, 0);
+        }
+	}
+    
+	
+    public void incrementPosition() {
+        setPosition(m_setPosition + 50);
+    }
+
+    public void decrementPosition() {
+        setPosition(m_setPosition - 50);
+    }
 
     /**
-     * Initializes a new instance of the {@link ArmSubsystem} class.
+     * @return Current setpoint.
      */
-    public IndexerSubsystem() {
-        m_motor.restoreFactoryDefaults();
-        m_motor.setInverted(IndexerConstants.kInvert);
-        m_motor.setIdleMode(CANSparkMax.IdleMode.kCoast); //TODO coast or brake??
-        m_motor.enableVoltageCompensation(12);
-        m_motor.setSmartCurrentLimit(IndexerConstants.kSmartCurrentLimit);
-
-        m_pidController.setP(IndexerConstants.kP);
-        m_pidController.setI(IndexerConstants.kI);
-        m_pidController.setIZone(IndexerConstants.kIz);
-        m_pidController.setD(IndexerConstants.kD);
-        m_pidController.setFF(IndexerConstants.kFF);
-        m_pidController.setOutputRange(IndexerConstants.kMinOutput, IndexerConstants.kMaxOutput);
-
-        // m_pidController.setSmartMotionAccelStrategy(IndexerConstants.kTrapezoidal, IndexerConstants.kSlotID);
-        // m_pidController.setSmartMotionMaxAccel(IndexerConstants.kMaxAcel, IndexerConstants.kSlotID);
-        // m_pidController.setSmartMotionMaxVelocity(IndexerConstants.kMaxVelocity, IndexerConstants.kSlotID);
-        // m_pidController.setSmartMotionAllowedClosedLoopError(IndexerConstants.kAllowedError, IndexerConstants.kSlotID);
-        // m_pidController.setSmartMotionMinOutputVelocity(IndexerConstants.kMinVelocity, IndexerConstants.kSlotID);
-
-        resetEncoder();
-    }
-
-    public void periodic() {
-        SmartDashboard.putNumber("Arm Position", getPosition());
+    public double getSetpoint() {
+        return m_setPosition;
     }
 
     /**
-     * @return Current arm position (motor rotations)
+     * @return Measured velocity.
      */
     public double getPosition() {
-        return m_encoder.getPosition();
+        return m_neoEncoder.getPosition();
     }
 
     /**
-     * @return Current velocity (motor rotations/s)
-     */
-    public double getVelocity() {
-        return m_encoder.getVelocity();
-    }
-
-    /**
-     * @return Whether the arm is at the setpoint
-     */
-    public boolean atSetpoint() {
-        return (Math.abs(m_setPosition - getPosition()) <= IndexerConstants.kAllowedError);
-    }
-
-    /**
-     * @param speed Percent output of the arm
-     */
-    public void setSpeed(double speed) {
-        m_motor.set(speed);
-    }
-
-    /**
-     * @param position Setpoint (motor rotations)
+     * Sets target speed for flywheel.
+     * 
+     * @param velocity Target velocity (rpm).
      */
     public void setPosition(double position) {
         m_setPosition = position;
-        m_pidController.setReference(position, ControlType.kPosition, IndexerConstants.kSlotID);
     }
 
     /**
-     * Zero the encoder position
+     * @return Whether the flywheel is at its setpoint ABOVE 0
      */
-    public void resetEncoder() {
-        m_encoder.setPosition(0);
-        setPosition(0);
+    public boolean atSetpoint() {
+        return getSetpoint() > 0
+                ? (Math.abs(getPosition() - getSetpoint()) / getSetpoint())
+                        * 100 < IndexerConstants.kAllowedErrorPercent
+                : false;
     }
-
-    public void configureShuffleboard() {
-        ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Arm");
-        shuffleboardTab.addNumber("Encoder Position", () -> getPosition()).withSize(4, 2).withPosition(0, 0)
-                .withWidget(BuiltInWidgets.kGraph);
-        shuffleboardTab.addNumber("Encoder Velocity", () -> getVelocity()).withSize(4, 2).withPosition(4, 0)
-                .withWidget(BuiltInWidgets.kGraph);
-        shuffleboardTab.addBoolean("At setpoint", () -> atSetpoint()).withSize(1, 1).withPosition(0, 2)
-                .withWidget(BuiltInWidgets.kBooleanBox);
+    public void reset(){
+        m_neoEncoder.setPosition(0);
     }
 }

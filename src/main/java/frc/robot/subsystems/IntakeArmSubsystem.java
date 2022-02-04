@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxPIDController.AccelStrategy;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
@@ -11,12 +12,12 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.IntakeArmConstants;
 import frc.robot.ShuffleboardLogging;
 
-public class ArmSubsystem extends SubsystemBase implements ShuffleboardLogging {
+public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLogging {
 
-    private final CANSparkMax m_motor = new CANSparkMax(ArmConstants.kMotorPort, MotorType.kBrushless);
+    private final CANSparkMax m_motor = new CANSparkMax(IntakeArmConstants.kMotorPort, MotorType.kBrushless);
     private final RelativeEncoder m_encoder = m_motor.getEncoder();
     private final SparkMaxPIDController m_pidController = m_motor.getPIDController();
     private double m_setPosition = 0;
@@ -24,25 +25,25 @@ public class ArmSubsystem extends SubsystemBase implements ShuffleboardLogging {
     /**
      * Initializes a new instance of the {@link ArmSubsystem} class.
      */
-    public ArmSubsystem() {
+    public IntakeArmSubsystem() {
         m_motor.restoreFactoryDefaults();
-        m_motor.setInverted(ArmConstants.kInvert);
+        m_motor.setInverted(IntakeArmConstants.kInvert);
         m_motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         m_motor.enableVoltageCompensation(12);
-        m_motor.setSmartCurrentLimit(ArmConstants.kSmartCurrentLimit);
+        m_motor.setSmartCurrentLimit(IntakeArmConstants.kSmartCurrentLimit);
 
-        m_pidController.setP(ArmConstants.kP);
-        m_pidController.setI(ArmConstants.kI);
-        m_pidController.setIZone(ArmConstants.kIz);
-        m_pidController.setD(ArmConstants.kD);
-        m_pidController.setFF(ArmConstants.kFF);
-        m_pidController.setOutputRange(ArmConstants.kMinOutput, ArmConstants.kMaxOutput);
+        m_pidController.setP(IntakeArmConstants.kP);
+        m_pidController.setI(IntakeArmConstants.kI);
+        m_pidController.setIZone(IntakeArmConstants.kIz);
+        m_pidController.setD(IntakeArmConstants.kD);
+        m_pidController.setFF(IntakeArmConstants.kFF);
+        m_pidController.setOutputRange(IntakeArmConstants.kMinOutput, IntakeArmConstants.kMaxOutput);
 
-        m_pidController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, ArmConstants.kSlotID);
-        m_pidController.setSmartMotionMaxAccel(ArmConstants.kMaxAcel, ArmConstants.kSlotID);
-        m_pidController.setSmartMotionMaxVelocity(ArmConstants.kMaxVelocity, ArmConstants.kSlotID);
-        m_pidController.setSmartMotionAllowedClosedLoopError(ArmConstants.kAllowedError, ArmConstants.kSlotID);
-        m_pidController.setSmartMotionMinOutputVelocity(ArmConstants.kMinVelocity, ArmConstants.kSlotID);
+        m_pidController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, IntakeArmConstants.kSlotID);
+        m_pidController.setSmartMotionMaxAccel(IntakeArmConstants.kMaxAcel, IntakeArmConstants.kSlotID);
+        m_pidController.setSmartMotionMaxVelocity(IntakeArmConstants.kMaxVelocity, IntakeArmConstants.kSlotID);
+        m_pidController.setSmartMotionAllowedClosedLoopError(IntakeArmConstants.kAllowedError, IntakeArmConstants.kSlotID);
+        m_pidController.setSmartMotionMinOutputVelocity(IntakeArmConstants.kMinVelocity, IntakeArmConstants.kSlotID);
 
         resetEncoder();
     }
@@ -69,14 +70,14 @@ public class ArmSubsystem extends SubsystemBase implements ShuffleboardLogging {
      * @return Whether the arm is at the setpoint
      */
     public boolean atSetpoint() {
-        return (Math.abs(m_setPosition - getPosition()) <= ArmConstants.kAllowedError);
+        return (Math.abs(m_setPosition - getPosition()) <= IntakeArmConstants.kAllowedError);
     }
 
     /**
      * @param speed Percent output of the arm
      */
     public void setPercentOutput(double speed) {
-        if (speed < 0 && getPosition() < ArmConstants.kMinPosition)
+        if (speed < 0 && getPosition() < IntakeArmConstants.kMinPosition)
             m_motor.set(0);
         else
             m_motor.set(speed);
@@ -87,7 +88,7 @@ public class ArmSubsystem extends SubsystemBase implements ShuffleboardLogging {
      */
     public void setPosition(double position) {
         m_setPosition = position;
-        m_pidController.setReference(position, ControlType.kSmartMotion, ArmConstants.kSlotID);
+        m_pidController.setReference(position, ControlType.kSmartMotion, IntakeArmConstants.kSlotID);
     }
 
     /**
