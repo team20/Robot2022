@@ -86,7 +86,7 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
      * @param speed Percent output of the hook
      */
     public void setPercentOutput(double speed) {
-        if (speed < 0 && getPosition() < SlideHookConstants.kRetractedPosition)
+        if (speed < 0 && getPosition() < SlideHookConstants.kStartPosition)
             m_masterMotor.set(0);
         else
             m_masterMotor.set(speed);
