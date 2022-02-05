@@ -269,13 +269,13 @@ public final class Constants {
 		public static final double kAllowedError = .2;
 
 		public static final double kInchesPerQuarterTurn = .125; // .125 inches of travel per quarter turn (unit position)
-		public static final double kStartPosition = 12;// inches
-		public static final double kToTelescopePosition = 15;// inches
+		public static final double kStartPosition = 0;// inches
+		public static final double kToTelescopePosition = 2;// inches
 
-		public static final double kTelescopeBehindRung=36;//inches
-		public static final double kTelescopeTouchingRung=36;//inches
+		public static final double kTelescopeBehindRung=24;//inches
+		public static final double kTelescopeTouchingRung=20;//inches
 
-		public static final double kControlled=25;//inches
+		public static final double kControlled=13;//inches
 
 	}
 
