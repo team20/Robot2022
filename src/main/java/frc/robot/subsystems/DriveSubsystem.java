@@ -209,12 +209,10 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
                 m_odometry.resetPosition(pose, m_gyro.getRotation2d());
         }
 
-        /**
-         * Drives the robot using arcade controls.
-         *
-         * @param fwd the commanded forward movement
-         * @param rot the commanded rotation
-         */
+        public void arcadeDrive(double fwd, double rot) {
+                m_drive.arcadeDrive(fwd, rot);
+        }
+
         public void arcadeDrive(double straight, double left, double right) {
                 tankDrive(DriveConstants.kSpeedLimitFactor * (straight - left + right),
                                 DriveConstants.kSpeedLimitFactor * (straight + left - right));
