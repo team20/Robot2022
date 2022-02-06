@@ -159,6 +159,7 @@ public final class Constants {
 
 		public static final double toBarPosition = 2;// inches
 	}
+
 	public static final class FlywheelConstants {
 		public static final int kMasterPort = 11;
 		public static final int kFollowerPort = 13;
@@ -202,31 +203,7 @@ public final class Constants {
 	}
 
 	public static final class IndexerConstants {
-		public static final int kMotorPort = 0;
-		public static final boolean kInvert = false;
-		public static final int kSmartCurrentLimit = 60;
-		public static final double kP = 0; // TODO: tune PID
-		public static final double kI = 0;
-		public static final double kD = 0.0000;// 0.000_03;
-		public static final double kIz = 0.0;
-		public static final double kFF = .0;// 0.000_193;
-		public static final double kMaxOutput = 1;
-		public static final double kMinOutput = -1;
-		public static final int kSlotID = 0;
-		public static final double kMinVelocity = 0;
-		public static final double kMaxAcel = 20_000;
-		public static final double kMaxVelocity = 10_000;
-		public static final double kGearRatio = 1 / 1; // TODO: change this
-		public static final double kAllowedErrorPercent = .2;
-		public static final double kMinPosition = 0;
-		public static final double kSpeed = 1.0;
-		public static final double kAllowedError = 0.0;
-		public static final int kStartProximitySensorPort = 0;
-		public static final int kCenterProximitySensorPort = 1;
-	}
-
-	public static final class IntakeArmConstants {
-		public static final int kMotorPort = 0;
+    public static final int kMotorPort = 0;
 		public static final boolean kInvert = false;
 		public static final int kSmartCurrentLimit = 60;
 		public static final double kP = 0; // TODO: tune PID
@@ -243,7 +220,23 @@ public final class Constants {
 		public static final double kGearRatio = 1 / 1; // TODO: change this
 		public static final double kAllowedError = .2;
 		public static final double kMinPosition = 0;
+    public static final double kAllowedErrorPercent = .2;
+		public static final double kMinPosition = 0;
+		public static final double kSpeed = 1.0;
+		public static final double kAllowedError = 0.0;
+		public static final int kStartProximitySensorPort = 0;
+		public static final int kCenterProximitySensorPort = 1;
 	}
+
+	public static final class IntakeArmConstants {
+		public static final double kAllowedError = 0.2;
+
+		public static final double kMinEncoderValue = 0.0;
+		public static final double kMaxEncoderValue = 42.0;
+		public static final double kMinAngle = 24.36;
+		public static final double kMaxAngle = 77.64;
+	}
+
 
 	public static final class IntakeConstants {
 		public static final int kMotorPort = 0;
@@ -342,4 +335,5 @@ public final class Constants {
 			this.hoodSetpoint = hoodSetpoint;
 		}
 		}
+
 }
