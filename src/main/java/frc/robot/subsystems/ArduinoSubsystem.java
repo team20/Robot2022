@@ -19,18 +19,15 @@ public class ArduinoSubsystem extends SubsystemBase {
 	private final I2C m_wire = new I2C(Port.kOnboard, ArduinoConstants.kAddress);
 	// data read from Arduino
 	private byte[] m_readData = new byte[7];
+	private byte[] m_writeData = new byte[4];
 	private boolean m_targetInView;
 	private int m_xValue;
 	private int m_distance;
-	// data written to Arduino
-	private byte[] m_writeData = new byte[4];
-	private byte m_mainLEDMode = ArduinoConstants.MainLEDModes.kOff;
-	private byte m_mainLEDValue = 0;
-	private byte m_shooterLEDMode = ArduinoConstants.ShooterLEDModes.kOff;
-	private byte m_shooterLEDValue = 0;
 	// PID outputs
 	private double m_turnSpeed;
 	private double m_driveSpeed;
+	private byte m_mainLEDMode = 0;
+
 
 	/**
 	 * Initializes a new instance of the {@link ArduinoSubsystem} class.
@@ -46,7 +43,8 @@ public class ArduinoSubsystem extends SubsystemBase {
 		m_writeData[1] = m_mainLEDValue;
 		m_writeData[2] = m_shooterLEDMode;
 		m_writeData[3] = m_shooterLEDValue;
-		// write byte array
+	
+		System.out.println("LLLLL"+m_mainLEDMode);
 		m_wire.writeBulk(m_writeData, m_writeData.length);
 	}
 
