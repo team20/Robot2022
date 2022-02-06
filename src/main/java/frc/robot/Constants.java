@@ -297,6 +297,7 @@ public final class Constants {
 		public static final double kTelescopeTouchingRung = 20;// inches
 
 		public static final double kControlled = 13;// inches
+		public static final double kHookVelocity=.5;
 
 	}
 

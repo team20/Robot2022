@@ -45,8 +45,6 @@ public class AutoClimbCommand extends SequentialCommandGroup {
         TelescopeControlledRetract, SlideControlledExtend, ControlledMove, TelescopeRetractFromControlled, SlideToStart, TelescopeExtend, SlideToTelescope, TelescopeRelease, 
         SlideToTelescopeBehind, TelescopeExtend, SlideToTelescopeTouching, ControlledMove, TelescopeRetract);
         //TODO: make first slidetostart happen at the start of the match???
-        //TODO: make DriveToDistanceCommand
-        //TODO: make SlideUntilAngleCommand
     }
     //X slide hook starts at b inches _kStartPosition_ (a couple inches back from telescope)
     //X telescope up 40 _kExtendedPosition_ inches
