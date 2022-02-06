@@ -203,6 +203,8 @@ public final class Constants {
 		public static final double kGearRatio = 1 / 1; // TODO: change this
 		public static final double kAllowedErrorPercent = .2;
 		public static final double kMinPosition = 0;
+		public static final int kStartProximitySensorPort = 0;
+		public static final int kCenterProximitySensorPort = 1;
 	}
 
 	public static final class IntakeArmConstants {

@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ColorMatch;
+import com.revrobotics.ColorMatchResult;
+import com.revrobotics.ColorSensorV3;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -16,16 +19,36 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import frc.robot.Constants.IndexerConstants;
 
+import frc.robot.ShuffleboardLogging;
+import frc.robot.Constants.IndexerConstants;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class IndexerSubsystem extends SubsystemBase{
+public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLogging{
     // private final VictorSPX m_motor = new VictorSPX(Constants.IndexerConstants.kMotorPort);
 	private final CANSparkMax m_motor=new CANSparkMax(IndexerConstants.kMotorPort, MotorType.kBrushless);
 	private final SparkMaxPIDController m_neoController=m_motor.getPIDController();
 	private final RelativeEncoder m_neoEncoder=m_motor.getEncoder();
 	private double m_setPosition;
+    private I2C.Port i2cPort;
+    private ColorSensorV3 m_colorSensor;
+    private ColorMatch m_colorMatcher;
+    private Color kBlueTarget;
+    private Color kRedTarget;
+    private Color m_colorSensed;
+    private String m_colorString = "\0";
+    private ColorMatchResult m_match;
+    private double m_colorSensorProximity;
+
+    private DigitalInput m_proximitySensorStart;
+    private DigitalInput m_proximitySensorCenter;
+
+    private boolean m_proximitySensorStartState;
+    private boolean m_proximitySensorCenterState;
 
 	public IndexerSubsystem() {
 		// m_motor.setNeutralMode(NeutralMode.Coast);
@@ -41,6 +64,20 @@ public class IndexerSubsystem extends SubsystemBase{
         m_neoController.setIZone(IndexerConstants.kIz);
         m_neoController.setFF(IndexerConstants.kFF);
         m_neoController.setOutputRange(IndexerConstants.kMinOutput,IndexerConstants.kMaxOutput);
+        
+        i2cPort = I2C.Port.kMXP; //52
+
+        m_colorSensor = new ColorSensorV3(i2cPort);
+        m_colorMatcher = new ColorMatch();
+
+        kBlueTarget = Color.kFirstBlue;
+        kRedTarget = Color.kFirstRed;
+        m_colorMatcher.addColorMatch(kBlueTarget);
+        m_colorMatcher.addColorMatch(kRedTarget);
+
+        m_proximitySensorStart = new DigitalInput(IndexerConstants.kStartProximitySensorPort);
+        m_proximitySensorCenter = new DigitalInput(IndexerConstants.kCenterProximitySensorPort);
+
 	}
 	
 	public void periodic(){
@@ -51,7 +88,35 @@ public class IndexerSubsystem extends SubsystemBase{
         }
 	}
     
-	
+	public boolean gamePieceAtStart(){
+        return m_proximitySensorStartState;
+    }
+    public boolean gamePieceAtCenter(){
+        return m_proximitySensorCenterState;
+    }
+
+    public boolean gamePieceReadyToShoot(){
+        if(m_colorSensorProximity > 100){
+            return true;
+        }
+        return false;
+    }
+    public void updateSensors(){
+        m_colorSensorProximity = m_colorSensor.getProximity();
+        m_colorSensed = m_colorSensor.getColor(); // get the color seen by sensor
+
+        m_match = m_colorMatcher.matchClosestColor(m_colorSensed);
+        if(m_colorSensorProximity < 100){
+            m_colorString = "Null";
+        }else if(m_match.color == kBlueTarget){
+            m_colorString = "Blue";
+        }else if(m_match.color == kRedTarget){
+            m_colorString = "Red";
+        }
+        m_proximitySensorStartState = !m_proximitySensorStart.get();
+        m_proximitySensorCenterState = !m_proximitySensorCenter.get();
+    }
+
     public void incrementPosition() {
         setPosition(m_setPosition + 50);
     }
@@ -94,5 +159,9 @@ public class IndexerSubsystem extends SubsystemBase{
     }
     public void reset(){
         m_neoEncoder.setPosition(0);
+    }
+    
+    public void configureShuffleboard(){
+
     }
 }
