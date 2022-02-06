@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.ShooterCommands;
 
 import java.util.function.Supplier;
 
@@ -30,7 +30,7 @@ public class AutoIndexCommand extends CommandBase {
 	 */
 	public void execute() {
 		if (m_flywheelReady.get()) {
-			m_indexerSubsystem.setPercentOutput(IndexerConstants.kSpeed);
+			m_indexerSubsystem.setSpeed(IndexerConstants.kSpeed);
 		}
 	}
 
