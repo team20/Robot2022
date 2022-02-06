@@ -27,7 +27,9 @@ public class ArduinoSubsystem extends SubsystemBase {
 	private double m_turnSpeed;
 	private double m_driveSpeed;
 	private byte m_mainLEDMode = 0;
-
+	private byte m_mainLEDValue = 0;
+	private byte m_shooterLEDMode = 0;
+	private byte m_shooterLEDValue = 0;
 
 	/**
 	 * Initializes a new instance of the {@link ArduinoSubsystem} class.
