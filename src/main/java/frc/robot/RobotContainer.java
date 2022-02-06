@@ -115,7 +115,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     
     // new JoystickButton(m_driverController, 5).whenHeld(new SlideHookMoveCommand(m_slideHookSubsystem, .1));
-    new JoystickButton(m_driverController, 5).whenHeld(new SlideHookPositionCommand(m_slideHookSubsystem, 1));
+    // new JoystickButton(m_driverController, 5).whenHeld(new SlideHookPositionCommand(m_slideHookSubsystem, 1));
 
     // get distance to target from limelight and then adjust the rpm and angle of
     // the shooter
