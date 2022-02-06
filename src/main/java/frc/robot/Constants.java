@@ -83,23 +83,6 @@ public final class Constants {
 		}
 	}
 
-	public static final class ArduinoConstants {
-		public static final int kAddress = 0x1;
-		public static final double kDistanceP = 0;
-		public static final double kDistanceI = 0;
-		public static final double kDistanceD = 0;
-		public static final int kDistanceSetpoint = 0;
-
-		public static final double kAngleP = 0;
-		public static final double kAngleI = 0;
-		public static final double kAngleD = 0;
-		public static final int kAngleSetpoint = 0;
-
-		public static final int kReadTargetInView = 0;
-		public static final int[] kReadXValue = { 1, 2, 3 };
-		public static final int[] kReadDistance = { 4, 5, 6 };
-	}
-
 	public static final class DriveConstants {
 		public static final int kFrontLeftPort = 40;
 		public static final boolean kFrontLeftInvert = true;
@@ -174,7 +157,8 @@ public final class Constants {
 		public static final double kEncoderVelocityConversionFactor = (1 / DriveConstants.kGearRatio) * Math.PI
 				* DriveConstants.kWheelDiameterMeters * 60;
 
-		public static final double toBarPosition=2;//inches
+		public static final double toBarPosition = 2;// inches
+	}
 
 	public static final class FlywheelConstants {
 		public static final int kMasterPort = 11;
@@ -219,31 +203,7 @@ public final class Constants {
 	}
 
 	public static final class IndexerConstants {
-		public static final int kMotorPort = 0;
-		public static final boolean kInvert = false;
-		public static final int kSmartCurrentLimit = 60;
-		public static final double kP = 0; // TODO: tune PID
-		public static final double kI = 0;
-		public static final double kD = 0.0000;// 0.000_03;
-		public static final double kIz = 0.0;
-		public static final double kFF = .0;// 0.000_193;
-		public static final double kMaxOutput = 1;
-		public static final double kMinOutput = -1;
-		public static final int kSlotID = 0;
-		public static final double kMinVelocity = 0;
-		public static final double kMaxAcel = 20_000;
-		public static final double kMaxVelocity = 10_000;
-		public static final double kGearRatio = 1 / 1; // TODO: change this
-		public static final double kAllowedErrorPercent = .2;
-		public static final double kMinPosition = 0;
-    public static final double kSpeed = 1.0;
-		public static final double kAllowedError = 0.0;
-		public static final int kStartProximitySensorPort = 0;
-		public static final int kCenterProximitySensorPort = 1;
-	}
-
-	public static final class IntakeArmConstants {
-		public static final int kMotorPort = 0;
+    public static final int kMotorPort = 0;
 		public static final boolean kInvert = false;
 		public static final int kSmartCurrentLimit = 60;
 		public static final double kP = 0; // TODO: tune PID
@@ -260,7 +220,35 @@ public final class Constants {
 		public static final double kGearRatio = 1 / 1; // TODO: change this
 		public static final double kAllowedError = .2;
 		public static final double kMinPosition = 0;
+    	public static final double kAllowedErrorPercent = .2;
+		public static final double kSpeed = 1.0;
+		public static final int kStartProximitySensorPort = 0;
+		public static final int kCenterProximitySensorPort = 1;
 	}
+
+	public static final class IntakeArmConstants {
+		public static final double kAllowedError = 0.2;
+		public static final double kMinEncoderValue = 0.0;
+		public static final double kMaxEncoderValue = 42.0;
+		public static final double kMinAngle = 24.36;
+		public static final double kMaxAngle = 77.64;
+		public static final int kMotorPort = 0;
+		public static final boolean kInvert = false;
+		public static final int kSmartCurrentLimit = 0;
+		public static final double kP = 0; // TODO: tune PID
+		public static final double kI = 0;
+		public static final double kD = 0.0000;// 0.000_03;
+		public static final double kIz = 0.0;
+		public static final double kFF = .0;// 0.000_193;
+		public static final double kMinOutput = 0;
+		public static final double kMaxOutput = 1;
+		public static final int kSlotID = 0;
+		public static final double kMaxAcel = 0;
+		public static final double kMaxVelocity = 0;
+		public static final double kMinVelocity = 0;
+		public static final double kMinPosition = 0;
+	}
+
 
 	public static final class IntakeConstants {
 		public static final int kMotorPort = 0;
@@ -305,14 +293,15 @@ public final class Constants {
 		public static final double kGearRatio = 1 / 1; // TODO: change this
 		public static final double kAllowedError = .2;
 
-		public static final double kInchesPerQuarterTurn = .125; // .125 inches of travel per quarter turn (unit position)
+		public static final double kInchesPerQuarterTurn = .125; // .125 inches of travel per quarter turn (unit
+																	// position)
 		public static final double kStartPosition = 0;// inches
 		public static final double kToTelescopePosition = 2;// inches
 
-		public static final double kTelescopeBehindRung=24;//inches
-		public static final double kTelescopeTouchingRung=20;//inches
+		public static final double kTelescopeBehindRung = 24;// inches
+		public static final double kTelescopeTouchingRung = 20;// inches
 
-		public static final double kControlled=13;//inches
+		public static final double kControlled = 13;// inches
 
 	}
 
@@ -339,8 +328,8 @@ public final class Constants {
 		public static final double kExtendedPosition = 40;// inches
 		public static final double kRetractedPosition = 0;// inches
 		public static final double kDisengageFromRetractedPosition = 5;// inches
-		
-		public static final double kControlled=35;//inches
+
+		public static final double kControlled = 35;// inches
 		public static final double kDisengageFromControlledPosition = 30;// inches
 
 	}
@@ -356,6 +345,6 @@ public final class Constants {
 			this.flywheelSetpoint = flywheelSetpoint;
 			this.hoodSetpoint = hoodSetpoint;
 		}
-	}
+		}
+
 }
-  

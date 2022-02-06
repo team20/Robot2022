@@ -101,6 +101,16 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
         }
         return false;
     }
+
+    public void ballToCenterForward(){
+
+    }
+    public void ballToCenterReverse(){
+        
+    }
+    public void ballToReadyToShoot(){
+        
+    }
     public void updateSensors(){
         m_colorSensorProximity = m_colorSensor.getProximity();
         m_colorSensed = m_colorSensor.getColor(); // get the color seen by sensor
@@ -147,7 +157,9 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     public void setPosition(double position) {
         m_setPosition = position;
     }
-
+    public void setSpeed(double speed){
+        m_motor.set(speed);
+    }
     /**
      * @return Whether the flywheel is at its setpoint ABOVE 0
      */
