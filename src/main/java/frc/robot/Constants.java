@@ -370,5 +370,4 @@ public final class Constants {
 			this.hoodSetpoint = hoodSetpoint;
 		}
 	}
-
 }
