@@ -30,7 +30,7 @@ public class AutoClimbCommand extends SequentialCommandGroup {
 
         SlideHookPositionCommand SlideToStart = new SlideHookPositionCommand(m_slideHookSubsystem, SlideHookConstants.kStartPosition);
         TelescopeHookPositionCommand TelescopeExtend= new TelescopeHookPositionCommand(m_telescopeHookSubsystem, TelescopeHookConstants.kExtendedPosition);
-        DriveToDistanceCommand DriveToBar=new DriveToDistanceCommand(m_driveSubsystem,DriveConstants.toBarPosition); 
+        DriveDistanceCommand DriveToBar=new DriveDistanceCommand(m_driveSubsystem,DriveConstants.toBarPosition); 
         TelescopeHookPositionCommand TelescopeRetract = new TelescopeHookPositionCommand(m_telescopeHookSubsystem, TelescopeHookConstants.kRetractedPosition);
         SlideHookPositionCommand SlideToTelescope=new SlideHookPositionCommand(m_slideHookSubsystem, SlideHookConstants.kToTelescopePosition);
         TelescopeHookPositionCommand TelescopeRelease= new TelescopeHookPositionCommand(m_telescopeHookSubsystem, TelescopeHookConstants.kDisengageFromRetractedPosition);
