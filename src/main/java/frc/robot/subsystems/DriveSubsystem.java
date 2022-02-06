@@ -92,7 +92,7 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
                 m_rightEncoder.setVelocityConversionFactor(
                                 (1 / DriveConstants.kGearRatio) * Math.PI * DriveConstants.kWheelDiameterMeters / 60.0);
 
-               // m_backRight.setControlFramePeriodMs(10);
+                // m_backRight.setControlFramePeriodMs(10);
 
                 m_leftPIDController.setP(DriveConstants.kP);
                 m_leftPIDController.setI(DriveConstants.kI);
@@ -179,7 +179,6 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
                 return m_gyro.getYaw() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
         }
 
-
         /**
          * @return The rate of the gyro turn (deg/s)
          */
@@ -216,8 +215,18 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
          * @param fwd the commanded forward movement
          * @param rot the commanded rotation
          */
-        public void arcadeDrive(double fwd, double rot) {
-                m_drive.arcadeDrive(fwd, rot);
+        public void arcadeDrive(double straight, double left, double right) {
+                tankDrive(DriveConstants.kSpeedLimitFactor * (straight - left + right),
+                                DriveConstants.kSpeedLimitFactor * (straight + left - right));
+        }
+
+        /**
+         * @param leftSpeed  Left motors percent output
+         * @param rightSpeed Right motors percent output
+         */
+        public void tankDrive(double leftSpeed, double rightSpeed) {
+                m_frontLeft.set(leftSpeed);
+                m_backRight.set(rightSpeed);
         }
 
         /**
@@ -232,17 +241,21 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
                 m_drive.feed();
         }
 
-        public void tankDriveVelocity(DifferentialDriveWheelSpeeds wheelSpeeds){ 
-                
-                double leftNativeVelocity = wheelSpeeds.leftMetersPerSecond * (1/DriveConstants.kEncoderVelocityConversionFactor);
-                double rightNativeVelocity = wheelSpeeds.rightMetersPerSecond * (1/DriveConstants.kEncoderVelocityConversionFactor);
+        public void tankDriveVelocity(DifferentialDriveWheelSpeeds wheelSpeeds) {
+
+                double leftNativeVelocity = wheelSpeeds.leftMetersPerSecond
+                                * (1 / DriveConstants.kEncoderVelocityConversionFactor);
+                double rightNativeVelocity = wheelSpeeds.rightMetersPerSecond
+                                * (1 / DriveConstants.kEncoderVelocityConversionFactor);
 
                 m_leftPIDController.setReference(leftNativeVelocity, CANSparkMax.ControlType.kVelocity);
                 m_rightPIDController.setReference(rightNativeVelocity, CANSparkMax.ControlType.kVelocity);
-       
-                //same as above except implementing a feed forward as well
-                // m_leftPIDController.setReference(leftNativeVelocity, CANSparkMax.ControlType.kVelocity,
-                // DriveConstants.kSlotID, DriveConstants.kFeedForward.calculate(wheelSpeeds.leftMetersPerSecond));
+
+                // same as above except implementing a feed forward as well
+                // m_leftPIDController.setReference(leftNativeVelocity,
+                // CANSparkMax.ControlType.kVelocity,
+                // DriveConstants.kSlotID,
+                // DriveConstants.kFeedForward.calculate(wheelSpeeds.leftMetersPerSecond));
         }
 
         /**
@@ -258,14 +271,14 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
         public void configureShuffleboard() {
                 ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Drive");
                 shuffleboardTab.addNumber("Left speed", () -> getWheelSpeeds().leftMetersPerSecond).withSize(4, 2)
-                        .withPosition(0, 0).withWidget(BuiltInWidgets.kGraph);
+                                .withPosition(0, 0).withWidget(BuiltInWidgets.kGraph);
                 shuffleboardTab.addNumber("Right speed", () -> getWheelSpeeds().rightMetersPerSecond).withSize(4, 2)
-                        .withPosition(4, 0).withWidget(BuiltInWidgets.kGraph);
+                                .withPosition(4, 0).withWidget(BuiltInWidgets.kGraph);
                 shuffleboardTab.addNumber("Left motor speed", () -> getLeftEncoderPosition()).withSize(1, 1)
-                        .withPosition(0, 2).withWidget(BuiltInWidgets.kTextView);
+                                .withPosition(0, 2).withWidget(BuiltInWidgets.kTextView);
                 shuffleboardTab.addNumber("Right motor speed", () -> getRightEncoderPosition()).withSize(1, 1)
-                        .withPosition(1, 2).withWidget(BuiltInWidgets.kTextView);
+                                .withPosition(1, 2).withWidget(BuiltInWidgets.kTextView);
                 shuffleboardTab.addNumber("Heading", () -> getHeading()).withSize(1, 1).withPosition(2, 2)
-                        .withWidget(BuiltInWidgets.kTextView);
+                                .withWidget(BuiltInWidgets.kTextView);
         }
 }

@@ -19,7 +19,7 @@ public class ArduinoSubsystem extends SubsystemBase {
 	private final I2C m_wire = new I2C(Port.kOnboard, ArduinoConstants.kAddress);
 	// data read from Arduino
 	private byte[] m_readData = new byte[7];
-	private byte[] m_writeData = new byte[1];
+	private byte[] m_writeData = new byte[4];
 	private boolean m_targetInView;
 	private int m_xValue;
 	private int m_distance;
@@ -40,7 +40,10 @@ public class ArduinoSubsystem extends SubsystemBase {
 	}
 	public void write() {
 		m_writeData[0] = m_mainLEDMode;
-		// write byte array
+		m_writeData[1] = m_mainLEDValue;
+		m_writeData[2] = m_shooterLEDMode;
+		m_writeData[3] = m_shooterLEDValue;
+	
 		System.out.println("LLLLL"+m_mainLEDMode);
 		m_wire.writeBulk(m_writeData, m_writeData.length);
 	}
@@ -49,6 +52,17 @@ public class ArduinoSubsystem extends SubsystemBase {
 		m_mainLEDMode = mode;
 	}
 
+	public void setShooterLEDMode(byte mode) {
+		m_shooterLEDMode = mode;
+	}
+
+	public void setMainLEDValue(double value) {
+		m_mainLEDValue = (byte) Math.round(value);
+	}
+	
+	public void setShooterLEDValue(double value) {
+		m_shooterLEDValue = (byte) Math.round(value);
+	}
 
 	/**
 	 * @return Speed to turn to face target.

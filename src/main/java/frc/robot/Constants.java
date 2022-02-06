@@ -11,6 +11,40 @@ import edu.wpi.first.wpilibj.SPI;
 
 public final class Constants {
 
+	public static final class ArduinoConstants {
+		public static final int kAddress = 10;
+		public static final double kDistanceP = 0;
+		public static final double kDistanceI = 0;
+		public static final double kDistanceD = 0;
+		public static final int kDistanceSetpoint = 0;
+
+		public static final double kAngleP = 0;
+		public static final double kAngleI = 0;
+		public static final double kAngleD = 0;
+		public static final int kAngleSetpoint = 0;
+
+		public static final int kReadTargetInView = 0;
+		public static final int[] kReadXValue = { 1, 2, 3 };
+		public static final int[] kReadDistance = { 4, 5, 6 };
+
+		public static final int kWriteMainLEDMode = 0;
+		public static final int kWriteMainLEDValue = 1;
+		public static final int kWriteShooterLEDMode = 2;
+		public static final int kWriteShooterLEDValue = 3;
+
+		public static final class MainLEDModes {
+			public static final byte kOff = 0;
+			public static final byte kChasing = 1;
+			public static final byte kSolid = 2;
+			public static final byte kColorWipe = 3;
+		}
+
+		public static final class ShooterLEDModes {
+			public static final byte kOff = 0;
+			public static final byte kFlywheelPercent = 1;
+		}
+	}
+
 	public static final class ControllerConstants {
 		public static final int kDriverControllerPort = 0;
 		public static final int kOperatorControllerPort = 1;
@@ -67,14 +101,14 @@ public final class Constants {
 	}
 
 	public static final class DriveConstants {
-		public static final int kFrontLeftPort = 4;
+		public static final int kFrontLeftPort = 40;
 		public static final boolean kFrontLeftInvert = true;
-		public static final int kBackLeftPort = 3;
+		public static final int kBackLeftPort = 30;
 		public static final boolean kBackLeftOppose = false;
 
-		public static final int kFrontRightPort = 5;
+		public static final int kFrontRightPort = 10;
 		public static final boolean kFrontRightInvert = false;
-		public static final int kBackRightPort = 6;
+		public static final int kBackRightPort = 20;
 		public static final boolean kBackRightOppose = false;
 
 		public static final int kSmartCurrentLimit = 60;
@@ -141,7 +175,6 @@ public final class Constants {
 				* DriveConstants.kWheelDiameterMeters * 60;
 
 		public static final double toBarPosition=2;//inches
-	}
 
 	public static final class FlywheelConstants {
 		public static final int kMasterPort = 11;
@@ -203,6 +236,8 @@ public final class Constants {
 		public static final double kGearRatio = 1 / 1; // TODO: change this
 		public static final double kAllowedErrorPercent = .2;
 		public static final double kMinPosition = 0;
+    public static final double kSpeed = 1.0;
+		public static final double kAllowedError = 0.0;
 		public static final int kStartProximitySensorPort = 0;
 		public static final int kCenterProximitySensorPort = 1;
 	}
@@ -323,3 +358,4 @@ public final class Constants {
 		}
 	}
 }
+  
