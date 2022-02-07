@@ -50,7 +50,9 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     private boolean m_proximitySensorStartState;
     private boolean m_proximitySensorCenterState;
 
-	public IndexerSubsystem() {
+    private byte m_stateSet;
+    
+    public IndexerSubsystem() {
 		// m_motor.setNeutralMode(NeutralMode.Coast);
 		// m_motor.enableVoltageCompensation(true);
 		// m_motor.setInverted(true);
@@ -81,36 +83,13 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
 	}
 	
 	public void periodic(){
+        updateSensors();
 		if (m_setPosition == 0) {
             m_motor.stopMotor();
         } else {
             m_neoController.setReference(m_setPosition, ControlType.kPosition, 0);
         }
 	}
-    
-	public boolean gamePieceAtStart(){
-        return m_proximitySensorStartState;
-    }
-    public boolean gamePieceAtCenter(){
-        return m_proximitySensorCenterState;
-    }
-
-    public boolean gamePieceReadyToShoot(){
-        if(m_colorSensorProximity > 100){
-            return true;
-        }
-        return false;
-    }
-
-    public void ballToCenterForward(){
-
-    }
-    public void ballToCenterReverse(){
-        
-    }
-    public void ballToReadyToShoot(){
-        
-    }
     public void updateSensors(){
         m_colorSensorProximity = m_colorSensor.getProximity();
         m_colorSensed = m_colorSensor.getColor(); // get the color seen by sensor
@@ -172,7 +151,29 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     public void reset(){
         m_neoEncoder.setPosition(0);
     }
-    
+
+	public boolean gamePieceRTF(){
+        return m_proximitySensorStartState;
+    }
+    public boolean gamePieceAtCenter(){
+        return m_proximitySensorCenterState;
+    }
+    public boolean gamePieceRTS(){
+        if(m_colorSensorProximity > 100){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean atSetState(){
+        return m_stateSet == getCurrState();
+    }
+    public byte getCurrState(){
+        return (byte)((byte)(gamePieceRTF()?1<<2:0) + (byte)(gamePieceAtCenter()?1<<1:0) + (byte)(gamePieceRTS()?1:0)); 
+    }
+    public void setState(byte state){
+        m_stateSet = state;
+    }
     public void configureShuffleboard(){
 
     }
