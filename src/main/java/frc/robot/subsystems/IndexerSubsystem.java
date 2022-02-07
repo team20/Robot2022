@@ -163,6 +163,9 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     public void setState(byte state){
         m_stateSet = state;
     }
+    public String getColorString(){
+        return m_colorString;
+    }
     public void configureShuffleboard(){
 
     }
