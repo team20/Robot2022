@@ -39,7 +39,8 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     private boolean m_proximitySensorStartState;
     private boolean m_proximitySensorCenterState;
 
-    private byte m_stateSet;
+    private byte m_setState;
+    private int m_direction;
     
     public IndexerSubsystem() {
 		// m_motor.setNeutralMode(NeutralMode.Coast);
@@ -73,7 +74,10 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
 	
 	public void periodic(){
         updateSensors();
-		if (m_setPosition == 0) {
+        if(getCurrState() != m_setState && atSetpoint()){
+            changePosition(m_direction);
+        }
+		if (atSetpoint()) {
             m_motor.stopMotor();
         } else {
             m_neoController.setReference(m_setPosition, ControlType.kPosition, 0);
@@ -98,11 +102,12 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     public void incrementPosition() {
         setPosition(m_setPosition + 50);
     }
-
     public void decrementPosition() {
         setPosition(m_setPosition - 50);
     }
-
+    public void changePosition(int dir){
+        setPosition(m_setPosition + (50*dir));
+    }
     /**
      * @return Current setpoint.
      */
@@ -155,18 +160,19 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     }
 
     public boolean atSetState(){
-        return m_stateSet == getCurrState();
+        return m_setState == getCurrState();
     }
     public byte getCurrState(){
         return (byte)((byte)(gamePieceRTF()?1<<2:0) + (byte)(gamePieceAtCenter()?1<<1:0) + (byte)(gamePieceRTS()?1:0)); 
     }
-    public void setState(byte state){
-        m_stateSet = state;
+    public void setState(byte state, int direction){
+        m_direction = direction;
+        m_setState = state;
     }
     public String getColorString(){
         return m_colorString;
     }
     public void configureShuffleboard(){
-
+        
     }
 }

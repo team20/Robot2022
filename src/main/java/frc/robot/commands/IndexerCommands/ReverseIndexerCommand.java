@@ -10,9 +10,12 @@ import frc.robot.subsystems.IndexerSubsystem;
 public class ReverseIndexerCommand extends CommandBase {
   private IndexerSubsystem m_indexerSubsystem;
   private boolean m_keepBallRTF;
+  
   private byte andState = 00000111;
   private byte orState = 00000100;
-  private boolean m_isFinished;
+
+  private byte m_initialIndexerState;
+  private byte m_desiredIndexerState;
   /** Creates a new ReverseIndexerCommand. */
   public ReverseIndexerCommand(IndexerSubsystem indexerSubsystem, boolean keepBallRTF) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -24,24 +27,18 @@ public class ReverseIndexerCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_initialIndexerState = m_indexerSubsystem.getCurrState();
     if(m_keepBallRTF){
-      byte currState = m_indexerSubsystem.getCurrState();
-      byte desState = (byte)((byte)(currState << 1) & andState | orState);
-      m_indexerSubsystem.setState(desState);
+      m_desiredIndexerState = (byte)((byte)(m_initialIndexerState << 1) & andState | orState);
     }else{
-      byte currState = m_indexerSubsystem.getCurrState();
-      byte desState = (byte)((byte)(currState << 1) & andState);
-      m_indexerSubsystem.setState(desState);
+      m_desiredIndexerState = (byte)((byte)(m_initialIndexerState << 1) & andState);
     }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    m_isFinished = m_indexerSubsystem.atSetState();
-    if(m_indexerSubsystem.atSetpoint() && !isFinished()){
-      m_indexerSubsystem.decrementPosition();
-    }
+  public void execute() {      
+      m_indexerSubsystem.setState(m_desiredIndexerState,-1);
   }
 
   // Called once the command ends or is interrupted.
@@ -51,6 +48,6 @@ public class ReverseIndexerCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_isFinished;
+    return m_indexerSubsystem.atSetState();
   }
 }
