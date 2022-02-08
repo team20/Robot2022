@@ -132,7 +132,6 @@ public class RobotContainer {
             () -> -m_operatorController.getRawAxis(Axis.kLeftY),
             () -> m_operatorController.getRawAxis(Axis.kLeftTrigger),
             () -> m_operatorController.getRawAxis(Axis.kRightTrigger)));
-    new POVButton(m_operatorController, 2).whenPressed(IndexerCommand.getLoadCommand(m_indexerSubsystem));
 
   }
 
