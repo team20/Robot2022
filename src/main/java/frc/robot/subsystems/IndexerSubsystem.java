@@ -14,6 +14,9 @@ import frc.robot.ShuffleboardLogging;
 import frc.robot.Constants.IndexerConstants;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -40,6 +43,7 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     private boolean m_proximitySensorCenterState;
 
     private byte m_setState;
+    private byte m_lastState;
     private int m_direction;
     
     public IndexerSubsystem() {
@@ -74,7 +78,7 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
 	
 	public void periodic(){
         updateSensors();
-        if(getCurrState() != m_setState && atSetpoint()){
+        if(getCurrStateSubsystem() != m_setState && atSetpoint()){
             changePosition(m_direction);
         }
 		if (atSetpoint()) {
@@ -163,9 +167,13 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
         return m_setState == getCurrState();
     }
     public byte getCurrState(){
+        return m_lastState == getCurrStateSubsystem() ? getCurrStateSubsystem() : m_setState;
+    }
+    private byte getCurrStateSubsystem(){
         return (byte)((byte)(gamePieceRTF()?1<<2:0) + (byte)(gamePieceAtCenter()?1<<1:0) + (byte)(gamePieceRTS()?1:0)); 
     }
     public void setState(byte state, int direction){
+        m_lastState = getCurrState();
         m_direction = direction;
         m_setState = state;
     }
@@ -173,6 +181,8 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
         return m_colorString;
     }
     public void configureShuffleboard(){
-        
+        ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Color");
+        shuffleboardTab.addBoolean("isBlue", () -> (m_colorString.equals("Blue"))).withSize(2, 2).withPosition(0, 0).withWidget(BuiltInWidgets.kBooleanBox);
+        shuffleboardTab.addBoolean("isRed", () -> (m_colorString.equals("Red"))).withSize(2, 2).withPosition(2, 0).withWidget(BuiltInWidgets.kBooleanBox);
     }
 }
