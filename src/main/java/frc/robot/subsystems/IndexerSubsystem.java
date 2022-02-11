@@ -43,8 +43,6 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     private boolean m_proximitySensorCenterState;
 
     private byte m_setState;
-    private byte m_lastState;
-    private int m_direction;
     
     public IndexerSubsystem() {
 		// m_motor.setNeutralMode(NeutralMode.Coast);
@@ -78,14 +76,7 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
 	
 	public void periodic(){
         updateSensors();
-        if(getCurrStateSubsystem() != m_setState && atSetpoint()){
-            changePosition(m_direction);
-        }
-		if (atSetpoint()) {
-            m_motor.stopMotor();
-        } else {
-            m_neoController.setReference(m_setPosition, ControlType.kPosition, 0);
-        }
+		
 	}
     public void updateSensors(){
         m_colorSensorProximity = m_colorSensor.getProximity();
@@ -103,15 +94,6 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
         m_proximitySensorCenterState = !m_proximitySensorCenter.get();
     }
 
-    public void incrementPosition() {
-        setPosition(m_setPosition + 50);
-    }
-    public void decrementPosition() {
-        setPosition(m_setPosition - 50);
-    }
-    public void changePosition(int dir){
-        setPosition(m_setPosition + (50*dir));
-    }
     /**
      * @return Current setpoint.
      */
@@ -126,20 +108,10 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
         return m_neoEncoder.getPosition();
     }
 
-    /**
-     * Sets target speed for flywheel.
-     * 
-     * @param velocity Target velocity (rpm).
-     */
-    public void setPosition(double position) {
-        m_setPosition = position;
-    }
     public void setSpeed(double speed){
         m_motor.set(speed);
     }
-    /**
-     * @return Whether the flywheel is at its setpoint ABOVE 0
-     */
+    
     public boolean atSetpoint() {
         return getSetpoint() > 0
                 ? (Math.abs(getPosition() - getSetpoint()) / getSetpoint())
@@ -163,18 +135,30 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
         return false;
     }
 
+    /**
+     * Am I at where I want to be?
+     * @return
+     */
     public boolean atSetState(){
-        return m_setState == getCurrState();
+        return m_setState == getCurrStateSubsystem();
     }
+
+    /**
+     * 
+     * @return return closest position to where I am without going above
+     */
     public byte getCurrState(){
-        return m_lastState == getCurrStateSubsystem() ? getCurrStateSubsystem() : m_setState;
+        return m_setState;
     }
+
+    /**
+     * Returns sensor values as bytes **FOR SUBSYSTEM ONLY**
+     * @return sensor values
+     */
     private byte getCurrStateSubsystem(){
         return (byte)((byte)(gamePieceRTF()?1<<2:0) + (byte)(gamePieceAtCenter()?1<<1:0) + (byte)(gamePieceRTS()?1:0)); 
     }
-    public void setState(byte state, int direction){
-        m_lastState = getCurrState();
-        m_direction = direction;
+    public void setState(byte state){
         m_setState = state;
     }
     public String getColorString(){
