@@ -42,7 +42,7 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     private boolean m_proximitySensorStartState;
     private boolean m_proximitySensorCenterState;
 
-    private byte m_setState;
+    private byte m_targetState;
     
     public IndexerSubsystem() {
 		// m_motor.setNeutralMode(NeutralMode.Coast);
@@ -75,13 +75,20 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
 	}
 	
 	public void periodic(){
+
+        //get updated sensor states so we always know where balls are and what color the ball that is ready to shoot is
         updateSensors();
 		
 	}
     public void updateSensors(){
+        
+        //get the proximity sensed by the color sensor
         m_colorSensorProximity = m_colorSensor.getProximity();
-        m_colorSensed = m_colorSensor.getColor(); // get the color seen by sensor
+        
+        // get the color seen by sensor
+        m_colorSensed = m_colorSensor.getColor();
 
+        //find the closest match for the color of the ball, will return null if nothing is there
         m_match = m_colorMatcher.matchClosestColor(m_colorSensed);
         if(m_colorSensorProximity < 100){
             m_colorString = "Null";
@@ -90,6 +97,8 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
         }else if(m_match.color == kRedTarget){
             m_colorString = "Red";
         }
+
+        //save if either the center or start proximity sensors sense a ball
         m_proximitySensorStartState = !m_proximitySensorStart.get();
         m_proximitySensorCenterState = !m_proximitySensorCenter.get();
     }
@@ -139,16 +148,16 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
      * Am I at where I want to be?
      * @return
      */
-    public boolean atSetState(){
-        return m_setState == getCurrStateSubsystem();
+    public boolean atTargetState(){
+        return m_targetState == getCurrStateSubsystem();
     }
 
     /**
      * 
      * @return return closest position to where I am without going above
      */
-    public byte getCurrState(){
-        return m_setState;
+    public byte getCurrTargetState(){
+        return m_targetState;
     }
 
     /**
@@ -158,8 +167,13 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     private byte getCurrStateSubsystem(){
         return (byte)((byte)(gamePieceRTF()?1<<2:0) + (byte)(gamePieceAtCenter()?1<<1:0) + (byte)(gamePieceRTS()?1:0)); 
     }
-    public void setState(byte state){
-        m_setState = state;
+
+    /**
+     * Set target sensor state **Will not move or stop on its own, you must also set speed and stop when it's finished** 
+     * @param state target sensor state
+     */
+    public void setTargetState(byte state){
+        m_targetState = state;
     }
     public String getColorString(){
         return m_colorString;
