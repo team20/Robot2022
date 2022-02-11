@@ -4,6 +4,9 @@
 
 package frc.robot.commands.IndexerCommands;
 
+import java.time.Duration;
+import java.time.Instant;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -32,6 +35,9 @@ public class IndexerCommand extends CommandBase {
   private byte orState = 00000100;
   
   private boolean m_keepBallRTF = true;
+
+  private Instant m_startTime;
+
   /** Creates a new AdvanceIndexerCommand. */
   public IndexerCommand(IndexerSubsystem indexerSubsystem, Operation operation) {
 
@@ -66,6 +72,8 @@ public class IndexerCommand extends CommandBase {
         m_desiredIndexerState = (byte)((byte)(m_initialIndexerState << 1) & andState);
       }
     }
+    m_startTime = Instant.now();
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -96,7 +104,17 @@ public class IndexerCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //finish when we reach our target state
+
+    //amount of time elapsed since we started the command
+    double elapsed = Duration.between(m_startTime, Instant.now()).toMillis();
+    
+    //max time to run to get to a state(will be ignored if controlled manually)
+    double max_duration = 2000;
+    
+    //finish when we reach our target state or timeout
+    if((m_operation == Operation.CMD_ADV || m_operation == Operation.CMD_REV) && elapsed > max_duration){
+      return true;
+    }
     return m_indexerSubsystem.atTargetState();
   }
 
