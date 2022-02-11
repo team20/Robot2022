@@ -28,11 +28,6 @@ public class IndexerCommand extends CommandBase {
     CMD_REV_MAN
   };
 
-  //used to mask out all but the last three bits when calculating sensor states
-  private byte andState = 00000111;
-  
-  //used to add a bit back in at the RTF position if that is required
-  private byte orState = 00000100;
   
   private boolean m_keepBallRTF = true;
 
@@ -59,20 +54,13 @@ public class IndexerCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_initialIndexerState = m_indexerSubsystem.getCurrTargetState();
     if(m_operation == Operation.CMD_ADV){
-      //find sensor states if moved forward one position
-      m_desiredIndexerState = (byte)(m_initialIndexerState >> 1);
+      m_desiredIndexerState = m_indexerSubsystem.getAdvanceTargetState();
     }else{
-      if(m_keepBallRTF){
-        //find sensor states if moved backward one position, preserving ball RTF and removing everything but the last 3 bits
-        m_desiredIndexerState = (byte)((byte)(m_initialIndexerState << 1) & andState | orState);
-      }else{
-        //find sensor states if moved backward one position, WITHOUT preserving ball RTF and removing everything but the last 3 bits
-        m_desiredIndexerState = (byte)((byte)(m_initialIndexerState << 1) & andState);
-      }
+        m_desiredIndexerState = m_indexerSubsystem.getReverseTargetState(m_keepBallRTF);
     }
     m_startTime = Instant.now();
+    
 
   }
 
@@ -112,7 +100,7 @@ public class IndexerCommand extends CommandBase {
     double max_duration = 2000;
     
     //finish when we reach our target state or timeout
-    if((m_operation == Operation.CMD_ADV || m_operation == Operation.CMD_REV) && elapsed > max_duration){
+    if(elapsed > max_duration && !((m_operation == Operation.CMD_FWD_MAN) || (m_operation == Operation.CMD_REV_MAN))){
       return true;
     }
     return m_indexerSubsystem.atTargetState();
@@ -125,8 +113,9 @@ public class IndexerCommand extends CommandBase {
    * @return command or command group to load a ball into the indexer
    */
   public static Command getLoadCommand(IndexerSubsystem indexerSubsystem){
-    if(indexerSubsystem.gamePieceRTF() && indexerSubsystem.gamePieceRTS()){
-        return new SequentialCommandGroup(new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_REV), new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_ADV));
+    if(indexerSubsystem.gamePieceRTS()){
+        return new SequentialCommandGroup(new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_REV), 
+                                          new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_ADV));
     }else{
         return new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_ADV);
     }

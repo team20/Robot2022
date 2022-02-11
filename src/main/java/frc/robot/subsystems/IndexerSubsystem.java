@@ -28,8 +28,8 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     private I2C.Port i2cPort;
     private ColorSensorV3 m_colorSensor;
     private ColorMatch m_colorMatcher;
-    private Color kBlueTarget;
-    private Color kRedTarget;
+    private static final Color kBlueTarget = Color.kFirstBlue;
+    private static final Color kRedTarget = Color.kFirstRed;
     private Color m_colorSensed;
     private String m_colorString = "\0";
     private ColorMatchResult m_match;
@@ -43,6 +43,13 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
 
     private byte m_targetState;
     
+    //used to mask out all but the last three bits when calculating sensor states
+    private byte andState = 00000111;
+    
+    //used to add a bit back in at the RTF position if that is required
+    private byte orState = 00000100;
+    
+    private final int kRTSThreshold = 100;
     public IndexerSubsystem() {
 		// m_motor.setNeutralMode(NeutralMode.Coast);
 		// m_motor.enableVoltageCompensation(true);
@@ -63,8 +70,6 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
         m_colorSensor = new ColorSensorV3(i2cPort);
         m_colorMatcher = new ColorMatch();
 
-        kBlueTarget = Color.kFirstBlue;
-        kRedTarget = Color.kFirstRed;
         m_colorMatcher.addColorMatch(kBlueTarget);
         m_colorMatcher.addColorMatch(kRedTarget);
 
@@ -109,23 +114,10 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
         return m_setPosition;
     }
 
-    /**
-     * @return Measured velocity.
-     */
-    public double getPosition() {
-        return m_neoEncoder.getPosition();
-    }
-
     public void setSpeed(double speed){
         m_motor.set(speed);
     }
     
-    public boolean atSetpoint() {
-        return getSetpoint() > 0
-                ? (Math.abs(getPosition() - getSetpoint()) / getSetpoint())
-                        * 100 < IndexerConstants.kAllowedErrorPercent
-                : false;
-    }
     public void reset(){
         m_neoEncoder.setPosition(0);
     }
@@ -137,10 +129,7 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
         return m_proximitySensorCenterState;
     }
     public boolean gamePieceRTS(){
-        if(m_colorSensorProximity > 100){
-            return true;
-        }
-        return false;
+        return m_colorSensorProximity > kRTSThreshold;
     }
 
     /**
@@ -161,10 +150,31 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
 
     /**
      * Returns sensor values as bytes **FOR SUBSYSTEM ONLY**
-     * @return sensor values
+     * 
+     * We can describe our state as a 3-bit number where the bits are:
+     * RTF   BIC   RTS
+     * (Ready to Feed, Ball in Center, Ready to Shoot)
+     * So with a ball in center we have bits 010 or state 2.
+     * 
+     * @return sensor values as a 3 bit number
      */
     private byte getCurrStateSubsystem(){
+
         return (byte)((byte)(gamePieceRTF()?1<<2:0) + (byte)(gamePieceAtCenter()?1<<1:0) + (byte)(gamePieceRTS()?1:0)); 
+    }
+
+    public byte getAdvanceTargetState(){
+        //find sensor states if moved forward one position
+        return (byte)(m_targetState >> 1);
+    }
+    public byte getReverseTargetState(boolean preserveRTF){
+        if(preserveRTF){
+            //find sensor states if moved backward one position, preserving ball RTF and removing everything but the last 3 bits
+            return (byte)((byte)(m_targetState << 1) & andState | orState);
+        }else{
+            //find sensor states if moved backward one position, WITHOUT preserving ball RTF and removing everything but the last 3 bits
+            return (byte)((byte)(m_targetState << 1) & andState);
+        }
     }
 
     /**
