@@ -146,7 +146,7 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
 
     /**
      * Am I at where I want to be?
-     * @return
+     * @return whether or not I am currently at my target state
      */
     public boolean atTargetState(){
         return m_targetState == getCurrStateSubsystem();
