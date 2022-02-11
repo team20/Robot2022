@@ -154,7 +154,11 @@ public class RobotContainer {
     return m_autoChooser.getSelected();
   }
 
-  public void generateAutonomousCommands() { // TODO lots of problems here....
+  public void generateAutonomousCommands() {
+    
+    
+    
+    // TODO lots of problems here....
     // // An example trajectory to follow. All units in meters.
     // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
     // // Start at the origin facing the +X direction
