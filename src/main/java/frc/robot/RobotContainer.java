@@ -23,6 +23,7 @@ import frc.robot.Constants.ArduinoConstants.MainLEDModes;
 import frc.robot.Constants.ArduinoConstants.ShooterLEDModes;
 import frc.robot.Constants.ControllerConstants.Axis;
 import frc.robot.commands.ArduinoCommands.UpdateLEDsCommand;
+import frc.robot.commands.AutoCommands.ComplexAutoSequence;
 import frc.robot.commands.AutoCommands.SitAndShootHigh;
 import frc.robot.commands.AutoCommands.SitAndShootLow;
 import frc.robot.commands.DriveCommands.ArcadeDriveCommand;
@@ -154,7 +155,18 @@ public class RobotContainer {
     return m_autoChooser.getSelected();
   }
 
-  public void generateAutonomousCommands() { // TODO lots of problems here....
+  public void generateAutonomousCommands() {
+    m_autoChooser.setDefaultOption("Shoot then Taxi", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,2));
+    
+    m_autoChooser.addOption("Taxi Only", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,1));
+    m_autoChooser.addOption("Shoot then Taxi", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,2));
+    m_autoChooser.addOption("Drive to Cargo, Shoot Twice", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,3));
+    m_autoChooser.addOption("Shoot Lower Two Cargo", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,4));
+
+    SmartDashboard.putData(m_autoChooser);
+    
+    
+    // TODO lots of problems here....
     // // An example trajectory to follow. All units in meters.
     // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
     // // Start at the origin facing the +X direction
