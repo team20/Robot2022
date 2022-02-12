@@ -18,7 +18,11 @@ import frc.robot.subsystems.IndexerSubsystem;
 
 public class ComplexAutoSequence extends SequentialCommandGroup {
 
+
     public ComplexAutoSequence(DriveSubsystem driveSubsystem, FlywheelSubsystem flywheelSubsystem, HoodSubsystem hoodSubsystem, IndexerSubsystem indexerSubsystem, int choice) {
+      
+        // TODO integrate into the CommandComposer 
+      
         switch(choice) {
            // Simple Taxi
             case 1:
@@ -30,10 +34,27 @@ public class ComplexAutoSequence extends SequentialCommandGroup {
                 new Taxi(driveSubsystem, 3));
                 break;
             // Taxi, Intake, Shoot Twice (Upper Cargo)
-
-
-
-
+            case 3: 
+                addCommands(new Taxi(driveSubsystem,3),
+                new IntakeCommand(),
+                new SitAndShootHigh(flywheelSubsystem,hoodSubsystem,indexerSubsystem),
+                // Wait command
+                new SitAndShootHigh(flywheelSubsystem,hoodSubsystem,indexerSubsystem)
+                );
+                break;
+            // Collect and shoot bottom two balls.
+            case 4:
+                addCommands(new Taxi(driveSubsystem,3),
+                new IntakeCommand(),
+                new SitAndShootHigh(flywheelSubsystem,hoodSubsystem,indexerSubsystem),
+                // Wait
+                new SitAndShootHigh(flywheelSubsystem,hoodSubsystem,indexerSubsystem),
+                new Turn(driveSubsystem, 300),
+                new Taxi(driveSubsystem, 3),
+                new IntakeCommand(),
+                new SitAndShootHigh(flywheelSubsystem,hoodSubsystem,indexerSubsystem)
+                );
+            
 
 
 

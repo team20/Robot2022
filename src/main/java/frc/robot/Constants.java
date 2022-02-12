@@ -163,7 +163,7 @@ public final class Constants {
 		public static final DifferentialDriveVoltageConstraint autoVoltageConstraint = 
 			new DifferentialDriveVoltageConstraint(
 				new SimpleMotorFeedforward(DriveConstants.ksVolts,
-				Math.sqrt(DriveConstants.kaVoltSecondsSquaredPerMeter),
+				DriveConstants.kvVoltSecondsPerMeter,
 				DriveConstants.kaVoltSecondsSquaredPerMeter),
 				DriveConstants.kDriveKinematics,
 				10);

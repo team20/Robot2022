@@ -156,10 +156,12 @@ public class RobotContainer {
   }
 
   public void generateAutonomousCommands() {
+    m_autoChooser.setDefaultOption("Shoot then Taxi", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,2));
     
     m_autoChooser.addOption("Taxi Only", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,1));
     m_autoChooser.addOption("Shoot then Taxi", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,2));
-    m_autoChooser.addOption("Taxi, Intake, Shoot Twice (Upper Cargo)", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,3));
+    m_autoChooser.addOption("Drive to Cargo, Shoot Twice", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,3));
+    m_autoChooser.addOption("Shoot Lower Two Cargo", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,4));
 
     SmartDashboard.putData(m_autoChooser);
     
