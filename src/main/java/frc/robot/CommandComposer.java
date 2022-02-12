@@ -47,11 +47,13 @@ public class CommandComposer {
     }
     public Command getAimAndShootCommand(String shootClass){
         double distanceLimelight = m_limelightSubsystem.getDistance();
-        double distanceShoot = ((distanceLimelight / 12.0) - (8.75 / 12.0));
+
+        //range finder is 8.75" offset from the limelight 
+        double distanceBase = (distanceLimelight - 8.75) / 12.0;
+        
         Command aimCommand = new LimelightCommand(m_limelightSubsystem, m_driveSubsystem, 0, distanceLimelight);
 
-        Command shootCommand = new SequentialCommandGroupWithEnd(ShootCommandComposer.getShootStopCommand(m_flywheelSubsystem, m_hoodSubsystem), 
-                                                                    ShootCommandComposer.getShootCommand(m_flywheelSubsystem, m_hoodSubsystem, distanceShoot, shootClass), 
+        Command shootCommand = new SequentialCommandGroup(ShootCommandComposer.getShootCommand(m_flywheelSubsystem, m_hoodSubsystem, distanceBase, shootClass), 
                                                                     IndexerCommandComposer.getShootCommand(m_indexerSubsystem));
 
         return new SequentialCommandGroup(aimCommand, shootCommand);
