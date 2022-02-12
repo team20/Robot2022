@@ -39,8 +39,8 @@ public class ShootCommandComposer{
   }
   public static Command getShootStopCommand(FlywheelSubsystem flywheelSubsystem, HoodSubsystem hoodSubsystem){
 
-    ParallelCommandGroup stopOnInterruptGroup = new ParallelCommandGroup(new FlywheelCommand(flywheelSubsystem, FlywheelCommand.Operation.CMD_STOP_ON_INTERRUPT, 0), 
-                                                                          new HoodCommand(hoodSubsystem, HoodCommand.Operation.CMD_STOP_ON_INTERRUPT, 0));
-    return stopOnInterruptGroup;
+    ParallelCommandGroup stopGroup = new ParallelCommandGroup(new FlywheelCommand(flywheelSubsystem, FlywheelCommand.Operation.CMD_SET_VELOCITY, 0), 
+                                                                          new HoodCommand(hoodSubsystem, HoodCommand.Operation.CMD_SET_POSITION, 0));
+    return stopGroup;
   }
 }

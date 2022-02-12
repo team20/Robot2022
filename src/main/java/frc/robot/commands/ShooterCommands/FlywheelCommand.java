@@ -13,8 +13,7 @@ public class FlywheelCommand extends CommandBase{
   private Operation m_operation;
   public enum Operation{
     CMD_SET_VELOCITY,
-    CMD_SETTLE,
-    CMD_STOP_ON_INTERRUPT
+    CMD_SETTLE
   }
   /** Creates a new FlywheelCommand. */
   public FlywheelCommand(FlywheelSubsystem flywheelSubsystem, Operation operation, double flywheelParam) {
@@ -40,9 +39,7 @@ public class FlywheelCommand extends CommandBase{
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if(m_operation == Operation.CMD_STOP_ON_INTERRUPT){
-      m_flywheelSubsystem.setVelocity(0);
-    }
+    
   }
 
   // Returns true when the command should end.
@@ -53,6 +50,7 @@ public class FlywheelCommand extends CommandBase{
     }else if(m_operation == Operation.CMD_SETTLE){
       return m_flywheelSubsystem.atSetpoint();
     }
-    return false;
+    return true;
+
   }
 }

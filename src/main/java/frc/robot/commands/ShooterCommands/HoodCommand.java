@@ -14,8 +14,7 @@ public class HoodCommand extends CommandBase {
 
   public enum Operation{
     CMD_SET_POSITION,
-    CMD_SETTLE,
-    CMD_STOP_ON_INTERRUPT
+    CMD_SETTLE
   }
   /** Creates a new HoodCommand. */
   public HoodCommand(HoodSubsystem hoodSubsystem, Operation operation, double hoodParam) {
@@ -29,7 +28,7 @@ public class HoodCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if(m_operation == Operation.CMD_SETTLE){
+    if(m_operation == Operation.CMD_SET_POSITION){
       m_hoodSubsystem.setPosition(m_hoodParam);
     }
   }
@@ -41,9 +40,7 @@ public class HoodCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if(m_operation == Operation.CMD_STOP_ON_INTERRUPT){
-      m_hoodSubsystem.setPosition(0);
-    }
+  
   }
 
   // Returns true when the command should end.
@@ -54,6 +51,6 @@ public class HoodCommand extends CommandBase {
     }else if(m_operation == Operation.CMD_SETTLE){
       return m_hoodSubsystem.atSetpoint();
     }
-    return false;
+    return true;
   }
 }

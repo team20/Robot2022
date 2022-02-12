@@ -7,14 +7,11 @@ package frc.robot.commands.IndexerCommands;
 import java.time.Duration;
 import java.time.Instant;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.IndexerSubsystem;
 
 public class IndexerCommand extends CommandBase {
   private IndexerSubsystem m_indexerSubsystem;
-  private byte m_initialIndexerState;
   private byte m_desiredIndexerState;
   private Operation m_operation;
   public enum Operation{
@@ -106,35 +103,4 @@ public class IndexerCommand extends CommandBase {
     return m_indexerSubsystem.atTargetState();
   }
 
-
-  /**
-   * Based on the current indexer sensor states, decide what commands are needed in order to load a ball and return them
-   * @param indexerSubsystem
-   * @return command or command group to load a ball into the indexer
-   */
-  public static Command getLoadCommand(IndexerSubsystem indexerSubsystem){
-    if(indexerSubsystem.gamePieceRTS()){
-        return new SequentialCommandGroup(new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_REV), 
-                                          new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_ADV));
-    }else{
-        return new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_ADV);
-    }
-}
-/**
- * Based on the current indexer sensor states, decide what commands are needed in order to shoot a ball and return them
- * NOTE: MUST BE USED IN SEQUENTIAL COMMAND GROUP AFTER FLYWHEEL SETTLE COMMAND **NO PARALLEL COMMAND GROUPS**
- * TODO: Add flywheel settle command so that we wait until flywheel is at setpoint before continuing
- * @param indexerSubsystem
- * @param flywheelSubsystem
- * @return command or command group to shoot a ball on the indexer side of things
- */
-public static Command getShootCommand(IndexerSubsystem indexerSubsystem){
-    if(indexerSubsystem.gamePieceRTS()){
-        return new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_ADV);
-    }else if(indexerSubsystem.gamePieceAtCenter()){
-        return new SequentialCommandGroup(new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_ADV), new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_ADV));
-    }else{
-        return new SequentialCommandGroup(new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_ADV), new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_ADV), new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_ADV));
-    }
-}
 }
