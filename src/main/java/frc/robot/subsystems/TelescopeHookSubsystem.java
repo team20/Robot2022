@@ -17,6 +17,8 @@ import frc.robot.Constants.TelescopeHookConstants;
 import frc.robot.ShuffleboardLogging;
 
 public class TelescopeHookSubsystem extends SubsystemBase implements ShuffleboardLogging {
+    private static TelescopeHookSubsystem s_system;
+    public static TelescopeHookSubsystem get() { return s_system; }
 
     private final CANSparkMax m_masterMotor = new CANSparkMax(TelescopeHookConstants.kMasterPort, MotorType.kBrushless);
     private final CANSparkMax m_followerMotor = new CANSparkMax(TelescopeHookConstants.kFollowerPort, MotorType.kBrushless);
@@ -29,6 +31,8 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
      * Initializes a new instance of the {@link TelescopeHookSubsystem} class.
      */
     public TelescopeHookSubsystem() {
+        s_system = this;
+
         m_masterMotor.restoreFactoryDefaults();
         m_masterMotor.setInverted(TelescopeHookConstants.kMasterInvert);
         m_masterMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);

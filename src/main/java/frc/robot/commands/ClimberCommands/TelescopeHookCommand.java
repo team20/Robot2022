@@ -5,7 +5,7 @@ import frc.robot.subsystems.TelescopeHookSubsystem;
 
 public class TelescopeHookCommand extends CommandBase {
 
-    private final TelescopeHookSubsystem m_telescopeHookSubsystem;
+    private final TelescopeHookSubsystem s_telescopeHookSubsystem;
     private final double m_param;
 
     public enum Operation{
@@ -19,11 +19,11 @@ public class TelescopeHookCommand extends CommandBase {
      * @param hoodSubsystem The hood subsystem to be used
      * @param setpoint      The desired encoder position
      */
-    public TelescopeHookCommand(TelescopeHookSubsystem telescopeHookSubsystem, Operation operation, double param) {
-        m_telescopeHookSubsystem = telescopeHookSubsystem;
+    public TelescopeHookCommand(Operation operation, double param) {
+        s_telescopeHookSubsystem = TelescopeHookSubsystem.get();
         m_operation = operation;
         m_param = param;
-        addRequirements(m_telescopeHookSubsystem);
+        addRequirements(s_telescopeHookSubsystem);
     }
 
     /**
@@ -31,10 +31,10 @@ public class TelescopeHookCommand extends CommandBase {
      */
     public void execute() {
         if(m_operation == Operation.CMD_POSITION){
-            m_telescopeHookSubsystem.setPosition(m_param);
-            System.out.println("Motor current is "+m_telescopeHookSubsystem.getOutputCurrent());
+            s_telescopeHookSubsystem.setPosition(m_param);
+            System.out.println("Motor current is "+s_telescopeHookSubsystem.getOutputCurrent());
         }else if(m_operation == Operation.CMD_MOVE){
-            m_telescopeHookSubsystem.setSpeed(m_param);
+            s_telescopeHookSubsystem.setSpeed(m_param);
         }
         
     }

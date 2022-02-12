@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SlideHookConstants;
+import frc.robot.commands.ClimberCommands.SlideHookCommand;
 import frc.robot.ShuffleboardLogging;
 
 public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLogging {
@@ -24,10 +25,13 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
     private final SparkMaxPIDController m_pidController = m_masterMotor.getPIDController();
     private double m_setPosition = 0;
 
+    private static SlideHookSubsystem s_system;
+    public static SlideHookSubsystem get() { return s_system; }
     /**
      * Initializes a new instance of the {@link SlideHookSubsystem} class.
      */
     public SlideHookSubsystem() {
+        s_system = this;
         m_masterMotor.restoreFactoryDefaults();
         m_masterMotor.setInverted(SlideHookConstants.kMasterInvert);
         m_masterMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
