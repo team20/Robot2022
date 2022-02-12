@@ -7,7 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.IndexerCommands.IndexerCommandComposer;
-import frc.robot.commands.LimelightCommands.LimelightCommand;
+import frc.robot.commands.LimelightCommands.LimelightTurnCommand;
 import frc.robot.commands.ShooterCommands.ShootCommandComposer;
 import frc.robot.subsystems.ArduinoSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -46,12 +46,11 @@ public class CommandComposer {
         m_telescopeHookSubsystem = telescopeHookSubsystem;
     }
     public Command getAimAndShootCommand(String shootClass){
-        double distanceLimelight = m_limelightSubsystem.getDistance();
 
-        //range finder is 8.75" offset from the limelight 
-        double distanceBase = (distanceLimelight - 8.75) / 12.0;
+        //base of the hub is 8.75" offset from the tape at the top 
+        double distanceBase = (m_limelightSubsystem.getDistance() - 8.75) / 12.0;
         
-        Command aimCommand = new LimelightCommand(m_limelightSubsystem, m_driveSubsystem, 0, distanceLimelight);
+        Command aimCommand = new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem);
 
         Command shootCommand = new SequentialCommandGroup(ShootCommandComposer.getShootCommand(m_flywheelSubsystem, m_hoodSubsystem, distanceBase, shootClass), 
                                                                     IndexerCommandComposer.getShootCommand(m_indexerSubsystem));
