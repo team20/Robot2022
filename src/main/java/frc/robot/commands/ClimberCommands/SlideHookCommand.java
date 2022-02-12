@@ -13,7 +13,8 @@ public class SlideHookCommand extends CommandBase {
     public enum Operation{
         CMD_MOVE,
         CMD_POSITION,
-        CMD_TO_ANGLE
+        CMD_TO_ANGLE,
+        CMD_POSITION_SETTLE
     }
 
     private Operation m_operation;
@@ -51,5 +52,19 @@ public class SlideHookCommand extends CommandBase {
             }
         }
         
+    }
+
+    @Override
+    public boolean isFinished(){
+        if(m_operation == Operation.CMD_POSITION){
+            return true;
+        }else if(m_operation == Operation.CMD_MOVE){
+            return true;
+        }else if(m_operation == Operation.CMD_TO_ANGLE){
+            return m_gyro.getYaw() > m_param;
+        }else if(m_operation == Operation.CMD_POSITION_SETTLE){
+            return SlideHookSubsystem.get().atSetpoint();
+        }
+        return true;
     }
 }

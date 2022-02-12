@@ -5,12 +5,12 @@ import frc.robot.subsystems.TelescopeHookSubsystem;
 
 public class TelescopeHookCommand extends CommandBase {
 
-    private final TelescopeHookSubsystem s_telescopeHookSubsystem;
     private final double m_param;
 
     public enum Operation{
         CMD_POSITION,
-        CMD_MOVE
+        CMD_MOVE,
+        CMD_POSITION_SETTLE
     }
     private final Operation m_operation;
     /**
@@ -20,22 +20,34 @@ public class TelescopeHookCommand extends CommandBase {
      * @param setpoint      The desired encoder position
      */
     public TelescopeHookCommand(Operation operation, double param) {
-        s_telescopeHookSubsystem = TelescopeHookSubsystem.get();
         m_operation = operation;
         m_param = param;
-        addRequirements(s_telescopeHookSubsystem);
+        addRequirements(TelescopeHookSubsystem.get());
     }
 
     /**
      * Update the setpoint
      */
     public void execute() {
+        TelescopeHookSubsystem subsystem = TelescopeHookSubsystem.get();
         if(m_operation == Operation.CMD_POSITION){
-            s_telescopeHookSubsystem.setPosition(m_param);
-            System.out.println("Motor current is "+s_telescopeHookSubsystem.getOutputCurrent());
+            subsystem.setPosition(m_param);
+            System.out.println("Motor current is "+subsystem.getOutputCurrent());
         }else if(m_operation == Operation.CMD_MOVE){
-            s_telescopeHookSubsystem.setSpeed(m_param);
+            subsystem.setSpeed(m_param);
         }
         
+    }
+
+    @Override
+    public boolean isFinished(){
+        if(m_operation == Operation.CMD_POSITION){
+            return true;
+        } else if(m_operation == Operation.CMD_MOVE){
+            return true;
+        } else if(m_operation == Operation.CMD_POSITION_SETTLE){
+            return TelescopeHookSubsystem.get().atSetpoint();
+        }
+        return true;
     }
 }
