@@ -27,7 +27,7 @@ import frc.robot.commands.AutoCommands.ComplexAutoSequence;
 import frc.robot.commands.AutoCommands.SitAndShootHigh;
 import frc.robot.commands.AutoCommands.SitAndShootLow;
 import frc.robot.commands.DriveCommands.ArcadeDriveCommand;
-import frc.robot.commands.LimelightCommands.LimelightCommand;
+import frc.robot.commands.LimelightCommands.LimelightTurnCommand;
 import frc.robot.commands.ShooterCommands.AutoIndexCommand;
 import frc.robot.commands.ShooterCommands.ShootSetupCommand;
 import frc.robot.subsystems.ArduinoSubsystem;
@@ -121,7 +121,7 @@ public class RobotContainer {
     // get distance to target from limelight and then adjust the rpm and angle of
     // the shooter
     new POVButton(m_operatorController, 180).whenHeld(new SequentialCommandGroup(
-        new LimelightCommand(m_limelightSubsystem, m_driveSubsystem, 0, m_limelightSubsystem.getDistance()),
+        new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem),
         new ParallelCommandGroup(new ShootSetupCommand(
             m_flywheelSubsystem, m_hoodSubsystem, ((m_limelightSubsystem.getDistance() / 12.0) - (8.75 / 12.0)),
             "LINEAR"),
