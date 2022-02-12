@@ -23,6 +23,7 @@ import frc.robot.Constants.ArduinoConstants.MainLEDModes;
 import frc.robot.Constants.ArduinoConstants.ShooterLEDModes;
 import frc.robot.Constants.ControllerConstants.Axis;
 import frc.robot.commands.ArduinoCommands.UpdateLEDsCommand;
+import frc.robot.commands.AutoCommands.ComplexAutoSequence;
 import frc.robot.commands.AutoCommands.SitAndShootHigh;
 import frc.robot.commands.AutoCommands.SitAndShootLow;
 import frc.robot.commands.DriveCommands.ArcadeDriveCommand;
@@ -156,6 +157,11 @@ public class RobotContainer {
 
   public void generateAutonomousCommands() {
     
+    m_autoChooser.addOption("Taxi Only", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,1));
+    m_autoChooser.addOption("Shoot then Taxi", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,2));
+    m_autoChooser.addOption("Taxi, Intake, Shoot Twice (Upper Cargo)", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,3));
+
+    SmartDashboard.putData(m_autoChooser);
     
     
     // TODO lots of problems here....
