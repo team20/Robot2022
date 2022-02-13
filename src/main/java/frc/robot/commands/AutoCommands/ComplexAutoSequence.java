@@ -36,7 +36,7 @@ public class ComplexAutoSequence extends SequentialCommandGroup {
             // Taxi, Intake, Shoot Twice (Upper Cargo)
             case 3: 
                 addCommands(new Taxi(driveSubsystem,3),
-                new IntakeCommand(),
+                //new IntakeCommand(),
                 new SitAndShootHigh(flywheelSubsystem,hoodSubsystem,indexerSubsystem),
                 // Wait command
                 new SitAndShootHigh(flywheelSubsystem,hoodSubsystem,indexerSubsystem)
@@ -45,13 +45,13 @@ public class ComplexAutoSequence extends SequentialCommandGroup {
             // Collect and shoot bottom two balls.
             case 4:
                 addCommands(new Taxi(driveSubsystem,3),
-                new IntakeCommand(),
+                //new IntakeCommand(),
                 new SitAndShootHigh(flywheelSubsystem,hoodSubsystem,indexerSubsystem),
                 // Wait
                 new SitAndShootHigh(flywheelSubsystem,hoodSubsystem,indexerSubsystem),
                 new Turn(driveSubsystem, 300),
                 new Taxi(driveSubsystem, 3),
-                new IntakeCommand(),
+                //new IntakeCommand(),
                 new SitAndShootHigh(flywheelSubsystem,hoodSubsystem,indexerSubsystem)
                 );
             
