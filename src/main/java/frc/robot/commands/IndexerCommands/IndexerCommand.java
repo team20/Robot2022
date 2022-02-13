@@ -22,7 +22,11 @@ public class IndexerCommand extends CommandBase {
     //manually run indexer forward
     CMD_FWD_MAN,
     //manually run indexer backward
-    CMD_REV_MAN
+    CMD_REV_MAN,
+
+    CMD_WAIT_RTF,
+
+    CMD_TO_EXPECTED_POSITION
   };
 
   
@@ -53,8 +57,10 @@ public class IndexerCommand extends CommandBase {
   public void initialize() {
     if(m_operation == Operation.CMD_ADV){
       m_desiredIndexerState = m_indexerSubsystem.getAdvanceTargetState();
-    }else{
-        m_desiredIndexerState = m_indexerSubsystem.getReverseTargetState(m_keepBallRTF);
+    } else if(m_operation == Operation.CMD_REV){
+      m_desiredIndexerState = m_indexerSubsystem.getReverseTargetState(m_keepBallRTF);
+    } else if(m_operation == Operation.CMD_TO_EXPECTED_POSITION){
+      m_desiredIndexerState = m_indexerSubsystem.getCurrTargetState();
     }
     m_startTime = Instant.now();
     
@@ -73,8 +79,10 @@ public class IndexerCommand extends CommandBase {
         m_indexerSubsystem.setSpeed(-1); //TODO find speed
       } else if(m_operation == Operation.CMD_FWD_MAN){
         m_indexerSubsystem.setSpeed(1); //TODO find speed
-      }else{
+      }else if(m_operation == Operation.CMD_REV_MAN){
         m_indexerSubsystem.setSpeed(-1); //TODO find speed
+      }else if(m_operation == Operation.CMD_TO_EXPECTED_POSITION){
+        m_indexerSubsystem.setSpeed(m_indexerSubsystem.getLastSpeed());
       }
   }
 
@@ -89,18 +97,25 @@ public class IndexerCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if(m_operation == Operation.CMD_ADV || m_operation == Operation.CMD_REV || m_operation == Operation.CMD_TO_EXPECTED_POSITION){
+      //amount of time elapsed since we started the command
+      double elapsed = Duration.between(m_startTime, Instant.now()).toMillis();
+          
+      //max time to run to get to a state(will be ignored if controlled manually)
+      double max_duration = 2000;
 
-    //amount of time elapsed since we started the command
-    double elapsed = Duration.between(m_startTime, Instant.now()).toMillis();
-    
-    //max time to run to get to a state(will be ignored if controlled manually)
-    double max_duration = 2000;
-    
-    //finish when we reach our target state or timeout
-    if(elapsed > max_duration && !((m_operation == Operation.CMD_FWD_MAN) || (m_operation == Operation.CMD_REV_MAN))){
-      return true;
+      //finish when we reach our target state or timeout
+      if(elapsed > max_duration){
+        return true;
+      }
+      return m_indexerSubsystem.atTargetState();
+    } else if(m_operation == Operation.CMD_FWD_MAN || m_operation == Operation.CMD_REV_MAN){
+      return false;
+    } else if(m_operation == Operation.CMD_WAIT_RTF){
+      return m_indexerSubsystem.gamePieceRTF();
     }
-    return m_indexerSubsystem.atTargetState();
+    return true;
+    
   }
 
 }

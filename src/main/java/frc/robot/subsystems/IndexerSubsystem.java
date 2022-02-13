@@ -50,6 +50,9 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     private byte orState = 00000100;
     
     private final int kRTSThreshold = 100;
+
+    private double lastSpeed = 0;
+
     public IndexerSubsystem() {
 		// m_motor.setNeutralMode(NeutralMode.Coast);
 		// m_motor.enableVoltageCompensation(true);
@@ -116,6 +119,9 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
 
     public void setSpeed(double speed){
         m_motor.set(speed);
+        if(speed !=0){
+            lastSpeed = speed;
+        }
     }
     
     public void reset(){
@@ -186,6 +192,9 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     }
     public String getColorString(){
         return m_colorString;
+    }
+    public double getLastSpeed(){
+        return lastSpeed;
     }
     public void configureShuffleboard(){
         ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Color");

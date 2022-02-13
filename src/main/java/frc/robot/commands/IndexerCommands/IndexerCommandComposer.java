@@ -51,4 +51,17 @@ public class IndexerCommandComposer {
                     new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_ADV));
         }
     }
+    //public static Command prep(IndexerSubsystem indexerSubsystem){
+    //    return new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_TO_EXPECTED_POSITION);
+    //}
+    public static Command getReadyToShoot(IndexerSubsystem indexerSubsystem){
+        if (indexerSubsystem.gamePieceRTS()) {
+            return new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_TO_EXPECTED_POSITION);
+        } else if (indexerSubsystem.gamePieceAtCenter()) {
+            return new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_ADV);
+        } else {
+            return new SequentialCommandGroup(new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_ADV),
+                    new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_ADV));
+        }
+    }
 }

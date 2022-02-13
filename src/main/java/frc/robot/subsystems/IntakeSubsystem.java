@@ -12,6 +12,8 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.ShuffleboardLogging;
 
 public class IntakeSubsystem extends SubsystemBase implements ShuffleboardLogging {
+	private static IntakeSubsystem s_intakeSubsystem;
+	public static IntakeSubsystem get(){return s_intakeSubsystem;} 
 
 	private final VictorSPX m_motor = new VictorSPX(IntakeConstants.kMotorPort);
 
