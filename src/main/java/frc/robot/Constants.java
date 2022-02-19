@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.SPI;
 public final class Constants {
 
 	public static final class ArduinoConstants {
-		public static final int kAddress = 10;
+		public static final int kAddress = 23;
 		public static final double kDistanceP = 0;
 		public static final double kDistanceI = 0;
 		public static final double kDistanceD = 0;
@@ -32,16 +32,22 @@ public final class Constants {
 		public static final int kWriteShooterLEDMode = 2;
 		public static final int kWriteShooterLEDValue = 3;
 
-		public static final class MainLEDModes {
+		public static final class LEDModes {
 			public static final byte kOff = 0;
 			public static final byte kChasing = 1;
 			public static final byte kSolid = 2;
 			public static final byte kColorWipe = 3;
 		}
 
-		public static final class ShooterLEDModes {
+		public static final class LEDColors {
 			public static final byte kOff = 0;
-			public static final byte kFlywheelPercent = 1;
+			public static final byte kRed = 1;
+			public static final byte kOrange = 2;
+			public static final byte kYellow = 3;
+			public static final byte kGreen = 4;
+			public static final byte kBlue = 5;
+			public static final byte kPurple = 6;
+			public static final byte kWhite = 7;
 		}
 	}
 
@@ -84,14 +90,14 @@ public final class Constants {
 	}
 
 	public static final class DriveConstants {
-		public static final int kFrontLeftPort = 40;
+		public static final int kFrontLeftPort = 10;
 		public static final boolean kFrontLeftInvert = true;
-		public static final int kBackLeftPort = 30;
+		public static final int kBackLeftPort = 20;
 		public static final boolean kBackLeftOppose = false;
 
-		public static final int kFrontRightPort = 10;
+		public static final int kFrontRightPort = 40;
 		public static final boolean kFrontRightInvert = false;
-		public static final int kBackRightPort = 20;
+		public static final int kBackRightPort = 30;
 		public static final boolean kBackRightOppose = false;
 
 		public static final int kSmartCurrentLimit = 60;
@@ -203,7 +209,7 @@ public final class Constants {
 	}
 
 	public static final class IndexerConstants {
-    public static final int kMotorPort = 0;
+    public static final int kMotorPort = 23;
 		public static final boolean kInvert = false;
 		public static final int kSmartCurrentLimit = 60;
 		public static final double kP = 0; // TODO: tune PID
@@ -227,12 +233,13 @@ public final class Constants {
 	}
 
 	public static final class IntakeArmConstants {
+		public static final int kCountsPerRevolution = 8192;
 		public static final double kAllowedError = 0.2;
 		public static final double kMinEncoderValue = 0.0;
 		public static final double kMaxEncoderValue = 42.0;
 		public static final double kMinAngle = 24.36;
 		public static final double kMaxAngle = 77.64;
-		public static final int kMotorPort = 0;
+		public static final int kMotorPort = 24;
 		public static final boolean kInvert = false;
 		public static final int kSmartCurrentLimit = 0;
 		public static final double kP = 0; // TODO: tune PID
@@ -251,7 +258,7 @@ public final class Constants {
 
 
 	public static final class IntakeConstants {
-		public static final int kMotorPort = 0;
+		public static final int kMotorPort = 25;
 		public static final boolean kInvert = false;
 	}
 
@@ -274,8 +281,8 @@ public final class Constants {
 	}
 
 	public static final class SlideHookConstants {
-		public static final int kMasterPort = 10;
-		public static final int kFollowerPort = 20;
+		public static final int kMasterPort = 26;
+		public static final int kFollowerPort = 27;
 		public static final boolean kMasterInvert = false;
 		public static final boolean kFollowerOppose = false;
 		public static final int kSmartCurrentLimit = 60;// TODO: change
@@ -306,8 +313,8 @@ public final class Constants {
 	}
 
 	public static final class TelescopeHookConstants {
-		public static final int kMasterPort = 10;
-		public static final int kFollowerPort = 20;
+		public static final int kMasterPort = 28;
+		public static final int kFollowerPort = 29;
 		public static final boolean kMasterInvert = false;
 		public static final boolean kFollowerOppose = false;
 		public static final int kSmartCurrentLimit = 60;// TODO: change
@@ -332,6 +339,12 @@ public final class Constants {
 		public static final double kControlled = 35;// inches
 		public static final double kDisengageFromControlledPosition = 30;// inches
 
+	}
+
+	public static final class LoggingConstants {
+		// Arduino, Arm, Carousel, Climber, Drive, Feeder, Flywheel, Hood, Intake,
+		// Limelight
+		public static final boolean[] kSubsystems = { true, true, true, true, true, true, true, true, true, true};
 	}
 
 	public enum FieldLocation {

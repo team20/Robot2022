@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
@@ -19,10 +21,10 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FieldLocation;
-import frc.robot.Constants.ArduinoConstants.MainLEDModes;
-import frc.robot.Constants.ArduinoConstants.ShooterLEDModes;
+import frc.robot.Constants.LoggingConstants;
+import frc.robot.Constants.ArduinoConstants.LEDModes;
+import frc.robot.Constants.ArduinoConstants.LEDColors;
 import frc.robot.Constants.ControllerConstants.Axis;
-import frc.robot.commands.ArduinoCommands.UpdateLEDsCommand;
 import frc.robot.commands.AutoCommands.SitAndShootHigh;
 import frc.robot.commands.AutoCommands.SitAndShootLow;
 import frc.robot.commands.DriveCommands.ArcadeDriveCommand;
@@ -67,14 +69,15 @@ public class RobotContainer {
   // shuffleboard logging (driver visuals) TODO actually configure this to be
   // useful
   private final ShuffleboardLogging[] m_subsystems = { m_driveSubsystem,
-      m_flywheelSubsystem, m_hoodSubsystem,
-      m_limelightSubsystem
-  };
+      m_flywheelSubsystem, m_hoodSubsystem, m_limelightSubsystem };
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+
+    configureShuffleboard();
+
     m_autoChooser.addOption("Sit and shoot high",
         new SitAndShootHigh(m_flywheelSubsystem, m_hoodSubsystem, m_indexerSubsystem));
     m_autoChooser.addOption("Sit and shoot low",
@@ -97,28 +100,17 @@ public class RobotContainer {
 
     SmartDashboard.putData(m_autoChooser);
 
-    m_arduinoSubsystem.setDefaultCommand(
-        new UpdateLEDsCommand(m_arduinoSubsystem, () -> {
-          return MainLEDModes.kChasing;
-        },
-            () -> {
-              return 0.0;
-            }, () -> {
-              return ShooterLEDModes.kOff;
-            }, () -> {
-              return 0.0;
-            }));
-
     configureButtonBindings();
   }
 
   private void configureButtonBindings() {
-    
-    // new JoystickButton(m_driverController, 5).whenHeld(new SlideHookMoveCommand(m_slideHookSubsystem, .1));
-    // new JoystickButton(m_driverController, 5).whenHeld(new SlideHookPositionCommand(m_slideHookSubsystem, 1));
+
+    // new JoystickButton(m_driverController, 5).whenHeld(new
+    // SlideHookMoveCommand(m_slideHookSubsystem, .1));
+    // new JoystickButton(m_driverController, 5).whenHeld(new
+    // SlideHookPositionCommand(m_slideHookSubsystem, 1));
 
     // get distance to target from limelight and then adjust the rpm and angle of
-    // the shooter
     new POVButton(m_operatorController, 180).whenHeld(new SequentialCommandGroup(
         new LimelightCommand(m_limelightSubsystem, m_driveSubsystem, 0, m_limelightSubsystem.getDistance()),
         new ParallelCommandGroup(new ShootSetupCommand(
@@ -128,10 +120,12 @@ public class RobotContainer {
                 m_indexerSubsystem, m_flywheelSubsystem::atSetpoint))));
 
     m_driveSubsystem.setDefaultCommand(
-        new ArcadeDriveCommand(m_arduinoSubsystem, m_driveSubsystem,
-            () -> -m_operatorController.getRawAxis(Axis.kLeftY),
+        new ArcadeDriveCommand(m_driveSubsystem, m_arduinoSubsystem, () -> -m_operatorController.getRawAxis(Axis.kLeftY),
             () -> m_operatorController.getRawAxis(Axis.kLeftTrigger),
             () -> m_operatorController.getRawAxis(Axis.kRightTrigger)));
+
+    // m_arduinoSubsystem.setDefaultCommand(
+    // new UpdateLEDsCommand();
 
   }
 
@@ -148,6 +142,14 @@ public class RobotContainer {
     // m_limelightSubsystem, m_driveSubsystem, 0,
     // m_limelightSubsystem.getDistance())); // last input is in units of
     // // inches
+  }
+
+  public void configureShuffleboard() {
+    for (int i = 0; i < m_subsystems.length; i++) {
+      if (LoggingConstants.kSubsystems[i]) {
+        m_subsystems[i].configureShuffleboard();
+      }
+    }
   }
 
   public Command getAutonomousCommand() {

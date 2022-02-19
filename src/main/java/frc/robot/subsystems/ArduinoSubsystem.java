@@ -1,13 +1,17 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArduinoConstants;
+import frc.robot.Constants.ArduinoConstants.LEDColors;
+import frc.robot.Constants.ArduinoConstants.LEDModes;
 
 public class ArduinoSubsystem extends SubsystemBase {
 	// PIDs
@@ -36,18 +40,29 @@ public class ArduinoSubsystem extends SubsystemBase {
 	 */
 	public ArduinoSubsystem() {
 		m_anglePid.setSetpoint(ArduinoConstants.kAngleSetpoint);
-		// m_anglePid.setTolerance(ArduinoConstants.kAngleTolerance);
+		//m_anglePid.setTolerance(ArduinoConstants.kAngleTolerance);
 		m_distancePid.setSetpoint(ArduinoConstants.kDistanceSetpoint);
-		// m_distancePid.setTolerance(ArduinoConstants.kDistanceTolerance);
+		//m_distancePid.setTolerance(ArduinoConstants.kDistanceTolerance);
 	}
+
+	public void periodic() {
+		update();
+
+	}
+
 	public void write() {
 		m_writeData[0] = m_mainLEDMode;
 		m_writeData[1] = m_mainLEDValue;
 		m_writeData[2] = m_shooterLEDMode;
 		m_writeData[3] = m_shooterLEDValue;
-	
-		System.out.println("LLLLL"+m_mainLEDMode);
+
+		// System.out.println("the main led MODE: " + m_mainLEDMode);
+		// System.out.println("the main led COLOR: " + m_mainLEDValue);
+		// System.out.println("the shooter led MODE: " + m_shooterLEDMode);
+		// System.out.println("the shooter led COLOR: " + m_shooterLEDValue);
+			
 		m_wire.writeBulk(m_writeData, m_writeData.length);
+		// System.out.println("aborted?: " + m_wire.writeBulk(m_writeData, m_writeData.length));
 	}
 
 	public void setMainLEDMode(byte mode) {
@@ -58,12 +73,12 @@ public class ArduinoSubsystem extends SubsystemBase {
 		m_shooterLEDMode = mode;
 	}
 
-	public void setMainLEDValue(double value) {
-		m_mainLEDValue = (byte) Math.round(value);
+	public void setMainLEDValue(byte value) {
+		m_mainLEDValue = value;
 	}
 	
-	public void setShooterLEDValue(double value) {
-		m_shooterLEDValue = (byte) Math.round(value);
+	public void setShooterLEDValue(byte value) {
+		m_shooterLEDValue = value;
 	}
 
 	/**
@@ -83,14 +98,22 @@ public class ArduinoSubsystem extends SubsystemBase {
 	// /**
 	// * @return Whether both PIDs are at their setpoints.
 	// */
-	// public boolean atSetpoint() {
-	// return m_anglePid.atSetpoint() && m_distancePid.atSetpoint();
-	// }
+	public boolean atSetpoint() {
+		return m_anglePid.atSetpoint() && m_distancePid.atSetpoint();
+	}
 
 	/**
 	 * Updates I2C stuff.
 	 */
+
 	public void update() {
+		if (DriverStation.isDisabled()) {
+			setMainLEDMode(LEDModes.kOff);
+			setMainLEDValue(LEDColors.kOff);
+			setShooterLEDMode(LEDModes.kOff);
+			setShooterLEDValue(LEDColors.kOff);
+		}
+
 		read();
 		m_turnSpeed = -m_anglePid.calculate(m_xValue);
 		m_driveSpeed = -m_distancePid.calculate(m_distance);
@@ -105,7 +128,6 @@ public class ArduinoSubsystem extends SubsystemBase {
 		m_wire.read(ArduinoConstants.kAddress, m_readData.length, m_readData);
 		// set values from array to variables
 		m_targetInView = m_readData[ArduinoConstants.kReadTargetInView] == 1;
-		System.out.println("UiOIAWKDBOWAID "+m_targetInView);
 		m_xValue = 0;
 		for (int i : ArduinoConstants.kReadXValue)
 			m_xValue += m_readData[i];
