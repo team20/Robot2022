@@ -164,6 +164,20 @@ public final class Constants {
 				* DriveConstants.kWheelDiameterMeters * 60;
 
 		public static final double toBarPosition = 2;// inches
+
+		// NEW FROM AIDAN
+		public static final DifferentialDriveVoltageConstraint autoVoltageConstraint = 
+			new DifferentialDriveVoltageConstraint(
+				new SimpleMotorFeedforward(DriveConstants.ksVolts,
+				DriveConstants.kvVoltSecondsPerMeter,
+				DriveConstants.kaVoltSecondsSquaredPerMeter),
+				DriveConstants.kDriveKinematics,
+				10);
+
+		public static final TrajectoryConfig kTrajectoryConfig = new TrajectoryConfig(kMaxSpeedMetersPerSecond,kMaxAccelerationMetersPerSecondSquared)
+		.setKinematics(DriveConstants.kDriveKinematics)
+		.addConstraint(autoVoltageConstraint);
+
 	}
 
 	public static final class FlywheelConstants {
@@ -309,6 +323,7 @@ public final class Constants {
 		public static final double kTelescopeTouchingRung = 20;// inches
 
 		public static final double kControlled = 13;// inches
+		public static final double kHookVelocity=.5;
 
 	}
 

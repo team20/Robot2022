@@ -25,10 +25,12 @@ import frc.robot.Constants.LoggingConstants;
 import frc.robot.Constants.ArduinoConstants.LEDModes;
 import frc.robot.Constants.ArduinoConstants.LEDColors;
 import frc.robot.Constants.ControllerConstants.Axis;
+import frc.robot.commands.ArduinoCommands.UpdateLEDsCommand;
+import frc.robot.commands.AutoCommands.ComplexAutoSequence;
 import frc.robot.commands.AutoCommands.SitAndShootHigh;
 import frc.robot.commands.AutoCommands.SitAndShootLow;
 import frc.robot.commands.DriveCommands.ArcadeDriveCommand;
-import frc.robot.commands.LimelightCommands.LimelightCommand;
+import frc.robot.commands.LimelightCommands.LimelightTurnCommand;
 import frc.robot.commands.ShooterCommands.AutoIndexCommand;
 import frc.robot.commands.ShooterCommands.ShootSetupCommand;
 import frc.robot.subsystems.ArduinoSubsystem;
@@ -112,7 +114,7 @@ public class RobotContainer {
 
     // get distance to target from limelight and then adjust the rpm and angle of
     new POVButton(m_operatorController, 180).whenHeld(new SequentialCommandGroup(
-        new LimelightCommand(m_limelightSubsystem, m_driveSubsystem, 0, m_limelightSubsystem.getDistance()),
+        new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem),
         new ParallelCommandGroup(new ShootSetupCommand(
             m_flywheelSubsystem, m_hoodSubsystem, ((m_limelightSubsystem.getDistance() / 12.0) - (8.75 / 12.0)),
             "LINEAR"),
@@ -156,7 +158,18 @@ public class RobotContainer {
     return m_autoChooser.getSelected();
   }
 
-  public void generateAutonomousCommands() { // TODO lots of problems here....
+  public void generateAutonomousCommands() {
+    m_autoChooser.setDefaultOption("Shoot then Taxi", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,2));
+    
+    m_autoChooser.addOption("Taxi Only", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,1));
+    m_autoChooser.addOption("Shoot then Taxi", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,2));
+    m_autoChooser.addOption("Drive to Cargo, Shoot Twice", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,3));
+    m_autoChooser.addOption("Shoot Lower Two Cargo", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,4));
+
+    SmartDashboard.putData(m_autoChooser);
+    
+    
+    // TODO lots of problems here....
     // // An example trajectory to follow. All units in meters.
     // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
     // // Start at the origin facing the +X direction
