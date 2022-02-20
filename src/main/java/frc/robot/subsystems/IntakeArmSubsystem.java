@@ -8,6 +8,7 @@ import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -21,6 +22,7 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
     private final CANSparkMax m_motor = new CANSparkMax(IntakeArmConstants.kMotorPort, MotorType.kBrushless);
     private final RelativeEncoder m_encoder = m_motor.getEncoder();
     private final SparkMaxPIDController m_pidController = m_motor.getPIDController();
+    private final DigitalInput m_bumpSwitch = new DigitalInput(IntakeArmConstants.kBumpSwitchPort);
     private double m_setPosition = 0;
 
     /**
@@ -43,7 +45,8 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
         m_pidController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, IntakeArmConstants.kSlotID);
         m_pidController.setSmartMotionMaxAccel(IntakeArmConstants.kMaxAcel, IntakeArmConstants.kSlotID);
         m_pidController.setSmartMotionMaxVelocity(IntakeArmConstants.kMaxVelocity, IntakeArmConstants.kSlotID);
-        m_pidController.setSmartMotionAllowedClosedLoopError(IntakeArmConstants.kAllowedError, IntakeArmConstants.kSlotID);
+        m_pidController.setSmartMotionAllowedClosedLoopError(IntakeArmConstants.kAllowedError,
+                IntakeArmConstants.kSlotID);
         m_pidController.setSmartMotionMinOutputVelocity(IntakeArmConstants.kMinVelocity, IntakeArmConstants.kSlotID);
 
         resetEncoder();
@@ -96,6 +99,14 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
      * Zero the encoder position
      */
     public void resetEncoder() {
+        m_encoder.setPosition(0);
+        setPosition(0);
+    }
+
+    public void zeroTheArm() {
+        while (!m_bumpSwitch.get()) {
+            m_motor.set(0.2); // TODO might need to flip this the other way
+        }
         m_encoder.setPosition(0);
         setPosition(0);
     }

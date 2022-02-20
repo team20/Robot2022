@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -114,6 +115,13 @@ public class ArduinoSubsystem extends SubsystemBase {
 			setShooterLEDValue(LEDColors.kOff);
 		}
 
+		if (Timer.getFPGATimestamp() >= 120) {
+			setMainLEDMode(LEDModes.kBackForthTimer);
+			setMainLEDValue(LEDColors.kBlue);
+			setShooterLEDMode(LEDModes.kBackForthTimer);
+			setShooterLEDMode(LEDColors.kBlue);
+		}
+
 		read();
 		m_turnSpeed = -m_anglePid.calculate(m_xValue);
 		m_driveSpeed = -m_distancePid.calculate(m_distance);
@@ -155,6 +163,13 @@ public class ArduinoSubsystem extends SubsystemBase {
 	 */
 	public int getDistance() {
 		return m_distance;
+	}
+
+	public void resetLEDs() {
+		setMainLEDMode(LEDModes.kReset);
+		setMainLEDValue(LEDColors.kOff);
+		setShooterLEDMode(LEDModes.kReset);
+		setShooterLEDValue(LEDColors.kOff);
 	}
 
 }

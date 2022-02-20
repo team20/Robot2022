@@ -33,10 +33,14 @@ public final class Constants {
 		public static final int kWriteShooterLEDValue = 3;
 
 		public static final class LEDModes {
-			public static final byte kOff = 0;
-			public static final byte kChasing = 1;
+			public static final byte kReset = 0;
+			public static final byte kOff = 1;
 			public static final byte kSolid = 2;
-			public static final byte kColorWipe = 3;
+			public static final byte kChasing = 3;
+			public static final byte kTheaterLights = 4;
+			public static final byte kRedGreenGradient = 5;
+			public static final byte kBlueGreenGradient = 6;
+			public static final byte kBackForthTimer = 7;
 		}
 
 		public static final class LEDColors {
@@ -268,6 +272,12 @@ public final class Constants {
 		public static final double kMaxVelocity = 0;
 		public static final double kMinVelocity = 0;
 		public static final double kMinPosition = 0;
+		public static final double kInPosition = 0;
+		public static final double kOutPosition = 0;
+		public static final int kBumpSwitchPort = 0;
+		public static final double kBounceDownPosition = 0;
+		public static final double kBounceUpPosition = 0;
+		public static final double kBounceTime = 0;
 	}
 
 

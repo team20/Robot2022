@@ -56,13 +56,14 @@ public class ArcadeDriveCommand extends CommandBase {
 
 		m_driveSubsystem.arcadeDrive(speedStraight, speedLeft, speedRight);
 		
-		if (speedStraight >= 0.25) {
-			new UpdateLEDsCommand(m_arduinoSubsystem, () -> LEDModes.kSolid,
-			() -> LEDColors.kPurple, () -> LEDModes.kOff, () -> LEDColors.kOff).execute();
-		} else {
-			new UpdateLEDsCommand(m_arduinoSubsystem, () -> LEDModes.kChasing,
-			() -> LEDColors.kGreen, () -> LEDModes.kOff, () -> LEDColors.kOff).execute();
-		}
+		// m_arduinoSubsystem.resetLEDs();
+		// if (speedStraight >= 0.25) {
+		// 	new UpdateLEDsCommand(m_arduinoSubsystem, () -> LEDModes.kSolid,
+		// 	() -> LEDColors.kPurple, () -> LEDModes.kOff, () -> LEDColors.kOff).execute();
+		// } else {
+		// 	new UpdateLEDsCommand(m_arduinoSubsystem, () -> LEDModes.kChasing,
+		// 	() -> LEDColors.kGreen, () -> LEDModes.kOff, () -> LEDColors.kOff).execute();
+		// }
 
 	}
 }

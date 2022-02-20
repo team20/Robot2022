@@ -47,7 +47,7 @@ public class CommandComposer {
         // base of the hub is 8.75" offset from the tape at the top
         double distanceBase = (m_limelightSubsystem.getDistance() - 8.75) / 12.0;
 
-        Command aimCommand = new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem);
+        Command aimCommand = new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem, m_arduinoSubsystem);
 
         Command shootCommand = new SequentialCommandGroup(
                 ShootCommandComposer.getShootCommand(m_flywheelSubsystem, m_hoodSubsystem, distanceBase, shootClass),

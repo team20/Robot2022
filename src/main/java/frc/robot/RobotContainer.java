@@ -38,8 +38,11 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.subsystems.IntakeArmSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.SlideHookSubsystem;
+import frc.robot.subsystems.TelescopeHookSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -53,13 +56,16 @@ import frc.robot.subsystems.SlideHookSubsystem;
 
 public class RobotContainer {
   // subsystems
-  private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
-  private final LimelightSubsystem m_limelightSubsystem = new LimelightSubsystem();
-  private final HoodSubsystem m_hoodSubsystem = new HoodSubsystem();
-  private final FlywheelSubsystem m_flywheelSubsystem = new FlywheelSubsystem();
-  private final IndexerSubsystem m_indexerSubsystem = new IndexerSubsystem();
   private final ArduinoSubsystem m_arduinoSubsystem = new ArduinoSubsystem();
+  private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
+  private final FlywheelSubsystem m_flywheelSubsystem = new FlywheelSubsystem();
+  private final HoodSubsystem m_hoodSubsystem = new HoodSubsystem();
+  private final IndexerSubsystem m_indexerSubsystem = new IndexerSubsystem();
+  private final IntakeArmSubsystem m_intakeArmSubsystem = new IntakeArmSubsystem();
+  private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+  private final LimelightSubsystem m_limelightSubsystem = new LimelightSubsystem();
   private final SlideHookSubsystem m_slideHookSubsystem = new SlideHookSubsystem();
+  private final TelescopeHookSubsystem m_telescopeHookSubsystem = new TelescopeHookSubsystem();
 
   // controllers
   private final Joystick m_driverController = new Joystick(ControllerConstants.kDriverControllerPort);
@@ -101,34 +107,29 @@ public class RobotContainer {
     // shoot both with taxiing
 
     SmartDashboard.putData(m_autoChooser);
-
+    
     configureButtonBindings();
   }
 
   private void configureButtonBindings() {
 
-    // new JoystickButton(m_driverController, 5).whenHeld(new
-    // SlideHookMoveCommand(m_slideHookSubsystem, .1));
-    // new JoystickButton(m_driverController, 5).whenHeld(new
-    // SlideHookPositionCommand(m_slideHookSubsystem, 1));
-
+    // Driver
     // get distance to target from limelight and then adjust the rpm and angle of
     new POVButton(m_operatorController, 180).whenHeld(new SequentialCommandGroup(
-        new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem),
+        new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem, m_arduinoSubsystem),
         new ParallelCommandGroup(new ShootSetupCommand(
             m_flywheelSubsystem, m_hoodSubsystem, ((m_limelightSubsystem.getDistance() / 12.0) - (8.75 / 12.0)),
             "LINEAR"),
             new AutoIndexCommand(
                 m_indexerSubsystem, m_flywheelSubsystem::atSetpoint))));
-
+    // arcade drive
     m_driveSubsystem.setDefaultCommand(
-        new ArcadeDriveCommand(m_driveSubsystem, m_arduinoSubsystem, () -> -m_operatorController.getRawAxis(Axis.kLeftY),
+        new ArcadeDriveCommand(m_driveSubsystem, m_arduinoSubsystem,
+            () -> -m_operatorController.getRawAxis(Axis.kLeftY),
             () -> m_operatorController.getRawAxis(Axis.kLeftTrigger),
             () -> m_operatorController.getRawAxis(Axis.kRightTrigger)));
 
-    // m_arduinoSubsystem.setDefaultCommand(
-    // new UpdateLEDsCommand();
-
+    // operator
   }
 
   public void configureTestingBindings() {
@@ -159,16 +160,20 @@ public class RobotContainer {
   }
 
   public void generateAutonomousCommands() {
-    m_autoChooser.setDefaultOption("Shoot then Taxi", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,2));
-    
-    m_autoChooser.addOption("Taxi Only", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,1));
-    m_autoChooser.addOption("Shoot then Taxi", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,2));
-    m_autoChooser.addOption("Drive to Cargo, Shoot Twice", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,3));
-    m_autoChooser.addOption("Shoot Lower Two Cargo", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,4));
+    m_autoChooser.setDefaultOption("Shoot then Taxi",
+        new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem, m_hoodSubsystem, m_indexerSubsystem, 2));
+
+    m_autoChooser.addOption("Taxi Only",
+        new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem, m_hoodSubsystem, m_indexerSubsystem, 1));
+    m_autoChooser.addOption("Shoot then Taxi",
+        new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem, m_hoodSubsystem, m_indexerSubsystem, 2));
+    m_autoChooser.addOption("Drive to Cargo, Shoot Twice",
+        new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem, m_hoodSubsystem, m_indexerSubsystem, 3));
+    m_autoChooser.addOption("Shoot Lower Two Cargo",
+        new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem, m_hoodSubsystem, m_indexerSubsystem, 4));
 
     SmartDashboard.putData(m_autoChooser);
-    
-    
+
     // TODO lots of problems here....
     // // An example trajectory to follow. All units in meters.
     // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
