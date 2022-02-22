@@ -40,16 +40,13 @@ public class SlideHookCommand extends CommandBase {
         if(m_operation == Operation.CMD_POSITION){
             subsystem.setPosition(m_param/SlideHookConstants.kInchesPerQuarterTurn);
             System.out.println("Setting slide hook position to "+m_param+ " inches");
-        }else if (m_operation == Operation.CMD_MOVE){
+        }
+        else if (m_operation == Operation.CMD_MOVE){
             subsystem.setSpeed(m_param);
-        }else if(m_operation == Operation.CMD_TO_ANGLE){
+        }
+        else if(m_operation == Operation.CMD_TO_ANGLE){
             System.out.println("NAVX ANGLE IS "+m_gyro.getYaw());//TODO: might not be yaw depending on orientation of navx
-            if(m_gyro.getYaw()<m_param){
-                subsystem.setSpeed(SlideHookConstants.kHookVelocity);
-            }
-            else{
-                subsystem.setSpeed(0.0);
-            }
+            subsystem.setSpeed(m_param);
         }
         
     }
@@ -57,14 +54,13 @@ public class SlideHookCommand extends CommandBase {
     @Override
     public boolean isFinished(){
         if(m_operation == Operation.CMD_POSITION){
-            return true;
-        }else if(m_operation == Operation.CMD_MOVE){
-            return true;
-        }else if(m_operation == Operation.CMD_TO_ANGLE){
-            return m_gyro.getYaw() > m_param;
-        }else if(m_operation == Operation.CMD_POSITION_SETTLE){
             return SlideHookSubsystem.get().atSetpoint();
+        }else if(m_operation == Operation.CMD_TO_ANGLE){
+            return m_gyro.getYaw() >= m_param;//TODO: see if it is yaw
         }
         return true;
+    }
+    public void end(boolean interrupted){
+        SlideHookSubsystem.get().setSpeed(0.0);
     }
 }

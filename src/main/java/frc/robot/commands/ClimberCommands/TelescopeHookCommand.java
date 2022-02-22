@@ -42,12 +42,11 @@ public class TelescopeHookCommand extends CommandBase {
     @Override
     public boolean isFinished(){
         if(m_operation == Operation.CMD_POSITION){
-            return true;
-        } else if(m_operation == Operation.CMD_MOVE){
-            return true;
-        } else if(m_operation == Operation.CMD_POSITION_SETTLE){
             return TelescopeHookSubsystem.get().atSetpoint();
         }
         return true;
+    }
+    public void end(boolean interrupted){
+        TelescopeHookSubsystem.get().setSpeed(0.0);
     }
 }
