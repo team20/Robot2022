@@ -46,7 +46,7 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
 
         //System.out.println("limelight y angle" + calculateRollingAverage(getYAngle()));
 
-        System.out.println("distance is: " + distance);
+        //System.out.println("distance is: " + distance);
     }
 
     /**
