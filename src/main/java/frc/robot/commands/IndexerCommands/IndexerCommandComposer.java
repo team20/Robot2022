@@ -17,12 +17,12 @@ public class IndexerCommandComposer {
      * @param indexerSubsystem
      * @return command or command group to load a ball into the indexer
      */
-    public static Command getLoadCommand(IndexerSubsystem indexerSubsystem) {
-        if (indexerSubsystem.gamePieceRTS()) {
-            return new SequentialCommandGroup(new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_REV),
-                    new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_ADV));
+    public static Command getLoadCommand() {
+        if (IndexerSubsystem.get().gamePieceRTS()) {
+            return new SequentialCommandGroup(new IndexerCommand(IndexerCommand.Operation.CMD_REV),
+                    new IndexerCommand(IndexerCommand.Operation.CMD_ADV));
         } else {
-            return new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_ADV);
+            return new IndexerCommand(IndexerCommand.Operation.CMD_ADV);
         }
     }
 
@@ -39,16 +39,29 @@ public class IndexerCommandComposer {
      * @return command or command group to shoot a ball on the indexer side of
      *         things
      */
-    public static Command getShootCommand(IndexerSubsystem indexerSubsystem) {
-        if (indexerSubsystem.gamePieceRTS()) {
-            return new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_ADV);
-        } else if (indexerSubsystem.gamePieceAtCenter()) {
-            return new SequentialCommandGroup(new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_ADV),
-                    new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_ADV));
+    public static Command getShootCommand() {
+        if (IndexerSubsystem.get().gamePieceRTS()) {
+            return new IndexerCommand(IndexerCommand.Operation.CMD_ADV);
+        } else if (IndexerSubsystem.get().gamePieceAtCenter()) {
+            return new SequentialCommandGroup(new IndexerCommand(IndexerCommand.Operation.CMD_ADV),
+                    new IndexerCommand(IndexerCommand.Operation.CMD_ADV));
         } else {
-            return new SequentialCommandGroup(new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_ADV),
-                    new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_ADV),
-                    new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_ADV));
+            return new SequentialCommandGroup(new IndexerCommand(IndexerCommand.Operation.CMD_ADV),
+                    new IndexerCommand(IndexerCommand.Operation.CMD_ADV),
+                    new IndexerCommand(IndexerCommand.Operation.CMD_ADV));
+        }
+    }
+    //public static Command prep(IndexerSubsystem indexerSubsystem){
+    //    return new IndexerCommand(indexerSubsystem, IndexerCommand.Operation.CMD_TO_EXPECTED_POSITION);
+    //}
+    public static Command getReadyToShoot(){
+        if (IndexerSubsystem.get().gamePieceRTS()) {
+            return new IndexerCommand(null);
+        } else if (IndexerSubsystem.get().gamePieceAtCenter()) {
+            return new IndexerCommand(IndexerCommand.Operation.CMD_ADV);
+        } else {
+            return new SequentialCommandGroup(new IndexerCommand(IndexerCommand.Operation.CMD_ADV),
+                    new IndexerCommand(IndexerCommand.Operation.CMD_ADV));
         }
     }
 }

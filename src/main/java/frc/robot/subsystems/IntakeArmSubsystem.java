@@ -22,11 +22,20 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
     private final RelativeEncoder m_encoder = m_motor.getEncoder();
     private final SparkMaxPIDController m_pidController = m_motor.getPIDController();
     private double m_setPosition = 0;
+    public enum Position{
+        DOWN_POSITION,
+        UP_POSITION
+    }
+    private final double downPositionEncoderPosition = 0; //TODO find encoder position
+    private final double upPositionEncoderPosition = 0; //TODO find encoder position
 
+    private static IntakeArmSubsystem s_system;
+    public static IntakeArmSubsystem get(){return s_system;}
     /**
      * Initializes a new instance of the {@link ArmSubsystem} class.
      */
     public IntakeArmSubsystem() {
+        s_system = this;
         m_motor.restoreFactoryDefaults();
         m_motor.setInverted(IntakeArmConstants.kInvert);
         m_motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
@@ -51,6 +60,9 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
 
     public void periodic() {
         SmartDashboard.putNumber("Arm Position", getPosition());
+        if(atSetpoint()){
+            m_motor.stopMotor();
+        }
     }
 
     /**
@@ -91,13 +103,30 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
         m_setPosition = position;
         m_pidController.setReference(position, ControlType.kSmartMotion, IntakeArmConstants.kSlotID);
     }
-
+    /**
+     * @param position Setpoint (position)
+     */
+    public void setPosition(Position position) {
+        if(position == Position.DOWN_POSITION){
+            m_setPosition = downPositionEncoderPosition;
+        }else{
+            m_setPosition = upPositionEncoderPosition;
+        }
+        m_pidController.setReference(m_setPosition, ControlType.kSmartMotion, IntakeArmConstants.kSlotID);
+    }
     /**
      * Zero the encoder position
      */
     public void resetEncoder() {
         m_encoder.setPosition(0);
         setPosition(0);
+    }
+
+    public void setBrakeMode(){
+        m_motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    }
+    public void setCoastMode(){
+        m_motor.setIdleMode(CANSparkMax.IdleMode.kCoast);
     }
 
     public void configureShuffleboard() {

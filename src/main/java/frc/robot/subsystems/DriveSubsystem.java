@@ -28,10 +28,10 @@ import frc.robot.RobotContainer;
 import frc.robot.ShuffleboardLogging;
 import frc.robot.Constants.DriveConstants;
 
-public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging {
-	// private static DriveSubsystem s_system;
-	// public static DriveSubsystem get() {return s_system;}	
-
+public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging {	
+  
+        private static DriveSubsystem s_subsystem;
+        public static DriveSubsystem get(){return s_subsystem;}
         private final CANSparkMax m_frontLeft = new CANSparkMax(DriveConstants.kFrontLeftPort, MotorType.kBrushless);
         private final CANSparkMax m_frontRight = new CANSparkMax(DriveConstants.kFrontRightPort, MotorType.kBrushless);
         private final CANSparkMax m_backLeft = new CANSparkMax(DriveConstants.kBackLeftPort, MotorType.kBrushless);
@@ -52,8 +52,8 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
         private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
 
         public DriveSubsystem() {
-                //s_system = this;
 
+                s_subsystem = this;
                 m_frontLeft.restoreFactoryDefaults();
                 m_frontLeft.setInverted(DriveConstants.kFrontLeftInvert);
                 m_frontLeft.setIdleMode(IdleMode.kBrake);

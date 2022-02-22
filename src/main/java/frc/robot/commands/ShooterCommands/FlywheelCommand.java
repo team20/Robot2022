@@ -18,18 +18,21 @@ public class FlywheelCommand extends CommandBase {
   }
 
   /** Creates a new FlywheelCommand. */
-  public FlywheelCommand(FlywheelSubsystem flywheelSubsystem, Operation operation, double flywheelParam) {
-    m_flywheelSubsystem = flywheelSubsystem;
+  public FlywheelCommand(Operation operation, double flywheelParam) {
     m_flywheelParam = flywheelParam;
+    m_operation = operation;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_flywheelSubsystem);
+    addRequirements(FlywheelSubsystem.get());
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    System.out.println("STARTING FLYWHEEL");
+    System.out.println("VELOCITY: " + m_flywheelParam);
+    System.out.println("OPERATION: " + m_operation);
     if (m_operation == Operation.CMD_SET_VELOCITY) {
-      m_flywheelSubsystem.setVelocity(m_flywheelParam);
+      FlywheelSubsystem.get().setVelocity(m_flywheelParam);
     }
 
   }
@@ -51,7 +54,7 @@ public class FlywheelCommand extends CommandBase {
     if (m_operation == Operation.CMD_SET_VELOCITY) {
       return true;
     } else if (m_operation == Operation.CMD_SETTLE) {
-      return m_flywheelSubsystem.atSetpoint();
+      return FlywheelSubsystem.get().atSetpoint();
     }
     return true;
 
