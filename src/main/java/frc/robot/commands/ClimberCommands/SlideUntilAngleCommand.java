@@ -6,11 +6,12 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.SlideHookConstants;
 import frc.robot.subsystems.SlideHookSubsystem;
 
 public class SlideUntilAngleCommand extends CommandBase{
     private final SlideHookSubsystem m_slideHookSubsystem;
-    private final AHRS m_gyro = new AHRS(DriveConstants.kGyroPort);
+    private final double m_targetAngle;
 /**
  * 
  * @param slideHookSubsystem Slide hook subsystem to be used
@@ -18,10 +19,26 @@ public class SlideUntilAngleCommand extends CommandBase{
  */
     public SlideUntilAngleCommand(SlideHookSubsystem slideHookSubsystem, double targetAngle){
         m_slideHookSubsystem=slideHookSubsystem;
-
+        m_targetAngle=targetAngle;
         addRequirements(slideHookSubsystem);
     }
-    public void execute(){
+    public void initialize(){
 
+    }
+    public void execute(){
+        m_slideHookSubsystem.setSpeed(SlideHookConstants.kRunningSpeed);
+        System.out.println("angle is "+m_slideHookSubsystem.getHeading());
+    }
+    public boolean isFinished(){
+        if(m_slideHookSubsystem.getHeading()>m_targetAngle){
+            System.out.println("DONEODNOEONDOENDONE");
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    public void end (boolean interrupted){
+        m_slideHookSubsystem.setSpeed(0.0);
     }
 }

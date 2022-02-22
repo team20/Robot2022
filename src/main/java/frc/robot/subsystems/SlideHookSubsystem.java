@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController.AccelStrategy;
@@ -22,6 +23,8 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
 
     private final RelativeEncoder m_encoder = m_masterMotor.getEncoder();
     private final SparkMaxPIDController m_pidController = m_masterMotor.getPIDController();
+    private final AHRS m_gyro = new AHRS(SlideHookConstants.kGyroPort);
+    
     private double m_setPosition = 0;
 
     /**
@@ -67,7 +70,12 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
     public double getPosition() {
         return m_encoder.getPosition();
     }
-
+    /**
+     * @return The heading of the gyro (degrees)
+     */
+        public double getHeading() {
+            return m_gyro.getYaw() * (SlideHookConstants.kGyroReversed ? -1.0 : 1.0);
+    }
     /**
      * @return Current velocity (motor rotations/s)
      */
@@ -97,7 +105,7 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
      */
     public void setPosition(double position) {
         m_setPosition = position;
-        m_pidController.setReference(position, ControlType.kSmartMotion, SlideHookConstants.kSlotID);
+        m_pidController.setReference(position, ControlType.kPosition, SlideHookConstants.kSlotID);
     }
 
     /**
@@ -122,5 +130,7 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
                 .withWidget(BuiltInWidgets.kGraph);
         shuffleboardTab.addBoolean("At setpoint", () -> atSetpoint()).withSize(1, 1).withPosition(0, 2)
                 .withWidget(BuiltInWidgets.kBooleanBox);
+        shuffleboardTab.addNumber("Heading", () -> getHeading()).withSize(1, 1).withPosition(2, 2)
+                .withWidget(BuiltInWidgets.kTextView);
     }
 }

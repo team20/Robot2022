@@ -98,7 +98,7 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
      */
     public void setPosition(double position) {
         m_setPosition = position;
-        m_pidController.setReference(position, ControlType.kSmartMotion, TelescopeHookConstants.kSlotID);
+        m_pidController.setReference(position, ControlType.kPosition, TelescopeHookConstants.kSlotID);
     }
 
     /**

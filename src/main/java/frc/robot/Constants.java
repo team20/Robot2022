@@ -84,14 +84,14 @@ public final class Constants {
 	}
 
 	public static final class DriveConstants {
-		public static final int kFrontLeftPort = 40;
+		public static final int kFrontLeftPort = 40000;
 		public static final boolean kFrontLeftInvert = true;
-		public static final int kBackLeftPort = 30;
+		public static final int kBackLeftPort = 30000;
 		public static final boolean kBackLeftOppose = false;
 
-		public static final int kFrontRightPort = 10;
+		public static final int kFrontRightPort = 100000;//TODO: put back to 10 when emily is done with her conniption fit
 		public static final boolean kFrontRightInvert = false;
-		public static final int kBackRightPort = 20;
+		public static final int kBackRightPort = 20000;
 		public static final boolean kBackRightOppose = false;
 
 		public static final int kSmartCurrentLimit = 60;
@@ -232,7 +232,7 @@ public final class Constants {
 		public static final double kMaxEncoderValue = 42.0;
 		public static final double kMinAngle = 24.36;
 		public static final double kMaxAngle = 77.64;
-		public static final int kMotorPort = 0;
+		public static final int kMotorPort = 800;
 		public static final boolean kInvert = false;
 		public static final int kSmartCurrentLimit = 0;
 		public static final double kP = 0; // TODO: tune PID
@@ -251,7 +251,7 @@ public final class Constants {
 
 
 	public static final class IntakeConstants {
-		public static final int kMotorPort = 0;
+		public static final int kMotorPort = 50;
 		public static final boolean kInvert = false;
 	}
 
@@ -279,8 +279,8 @@ public final class Constants {
 		public static final boolean kMasterInvert = false;
 		public static final boolean kFollowerOppose = false;
 		public static final int kSmartCurrentLimit = 60;// TODO: change
-		public static final double kP = 0; // TODO: tune PID
-		public static final double kI = 0;
+		public static final double kP = .003; // TODO: tune PID
+		public static final double kI = .0000;
 		public static final double kD = 0.0000;// 0.000_03;
 		public static final double kIz = 0.0;
 		public static final double kFF = .0;// 0.000_193;
@@ -290,28 +290,29 @@ public final class Constants {
 		public static final double kMinVelocity = 0;
 		public static final double kMaxAcel = 20_000;
 		public static final double kMaxVelocity = 10_000;
-		public static final double kGearRatio = 1 / 1; // TODO: change this
-		public static final double kAllowedError = .2;
-
+		public static final double kRunningSpeed=.1;
+		public static final double kAllowedError = 5;
+		public static final boolean kGyroReversed=false;
+		public static final SPI.Port kGyroPort=SPI.Port.kMXP;
 		public static final double kInchesPerQuarterTurn = .125; // .125 inches of travel per quarter turn (unit
 																	// position)
 		public static final double kStartPosition = 0;// inches
 		public static final double kToTelescopePosition = 2;// inches
 
-		public static final double kTelescopeBehindRung = 24;// inches
-		public static final double kTelescopeTouchingRung = 20;// inches
+		public static final double kTelescopeBehindRungAngle = 24;// degrees
+		public static final double kTelescopeTouchingRungAngle = 20;// degrees
 
 		public static final double kControlled = 13;// inches
 
 	}
 
 	public static final class TelescopeHookConstants {
-		public static final int kMasterPort = 10;
-		public static final int kFollowerPort = 20;
+		public static final int kMasterPort = 30;
+		public static final int kFollowerPort = 40;
 		public static final boolean kMasterInvert = false;
 		public static final boolean kFollowerOppose = false;
 		public static final int kSmartCurrentLimit = 60;// TODO: change
-		public static final double kP = 0; // TODO: tune PID
+		public static final double kP = .003; // TODO: tune PID
 		public static final double kI = 0;
 		public static final double kD = 0.0000;// 0.000_03;
 		public static final double kIz = 0.0;
@@ -323,7 +324,7 @@ public final class Constants {
 		public static final double kMaxAcel = 20_000;
 		public static final double kMaxVelocity = 10_000;
 		public static final double kGearRatio = 1 / 2.4; // TODO: change this
-		public static final double kAllowedError = .2;
+		public static final double kAllowedError = 5;
 
 		public static final double kExtendedPosition = 40;// inches
 		public static final double kRetractedPosition = 0;// inches

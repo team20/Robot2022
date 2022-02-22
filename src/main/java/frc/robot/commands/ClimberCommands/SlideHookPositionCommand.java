@@ -27,5 +27,13 @@ public class SlideHookPositionCommand extends CommandBase {
     public void execute() {
         m_slideHookSubsystem.setPosition(m_inches/SlideHookConstants.kInchesPerQuarterTurn);
         System.out.println("Setting slide hook position to "+m_inches+ " inches");
+        System.out.println("currentlyy att "+m_slideHookSubsystem.getPosition());
+    }
+    public boolean isFinished(){
+        return m_slideHookSubsystem.atSetpoint();
+    }
+    public void end(boolean interruped){
+        System.out.println("stopping slide");
+        m_slideHookSubsystem.setSpeed(0.0);
     }
 }

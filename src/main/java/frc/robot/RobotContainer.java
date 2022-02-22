@@ -25,10 +25,12 @@ import frc.robot.Constants.ControllerConstants.Axis;
 import frc.robot.commands.ArduinoCommands.UpdateLEDsCommand;
 import frc.robot.commands.AutoCommands.SitAndShootHigh;
 import frc.robot.commands.AutoCommands.SitAndShootLow;
+import frc.robot.commands.ClimberCommands.AutoClimbCommand;
 import frc.robot.commands.DriveCommands.ArcadeDriveCommand;
 import frc.robot.commands.LimelightCommands.LimelightCommand;
 import frc.robot.commands.ShooterCommands.AutoIndexCommand;
 import frc.robot.commands.ShooterCommands.ShootSetupCommand;
+import frc.robot.commands.ClimberCommands.SlideUntilAngleCommand;
 import frc.robot.subsystems.ArduinoSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
@@ -36,6 +38,7 @@ import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.SlideHookSubsystem;
+import frc.robot.subsystems.TelescopeHookSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -56,6 +59,7 @@ public class RobotContainer {
   private final IndexerSubsystem m_indexerSubsystem = new IndexerSubsystem();
   private final ArduinoSubsystem m_arduinoSubsystem = new ArduinoSubsystem();
   private final SlideHookSubsystem m_slideHookSubsystem = new SlideHookSubsystem();
+  private final TelescopeHookSubsystem m_telescopeHookSubsystem=new TelescopeHookSubsystem();
 
   // controllers
   private final Joystick m_driverController = new Joystick(ControllerConstants.kDriverControllerPort);
@@ -75,10 +79,10 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    m_autoChooser.addOption("Sit and shoot high",
-        new SitAndShootHigh(m_flywheelSubsystem, m_hoodSubsystem, m_indexerSubsystem));
-    m_autoChooser.addOption("Sit and shoot low",
-        new SitAndShootLow(m_flywheelSubsystem, m_hoodSubsystem, m_indexerSubsystem));
+    // m_autoChooser.addOption("Sit and shoot high",
+    //     new SitAndShootHigh(m_flywheelSubsystem, m_hoodSubsystem, m_indexerSubsystem));
+    // m_autoChooser.addOption("Sit and shoot low",
+    //     new SitAndShootLow(m_flywheelSubsystem, m_hoodSubsystem, m_indexerSubsystem));
     // m_autoChooser.addOption("Taxi" , new Taxi(m_driveSubsystem));
     // m_autoChooser.addOption("Taxi, shoot high");
     // m_autoChooser.addOption("Shoot high, taxi");
@@ -95,19 +99,19 @@ public class RobotContainer {
     // shoot taxi pick up ball and shoot
     // shoot both with taxiing
 
-    SmartDashboard.putData(m_autoChooser);
+    // SmartDashboard.putData(m_autoChooser);
 
-    m_arduinoSubsystem.setDefaultCommand(
-        new UpdateLEDsCommand(m_arduinoSubsystem, () -> {
-          return MainLEDModes.kChasing;
-        },
-            () -> {
-              return 0.0;
-            }, () -> {
-              return ShooterLEDModes.kOff;
-            }, () -> {
-              return 0.0;
-            }));
+    // m_arduinoSubsystem.setDefaultCommand(
+    //     new UpdateLEDsCommand(m_arduinoSubsystem, () -> {
+    //       return MainLEDModes.kChasing;
+    //     },
+    //         () -> {
+    //           return 0.0;
+    //         }, () -> {
+    //           return ShooterLEDModes.kOff;
+    //         }, () -> {
+    //           return 0.0;
+    //         }));
 
     configureButtonBindings();
   }
@@ -119,19 +123,21 @@ public class RobotContainer {
 
     // get distance to target from limelight and then adjust the rpm and angle of
     // the shooter
-    new POVButton(m_operatorController, 180).whenHeld(new SequentialCommandGroup(
-        new LimelightCommand(m_limelightSubsystem, m_driveSubsystem, 0, m_limelightSubsystem.getDistance()),
-        new ParallelCommandGroup(new ShootSetupCommand(
-            m_flywheelSubsystem, m_hoodSubsystem, ((m_limelightSubsystem.getDistance() / 12.0) - (8.75 / 12.0)),
-            "LINEAR"),
-            new AutoIndexCommand(
-                m_indexerSubsystem, m_flywheelSubsystem::atSetpoint))));
+    new JoystickButton(m_driverController, 5).whenPressed(new AutoClimbCommand(m_slideHookSubsystem, m_telescopeHookSubsystem, m_driveSubsystem));
+    // new JoystickButton(m_driverController, 5).whenHeld(new SlideUntilAngleCommand(m_slideHookSubsystem, 40));
+    // new POVButton(m_operatorController, 180).whenHeld(new SequentialCommandGroup(
+    //     new LimelightCommand(m_limelightSubsystem, m_driveSubsystem, 0, m_limelightSubsystem.getDistance()),
+    //     new ParallelCommandGroup(new ShootSetupCommand(
+    //         m_flywheelSubsystem, m_hoodSubsystem, ((m_limelightSubsystem.getDistance() / 12.0) - (8.75 / 12.0)),
+    //         "LINEAR"),
+    //         new AutoIndexCommand(
+    //             m_indexerSubsystem, m_flywheelSubsystem::atSetpoint))));
 
-    m_driveSubsystem.setDefaultCommand(
-        new ArcadeDriveCommand(m_arduinoSubsystem, m_driveSubsystem,
-            () -> -m_operatorController.getRawAxis(Axis.kLeftY),
-            () -> m_operatorController.getRawAxis(Axis.kLeftTrigger),
-            () -> m_operatorController.getRawAxis(Axis.kRightTrigger)));
+    // m_driveSubsystem.setDefaultCommand(
+    //     new ArcadeDriveCommand(m_arduinoSubsystem, m_driveSubsystem,
+    //         () -> -m_operatorController.getRawAxis(Axis.kLeftY),
+    //         () -> m_operatorController.getRawAxis(Axis.kLeftTrigger),
+    //         () -> m_operatorController.getRawAxis(Axis.kRightTrigger)));
 
   }
 
