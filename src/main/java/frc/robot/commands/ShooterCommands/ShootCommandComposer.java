@@ -10,9 +10,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.LinearRangeFinder;
 import frc.robot.RangeFinder;
 import frc.robot.RegressionRangeFinder;
-import frc.robot.subsystems.FlywheelSubsystem;
-import frc.robot.subsystems.HoodSubsystem;
-
 public class ShootCommandComposer {
   public static Command getShootCommand(double distance, String shootClass) {
     RangeFinder distanceClass;
@@ -28,12 +25,12 @@ public class ShootCommandComposer {
 
     // set the setpoints
     ParallelCommandGroup setGroup = new ParallelCommandGroup(
-        new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, flywheelSetpoint)/*,
-        new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, hoodSetpoint)*/);
+        new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, flywheelSetpoint),
+        new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, hoodSetpoint));
     // wait for the setpoints
     ParallelCommandGroup settleGroup = new ParallelCommandGroup(
-        new FlywheelCommand(FlywheelCommand.Operation.CMD_SETTLE, 0)/*,
-        new HoodCommand(HoodCommand.Operation.CMD_SETTLE, 0)*/);
+        new FlywheelCommand(FlywheelCommand.Operation.CMD_SETTLE, 0),
+        new HoodCommand(HoodCommand.Operation.CMD_SETTLE, 0));
     // first set the setpoints, then wait for them to settle
     return new SequentialCommandGroup(setGroup, settleGroup);
   }
@@ -41,7 +38,7 @@ public class ShootCommandComposer {
   public static Command getShootStopCommand() {
 
     return new ParallelCommandGroup(
-        new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)/*,
-        new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0)*/);
+        new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
+        new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0));
   }
 }
