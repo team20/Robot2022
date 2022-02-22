@@ -7,50 +7,32 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.DeferredCommand;
 import frc.robot.commands.ClimberCommands.*;
 import frc.robot.commands.IndexerCommands.*;
 import frc.robot.commands.IntakeCommands.IntakeCommand;
 import frc.robot.commands.LimelightCommands.*;
 import frc.robot.commands.ShooterCommands.*;
-import frc.robot.subsystems.*;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.Constants.*;
-
 /** Add your docs here. */
 public class CommandComposer {
 
-    private ArduinoSubsystem m_arduinoSubsystem;
-    private DriveSubsystem m_driveSubsystem;
-    private FlywheelSubsystem m_flywheelSubsystem;
-    private HoodSubsystem m_hoodSubsystem;
-    private IndexerSubsystem m_indexerSubsystem;
-    private IntakeArmSubsystem m_intakeArmSubsystem;
-    private LimelightSubsystem m_limelightSubsystem;
 
-    public CommandComposer(ArduinoSubsystem arduinoSubsystem, DriveSubsystem driveSubsystem,
-            FlywheelSubsystem flywheelSubsystem, HoodSubsystem hoodSubsystem, IndexerSubsystem indexerSubsystem,
-            IntakeArmSubsystem intakeArmSubsystem, LimelightSubsystem limelightSubsystem) {
-        m_arduinoSubsystem = arduinoSubsystem;
-        m_driveSubsystem = driveSubsystem;
-        m_flywheelSubsystem = flywheelSubsystem;
-        m_hoodSubsystem = hoodSubsystem;
-        m_indexerSubsystem = indexerSubsystem;
-        m_intakeArmSubsystem = intakeArmSubsystem;
-        m_limelightSubsystem = limelightSubsystem;
-
-    }
-
-    public Command getAimAndShootCommand(String shootClass) {
-
+    public static Command getAimAndShootCommand(String shootClass) {
         // base of the hub is 8.75" offset from the tape at the top
-        double distanceBase = (m_limelightSubsystem.getDistance() - 8.75) / 12.0;
+        //double distanceBase = (LimelightSubsystem.get().getDistance() - 8.75) / 12.0;
 
-        Command aimCommand = new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem);
+        Command aimCommand = new LimelightTurnCommand(LimelightSubsystem.get(), DriveSubsystem.get());
 
-        Command startFlywheelAndPrepRTS = new SequentialCommandGroup(ShootCommandComposer.getShootCommand(m_flywheelSubsystem, m_hoodSubsystem, distanceBase, shootClass), IndexerCommandComposer.getReadyToShoot(m_indexerSubsystem));
-        Command shootCommand = new SequentialCommandGroup(startFlywheelAndPrepRTS, IndexerCommandComposer.getShootCommand(m_indexerSubsystem));
+        Command startFlywheelAndPrepRTS = new ParallelCommandGroup(new DeferredCommand(() -> (ShootCommandComposer.getShootCommand(10, shootClass))), new DeferredCommand(IndexerCommandComposer::getReadyToShoot));
+        Command shootCommand = new SequentialCommandGroup(startFlywheelAndPrepRTS, new DeferredCommand(IndexerCommandComposer::getShootCommand), ShootCommandComposer.getShootStopCommand());
 
         return new SequentialCommandGroup(aimCommand, shootCommand);
+    }
+    public static Command getSpitCommand(){
+        return new SequentialCommandGroup(new IndexerCommand(IndexerCommand.Operation.CMD_REV_MAN), new IndexerCommand(IndexerCommand.Operation.CMD_WAIT_RTF), new IndexerCommand(IndexerCommand.Operation.CMD_STOP), new IntakeCommand(IntakeCommand.Operation.CMD_RUN_REV));
     }
 
     public Command getClimbCommand() {
@@ -58,6 +40,7 @@ public class CommandComposer {
                 TelescopeHookCommand.Operation.CMD_POSITION_SETTLE, 0);
         SlideHookCommand slideHookWait = new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION_SETTLE, 0);
 
+        
         SequentialCommandGroup SlideToStart = new SequentialCommandGroup(
                 new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kStartPosition),
                 slideHookWait);
@@ -65,7 +48,7 @@ public class CommandComposer {
         SequentialCommandGroup TelescopeExtend = new SequentialCommandGroup(new TelescopeHookCommand(
                 TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kExtendedPosition), telescopeWait);
 
-        DriveDistanceCommand DriveToBar = new DriveDistanceCommand(m_driveSubsystem, DriveConstants.toBarPosition);
+        DriveDistanceCommand DriveToBar = new DriveDistanceCommand(DriveSubsystem.get(), DriveConstants.toBarPosition);
 
         SequentialCommandGroup TelescopeRetract = new SequentialCommandGroup(new TelescopeHookCommand(
                 TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kRetractedPosition), telescopeWait);
@@ -106,12 +89,13 @@ public class CommandComposer {
                 SlideToTelescopeBehind, TelescopeExtend, SlideToTelescopeTouching, ControlledMove, TelescopeRetract);
     }
 
-    public Command getLoadCommand(){
+    public static Command getLoadCommand(){
+        System.out.println("Getting Load Command");
         //Command prepIndexer = IndexerCommandComposer.prep(m_indexerSubsystem);
         IntakeCommand startIntake = new IntakeCommand(IntakeCommand.Operation.CMD_RUN_FWD);
-        IndexerCommand waitRTF = new IndexerCommand(m_indexerSubsystem, IndexerCommand.Operation.CMD_WAIT_RTF);
-        IntakeCommand stopIntake = new IntakeCommand(IntakeCommand.Operation.CMD_RUN_REV);
-        Command index = IndexerCommandComposer.getLoadCommand(m_indexerSubsystem);
+        IndexerCommand waitRTF = new IndexerCommand(IndexerCommand.Operation.CMD_WAIT_RTF);
+        IntakeCommand stopIntake = new IntakeCommand(IntakeCommand.Operation.CMD_STOP);
+        Command index = new DeferredCommand(IndexerCommandComposer::getLoadCommand);
 
         return new SequentialCommandGroup(startIntake, waitRTF, stopIntake, index);
     }

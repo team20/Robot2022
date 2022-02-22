@@ -24,15 +24,17 @@ public class IntakeCommand extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    System.out.println("starting intake command");
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if(m_operation == Operation.CMD_RUN_FWD){
-      IntakeSubsystem.get().setSpeed(1);
+      IntakeSubsystem.get().setSpeed(.5);
     }else if(m_operation == Operation.CMD_RUN_REV){
-      IntakeSubsystem.get().setSpeed(-1);
+      IntakeSubsystem.get().setSpeed(-.5);
     }else if(m_operation == Operation.CMD_STOP){
       IntakeSubsystem.get().setSpeed(0);
     }

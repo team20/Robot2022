@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IndexerSubsystem;
 
 public class IndexerCommand extends CommandBase {
-  private IndexerSubsystem m_indexerSubsystem;
   private byte m_desiredIndexerState;
   private Operation m_operation;
   public enum Operation{
@@ -23,10 +22,11 @@ public class IndexerCommand extends CommandBase {
     CMD_FWD_MAN,
     //manually run indexer backward
     CMD_REV_MAN,
-
+    //wait until a ball is ready to feed, then end
     CMD_WAIT_RTF,
-
-    CMD_TO_EXPECTED_POSITION
+    //try to move to the target position
+    CMD_TO_EXPECTED_POSITION,
+    CMD_STOP
   };
 
   
@@ -35,32 +35,33 @@ public class IndexerCommand extends CommandBase {
   private Instant m_startTime;
 
   /** Creates a new AdvanceIndexerCommand. */
-  public IndexerCommand(IndexerSubsystem indexerSubsystem, Operation operation) {
+  public IndexerCommand(Operation operation) {
 
     //save desired operation and the subsystem
     m_operation = operation;
-    m_indexerSubsystem = indexerSubsystem;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_indexerSubsystem);
+    addRequirements(IndexerSubsystem.get());
   }
   public IndexerCommand(IndexerSubsystem indexerSubsystem, boolean keepBallRTF, Operation operation) {
     //save desired operation, the indexer subsystem, and whether or not we want the sensors to reflect that if we move backwards, the RTF ball will stay in the same position
     m_operation = operation;
-    m_indexerSubsystem = indexerSubsystem;
     m_keepBallRTF = keepBallRTF;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_indexerSubsystem);
+    addRequirements(IndexerSubsystem.get());
   }
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    IndexerSubsystem indexerSubsystem = IndexerSubsystem.get();
     if(m_operation == Operation.CMD_ADV){
-      m_desiredIndexerState = m_indexerSubsystem.getAdvanceTargetState();
+      m_desiredIndexerState = indexerSubsystem.getAdvanceTargetState();
+      System.out.println("Desired state: " + (byte)m_desiredIndexerState);
     } else if(m_operation == Operation.CMD_REV){
-      m_desiredIndexerState = m_indexerSubsystem.getReverseTargetState(m_keepBallRTF);
+      m_desiredIndexerState = indexerSubsystem.getReverseTargetState(m_keepBallRTF);
+      System.out.println((byte)m_desiredIndexerState);
     } else if(m_operation == Operation.CMD_TO_EXPECTED_POSITION){
-      m_desiredIndexerState = m_indexerSubsystem.getCurrTargetState();
+      m_desiredIndexerState = indexerSubsystem.getCurrTargetState();
     }
     m_startTime = Instant.now();
     
@@ -70,28 +71,32 @@ public class IndexerCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+      IndexerSubsystem indexerSubsystem = IndexerSubsystem.get();
       //set speeds and/or target states depending on desired operations
       if(m_operation == Operation.CMD_ADV){
-        m_indexerSubsystem.setTargetState(m_desiredIndexerState);
-        m_indexerSubsystem.setSpeed(1); //TODO find speed
+        indexerSubsystem.setTargetState(m_desiredIndexerState);
+        indexerSubsystem.setSpeed(50); //TODO find speed
       }else if(m_operation == Operation.CMD_REV){
-        m_indexerSubsystem.setTargetState(m_desiredIndexerState);
-        m_indexerSubsystem.setSpeed(-1); //TODO find speed
+        indexerSubsystem.setTargetState(m_desiredIndexerState);
+        indexerSubsystem.setSpeed(-50); //TODO find speed
       } else if(m_operation == Operation.CMD_FWD_MAN){
-        m_indexerSubsystem.setSpeed(1); //TODO find speed
+        indexerSubsystem.setSpeed(50); //TODO find speed
       }else if(m_operation == Operation.CMD_REV_MAN){
-        m_indexerSubsystem.setSpeed(-1); //TODO find speed
+        indexerSubsystem.setSpeed(-50); //TODO find speed
       }else if(m_operation == Operation.CMD_TO_EXPECTED_POSITION){
-        m_indexerSubsystem.setSpeed(m_indexerSubsystem.getLastSpeed());
+        indexerSubsystem.setSpeed(indexerSubsystem.getLastSpeed());
+      }else if(m_operation == Operation.CMD_STOP){
+        indexerSubsystem.setSpeed(50);
       }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
     //stop the motor when the command finishes
-    m_indexerSubsystem.setSpeed(0);
+    if(!(m_operation == Operation.CMD_FWD_MAN || m_operation == Operation.CMD_REV_MAN)){
+      IndexerSubsystem.get().setSpeed(0);
+    }
   }
 
   // Returns true when the command should end.
@@ -102,17 +107,17 @@ public class IndexerCommand extends CommandBase {
       double elapsed = Duration.between(m_startTime, Instant.now()).toMillis();
           
       //max time to run to get to a state(will be ignored if controlled manually)
-      double max_duration = 2000;
+      double max_duration = 100000;
 
       //finish when we reach our target state or timeout
       if(elapsed > max_duration){
         return true;
       }
-      return m_indexerSubsystem.atTargetState();
+      return IndexerSubsystem.get().atTargetState();
     } else if(m_operation == Operation.CMD_FWD_MAN || m_operation == Operation.CMD_REV_MAN){
-      return false;
+      return true;
     } else if(m_operation == Operation.CMD_WAIT_RTF){
-      return m_indexerSubsystem.gamePieceRTF();
+      return IndexerSubsystem.get().gamePieceRTF();
     }
     return true;
     
