@@ -10,13 +10,12 @@ public class LimelightTurnCommand extends CommandBase {
 
     private final LimelightSubsystem m_limelightSubsystem;
     private final DriveSubsystem m_driveSubsystem;
-    
+
     private final PIDController m_turnController = new PIDController(
             LimelightConstants.kTurnP, LimelightConstants.kTurnI, LimelightConstants.kTurnD,
             LimelightConstants.kRefreshRate);
     private final double m_setpointAngle;
 
-   
     /**
      * Use the limelight to reach a desired angle to the powerport
      * 
@@ -24,20 +23,23 @@ public class LimelightTurnCommand extends CommandBase {
      * @param driveSubsystem     The drivetrain subsystem to be used
      */
 
-    public LimelightTurnCommand(LimelightSubsystem limelightSubsystem, DriveSubsystem driveSubsystem, double setpointAngle) {
+    public LimelightTurnCommand(LimelightSubsystem limelightSubsystem, DriveSubsystem driveSubsystem,
+            double setpointAngle) {
         m_limelightSubsystem = limelightSubsystem;
         m_driveSubsystem = driveSubsystem;
         m_setpointAngle = setpointAngle;
-    
+
         addRequirements(m_limelightSubsystem, m_driveSubsystem);
     }
-    public LimelightTurnCommand(LimelightSubsystem limelightSubsystem, DriveSubsystem driveSubsystem) {
-            m_limelightSubsystem = limelightSubsystem;
-            m_driveSubsystem = driveSubsystem;
-            m_setpointAngle = 0; //default setpoint angle is 0(directly in front of the robot)
 
-            addRequirements(m_limelightSubsystem, m_driveSubsystem);
+    public LimelightTurnCommand(LimelightSubsystem limelightSubsystem, DriveSubsystem driveSubsystem) {
+        m_limelightSubsystem = limelightSubsystem;
+        m_driveSubsystem = driveSubsystem;
+        m_setpointAngle = 0; // default setpoint angle is 0(directly in front of the robot)
+
+        addRequirements(m_limelightSubsystem, m_driveSubsystem);
     }
+
     /**
      * Set the tolerance and goal of the PIDs
      */
@@ -46,7 +48,7 @@ public class LimelightTurnCommand extends CommandBase {
 
         m_turnController.setTolerance(LimelightConstants.kTurnTolerance);
         m_turnController.setSetpoint(m_setpointAngle);
-    
+
     }
 
     /**
@@ -54,16 +56,18 @@ public class LimelightTurnCommand extends CommandBase {
      */
     public void execute() {
         double measurementAngle = m_limelightSubsystem.getXAngle();
-            double turnOutput = m_turnController.calculate(measurementAngle); 
-             // Apply max power limit
-            if (Math.abs(turnOutput) > .25) { turnOutput = .25 * Math.signum(turnOutput); }
-        
-            // Apply min power limit
-            if (Math.abs(turnOutput) < .05) {
-                turnOutput = Math.signum(turnOutput) * 0.05;
-            }
+        double turnOutput = m_turnController.calculate(measurementAngle);
+        // Apply max power limit
+        if (Math.abs(turnOutput) > .25) {
+            turnOutput = .25 * Math.signum(turnOutput);
+        }
 
-            m_driveSubsystem.tankDrive(turnOutput, -1 * turnOutput); // Flip these if the bot turns the wrong direction
+        // Apply min power limit
+        if (Math.abs(turnOutput) < .05) {
+            turnOutput = Math.signum(turnOutput) * 0.05;
+        }
+
+        m_driveSubsystem.tankDrive(turnOutput, -1 * turnOutput); // Flip these if the bot turns the wrong direction
     }
 
     /**
