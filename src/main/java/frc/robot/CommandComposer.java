@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -22,11 +24,11 @@ public class CommandComposer {
 
     public static Command getAimAndShootCommand(String shootClass) {
         // base of the hub is 8.75" offset from the tape at the top
-        //double distanceBase = (LimelightSubsystem.get().getDistance() - 8.75) / 12.0;
+        double distanceBase = (LimelightSubsystem.get().getDistance() - 8.75) / 12.0;
 
         Command aimCommand = new LimelightTurnCommand(LimelightSubsystem.get(), DriveSubsystem.get());
 
-        Command startFlywheelAndPrepRTS = new ParallelCommandGroup(new DeferredCommand(() -> (ShootCommandComposer.getShootCommand(10, shootClass))), new DeferredCommand(IndexerCommandComposer::getReadyToShoot));
+        Command startFlywheelAndPrepRTS = new ParallelCommandGroup(new DeferredCommand(() -> (ShootCommandComposer.getShootCommand(distanceBase, shootClass))), new DeferredCommand(IndexerCommandComposer::getReadyToShoot));
         Command shootCommand = new SequentialCommandGroup(startFlywheelAndPrepRTS, new DeferredCommand(IndexerCommandComposer::getShootCommand), ShootCommandComposer.getShootStopCommand());
 
         return new SequentialCommandGroup(aimCommand, shootCommand);
@@ -98,5 +100,9 @@ public class CommandComposer {
         Command index = new DeferredCommand(IndexerCommandComposer::getLoadCommand);
 
         return new SequentialCommandGroup(startIntake, waitRTF, stopIntake, index);
+    }
+    public static Command getManualFlywheelCommand(){
+        NetworkTableEntry flywheelSpeed = Shuffleboard.getTab("Testing").add("Flywheel RPMS",1).getEntry();
+        return new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, flywheelSpeed.getDouble(0));
     }
 }
