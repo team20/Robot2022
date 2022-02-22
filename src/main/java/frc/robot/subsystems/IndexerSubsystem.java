@@ -13,6 +13,7 @@ import frc.robot.ShuffleboardLogging;
 import frc.robot.Constants.IndexerConstants;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -68,6 +69,7 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
         i2cPort = I2C.Port.kMXP; //52
 
         m_colorSensor = new ColorSensorV3(i2cPort);
+        
         m_colorMatcher = new ColorMatch();
 
         m_colorMatcher.addColorMatch(kBlueTarget);

@@ -22,7 +22,7 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
     private final CANSparkMax m_motor = new CANSparkMax(IntakeArmConstants.kMotorPort, MotorType.kBrushless);
     private final RelativeEncoder m_encoder = m_motor.getEncoder();
     private final SparkMaxPIDController m_pidController = m_motor.getPIDController();
-    private final DigitalInput m_bumpSwitch = new DigitalInput(IntakeArmConstants.kBumpSwitchPort);
+    private final DigitalInput m_bumpSwitch = new DigitalInput(4); //IntakeArmConstants.kBumpSwitchPort
     private double m_setPosition = 0;
 
     /**

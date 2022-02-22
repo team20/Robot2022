@@ -25,6 +25,7 @@ import frc.robot.Constants.LoggingConstants;
 import frc.robot.Constants.ArduinoConstants.LEDModes;
 import frc.robot.Constants.ArduinoConstants.LEDColors;
 import frc.robot.Constants.ControllerConstants.Axis;
+import frc.robot.Constants.ControllerConstants.Button;
 import frc.robot.commands.ArduinoCommands.UpdateLEDsCommand;
 import frc.robot.commands.AutoCommands.ComplexAutoSequence;
 import frc.robot.commands.AutoCommands.SitAndShootHigh;
@@ -134,17 +135,10 @@ public class RobotContainer {
 
   public void configureTestingBindings() {
 
-    // new JoystickButton(m_operatorController, 2).whenPressed(new LimelightCommand(
-    // // 2 is x
-    // m_limelightSubsystem, m_driveSubsystem, 0, 178)); // last input is in units
-    // of inches
+    new JoystickButton(m_operatorController, Button.kX).whenPressed(new LimelightTurnCommand(
+    m_limelightSubsystem, m_driveSubsystem, m_arduinoSubsystem, 0));
 
-    // turning to 0 and aligning to the center of circle
-    // new JoystickButton(m_operatorController, 3).whenPressed(new LimelightCommand(
-    // // 3 is circle
-    // m_limelightSubsystem, m_driveSubsystem, 0,
-    // m_limelightSubsystem.getDistance())); // last input is in units of
-    // // inches
+    
   }
 
   public void configureShuffleboard() {

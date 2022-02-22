@@ -84,7 +84,7 @@ public class LimelightTurnCommand extends CommandBase {
     public void end(boolean interupted) {
         m_limelightSubsystem.turnOffLight();
         m_driveSubsystem.tankDrive(0, 0);
-        m_arduinoSubsystem.resetLEDs();
+        //m_arduinoSubsystem.resetLEDs();
         new UpdateLEDsCommand(m_arduinoSubsystem, () -> LEDModes.kTheaterLights,
         () -> LEDColors.kGreen, () -> LEDModes.kTheaterLights, () -> LEDColors.kGreen).execute(); //change this to Arya's theater lights
     }
