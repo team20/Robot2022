@@ -48,6 +48,7 @@ import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.SlideHookSubsystem;
+import frc.robot.subsystems.TelescopeHookSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -68,7 +69,7 @@ public class RobotContainer {
   private final IndexerSubsystem m_indexerSubsystem = new IndexerSubsystem();
   private final ArduinoSubsystem m_arduinoSubsystem = new ArduinoSubsystem();
   private final SlideHookSubsystem m_slideHookSubsystem = new SlideHookSubsystem();
-
+  private final TelescopeHookSubsystem m_telescopeHookSubsystem=new TelescopeHookSubsystem();
   // controllers
   private final Joystick m_driverController = new Joystick(ControllerConstants.kDriverControllerPort);
   private final Joystick m_operatorController = new Joystick(ControllerConstants.kOperatorControllerPort);
@@ -111,6 +112,7 @@ public class RobotContainer {
     SmartDashboard.putData(m_autoChooser);
 
     configureButtonBindings();
+    // configureTestingBindings();
   }
 
   private void configureButtonBindings() {
@@ -119,8 +121,10 @@ public class RobotContainer {
     // SlideHookMoveCommand(m_slideHookSubsystem, .1));
     // new JoystickButton(m_driverController, 5).whenHeld(new
     // SlideHookPositionCommand(m_slideHookSubsystem, 1));
-
+    new JoystickButton(m_driverController, 5).whenHeld(CommandComposer.getClimbCommand());
+    // new JoystickButton(m_driverController, 5).whenHeld(command)
     // get distance to target from limelight and then adjust the rpm and angle of
+
     new POVButton(m_operatorController, 180).whenHeld(new SequentialCommandGroup(
         new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem),
         new ParallelCommandGroup(new ShootSetupCommand(
@@ -156,7 +160,6 @@ public class RobotContainer {
     new POVButton(m_driverController, 270).whenReleased(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
     
     new JoystickButton(m_driverController, 3).whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP));
-    
     new JoystickButton(m_driverController, 2).whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN));
     
     new POVButton(m_operatorController, 0).whenPressed(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, 0.3));
