@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.HoodSubsystem;
 
 public class HoodCommand extends CommandBase {
-  private HoodSubsystem m_hoodSubsystem;
   private Operation m_operation;
   private double m_hoodParam;
 
@@ -18,19 +17,18 @@ public class HoodCommand extends CommandBase {
   }
 
   /** Creates a new HoodCommand. */
-  public HoodCommand(HoodSubsystem hoodSubsystem, Operation operation, double hoodParam) {
-    m_hoodSubsystem = hoodSubsystem;
+  public HoodCommand(Operation operation, double hoodParam) {
     m_operation = operation;
     m_hoodParam = hoodParam;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_hoodSubsystem);
+    addRequirements(HoodSubsystem.get());
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     if (m_operation == Operation.CMD_SET_POSITION) {
-      m_hoodSubsystem.setPosition(m_hoodParam);
+      HoodSubsystem.get().setPosition(m_hoodParam);
     }
   }
 
@@ -51,7 +49,7 @@ public class HoodCommand extends CommandBase {
     if (m_operation == Operation.CMD_SET_POSITION) {
       return true;
     } else if (m_operation == Operation.CMD_SETTLE) {
-      return m_hoodSubsystem.atSetpoint();
+      return HoodSubsystem.get().atSetpoint();
     }
     return true;
   }

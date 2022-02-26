@@ -17,6 +17,8 @@ import frc.robot.ShuffleboardLogging;
 
 public class HoodSubsystem extends SubsystemBase implements ShuffleboardLogging {
 
+    private static HoodSubsystem s_subsystem;
+    public static HoodSubsystem get(){return s_subsystem;}
     private final CANSparkMax m_motor = new CANSparkMax(HoodConstants.kMotorPort, MotorType.kBrushless);
     private final RelativeEncoder m_encoder = m_motor.getEncoder();
     private final SparkMaxPIDController m_pidController = m_motor.getPIDController();
@@ -26,6 +28,7 @@ public class HoodSubsystem extends SubsystemBase implements ShuffleboardLogging 
      * Initializes a new instance of the {@link HoodSubsystem} class.
      */
     public HoodSubsystem() {
+        s_subsystem = this;
         m_motor.restoreFactoryDefaults();
         m_motor.setInverted(HoodConstants.kInvert);
         m_motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
