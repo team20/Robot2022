@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArduinoConstants;
 import frc.robot.Constants.ArduinoConstants.LEDColors;
 import frc.robot.Constants.ArduinoConstants.LEDModes;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ArduinoSubsystem extends SubsystemBase {
 	// PIDs
@@ -64,7 +65,7 @@ public class ArduinoSubsystem extends SubsystemBase {
 
 		//m_wire.writeBulk(m_writeData);
 		m_wire.writeBulk(m_writeData, m_writeData.length);
-	
+		
 		System.out.println("aborted?: " + m_wire.writeBulk(m_writeData, m_writeData.length));
 	}
 
@@ -117,12 +118,12 @@ public class ArduinoSubsystem extends SubsystemBase {
 			setShooterLEDValue(LEDColors.kOff);
 		}
 
-		if (Timer.getFPGATimestamp() >= 120) {
-			setMainLEDMode(LEDModes.kBackForthTimer);
-			setMainLEDValue(LEDColors.kBlue);
-			setShooterLEDMode(LEDModes.kBackForthTimer);
-			setShooterLEDMode(LEDColors.kBlue);
-		}
+		// if (Timer.getFPGATimestamp() >= 120) {
+		// 	setMainLEDMode(LEDModes.kBackForthTimer);
+		// 	setMainLEDValue(LEDColors.kBlue);
+		// 	setShooterLEDMode(LEDModes.kBackForthTimer);
+		// 	setShooterLEDMode(LEDColors.kBlue);
+		// }
 
 		read();
 		m_turnSpeed = -m_anglePid.calculate(m_xValue);
@@ -167,11 +168,11 @@ public class ArduinoSubsystem extends SubsystemBase {
 		return m_distance;
 	}
 
-	// public void resetLEDs() {
-	// 	setMainLEDMode(LEDModes.kReset);
-	// 	setMainLEDValue(LEDColors.kOff);
-	// 	setShooterLEDMode(LEDModes.kReset);
-	// 	setShooterLEDValue(LEDColors.kOff);
-	// }
+	public void resetLEDs() {
+		setMainLEDMode(LEDModes.kReset);
+		setMainLEDValue(LEDColors.kOff);
+		setShooterLEDMode(LEDModes.kReset);
+		setShooterLEDValue(LEDColors.kOff);
+	}
 
 }
