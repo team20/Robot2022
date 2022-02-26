@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -12,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArduinoConstants;
 import frc.robot.Constants.ArduinoConstants.LEDColors;
 import frc.robot.Constants.ArduinoConstants.LEDModes;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ArduinoSubsystem extends SubsystemBase {
 	// PIDs
@@ -56,13 +58,15 @@ public class ArduinoSubsystem extends SubsystemBase {
 		m_writeData[2] = m_shooterLEDMode;
 		m_writeData[3] = m_shooterLEDValue;
 
-		// System.out.println("the main led MODE: " + m_mainLEDMode);
-		// System.out.println("the main led COLOR: " + m_mainLEDValue);
-		// System.out.println("the shooter led MODE: " + m_shooterLEDMode);
-		// System.out.println("the shooter led COLOR: " + m_shooterLEDValue);
-			
+		System.out.println("the main led MODE: " + m_mainLEDMode);
+		System.out.println("the main led COLOR: " + m_mainLEDValue);
+		System.out.println("the shooter led MODE: " + m_shooterLEDMode);
+		System.out.println("the shooter led COLOR: " + m_shooterLEDValue);
+
+		//m_wire.writeBulk(m_writeData);
 		m_wire.writeBulk(m_writeData, m_writeData.length);
-		// System.out.println("aborted?: " + m_wire.writeBulk(m_writeData, m_writeData.length));
+		
+		System.out.println("aborted?: " + m_wire.writeBulk(m_writeData, m_writeData.length));
 	}
 
 	public void setMainLEDMode(byte mode) {
@@ -114,6 +118,13 @@ public class ArduinoSubsystem extends SubsystemBase {
 			setShooterLEDValue(LEDColors.kOff);
 		}
 
+		// if (Timer.getFPGATimestamp() >= 120) {
+		// 	setMainLEDMode(LEDModes.kBackForthTimer);
+		// 	setMainLEDValue(LEDColors.kBlue);
+		// 	setShooterLEDMode(LEDModes.kBackForthTimer);
+		// 	setShooterLEDMode(LEDColors.kBlue);
+		// }
+
 		read();
 		m_turnSpeed = -m_anglePid.calculate(m_xValue);
 		m_driveSpeed = -m_distancePid.calculate(m_distance);
@@ -155,6 +166,13 @@ public class ArduinoSubsystem extends SubsystemBase {
 	 */
 	public int getDistance() {
 		return m_distance;
+	}
+
+	public void resetLEDs() {
+		setMainLEDMode(LEDModes.kReset);
+		setMainLEDValue(LEDColors.kOff);
+		setShooterLEDMode(LEDModes.kReset);
+		setShooterLEDValue(LEDColors.kOff);
 	}
 
 }

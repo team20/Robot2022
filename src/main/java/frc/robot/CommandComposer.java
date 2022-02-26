@@ -21,12 +21,12 @@ import frc.robot.Constants.*;
 /** Add your docs here. */
 public class CommandComposer {
 
-
     public static Command getAimAndShootCommand(String shootClass) {
         // base of the hub is 8.75" offset from the tape at the top
         double distanceBase = (LimelightSubsystem.get().getDistance() - 8.75) / 12.0;
 
         Command aimCommand = new LimelightTurnCommand(LimelightSubsystem.get(), DriveSubsystem.get());
+        //Command aimCommand = new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem, m_arduinoSubsystem);
 
         Command startFlywheelAndPrepRTS = new ParallelCommandGroup(new DeferredCommand(() -> (ShootCommandComposer.getShootCommand(distanceBase, shootClass))), new DeferredCommand(IndexerCommandComposer::getReadyToShoot));
         Command shootCommand = new SequentialCommandGroup(startFlywheelAndPrepRTS, new DeferredCommand(IndexerCommandComposer::getShootCommand), ShootCommandComposer.getShootStopCommand());
