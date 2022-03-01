@@ -125,7 +125,7 @@ public class RobotContainer {
     // Driver
     // get distance to target from limelight and then adjust the rpm and angle of
     new POVButton(m_operatorController, 180).whenHeld(new SequentialCommandGroup(
-        new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem, m_arduinoSubsystem),
+        new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem, m_arduinoSubsystem, 0),
         new ParallelCommandGroup(new ShootSetupCommand(
             m_flywheelSubsystem, m_hoodSubsystem, ((m_limelightSubsystem.getDistance() / 12.0) - (8.75 / 12.0)),
             "LINEAR"),

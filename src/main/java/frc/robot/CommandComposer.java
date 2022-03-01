@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -17,15 +18,19 @@ import frc.robot.commands.LimelightCommands.*;
 import frc.robot.commands.ShooterCommands.*;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
+import frc.robot.subsystems.ArduinoSubsystem;
 import frc.robot.Constants.*;
 /** Add your docs here. */
 public class CommandComposer {
 
     public static Command getAimAndShootCommand(String shootClass) {
+
+        ArduinoSubsystem m_arduinoSubsystem = new ArduinoSubsystem();
+
         // base of the hub is 8.75" offset from the tape at the top
         double distanceBase = (LimelightSubsystem.get().getDistance() - 8.75) / 12.0;
 
-        Command aimCommand = new LimelightTurnCommand(LimelightSubsystem.get(), DriveSubsystem.get());
+        Command aimCommand = new LimelightTurnCommand(LimelightSubsystem.get(), DriveSubsystem.get(), m_arduinoSubsystem, 0);
         //Command aimCommand = new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem, m_arduinoSubsystem);
 
         Command startFlywheelAndPrepRTS = new ParallelCommandGroup(new DeferredCommand(() -> (ShootCommandComposer.getShootCommand(distanceBase, shootClass))), new DeferredCommand(IndexerCommandComposer::getReadyToShoot));

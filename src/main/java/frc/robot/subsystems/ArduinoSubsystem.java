@@ -64,6 +64,12 @@ public class ArduinoSubsystem extends SubsystemBase {
 		System.out.println("the shooter led COLOR: " + m_shooterLEDValue);
 
 		//m_wire.writeBulk(m_writeData);
+
+		// m_writeData[0] = 3;
+		// m_writeData[1] = 3;
+		// m_writeData[2] = 3;
+		// m_writeData[3] = 3;
+
 		m_wire.writeBulk(m_writeData, m_writeData.length);
 		
 		System.out.println("aborted?: " + m_wire.writeBulk(m_writeData, m_writeData.length));

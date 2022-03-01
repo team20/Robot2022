@@ -62,7 +62,7 @@ public class ArcadeDriveCommand extends CommandBase {
 			() -> LEDColors.kPurple, () -> LEDModes.kOff, () -> LEDColors.kOff).execute();
 		} else {
 			System.out.println("supposedly setting to green chasing");
-			new UpdateLEDsCommand(m_arduinoSubsystem, () -> LEDModes.kChasing,
+			new UpdateLEDsCommand(m_arduinoSubsystem, () -> LEDModes.kTheaterLights,
 			() -> LEDColors.kGreen, () -> LEDModes.kOff, () -> LEDColors.kOff).execute();
 		}
 
