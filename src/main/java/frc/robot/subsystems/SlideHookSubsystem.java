@@ -84,10 +84,10 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
     }
 
     /**
-         * @return The heading of the gyro (degrees)
-         */
-        public double getHeading() {
-            return m_gyro.getYaw() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+     * @return The heading of the gyro (degrees)
+     */
+    public double getHeading() {
+        return m_gyro.getYaw() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
     }
 
     /**

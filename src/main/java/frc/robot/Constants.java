@@ -328,6 +328,8 @@ public final class Constants {
 		public static final double kControlled = 13;// inches
 		public static final double kHookVelocity=.5;
 
+		public static final double kUntilSlideEngaged=2;
+		public static final double kUntilTelescopeDown=5;
 	}
 
 	public static final class TelescopeHookConstants {
@@ -356,6 +358,7 @@ public final class Constants {
 		public static final double kControlled = 35;// inches
 		public static final double kDisengageFromControlledPosition = 30;// inches
 
+		public static final double kUntilTelescopeBehind=2;
 	}
 
 	public static final class LoggingConstants {

@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -41,8 +42,14 @@ public class CommandComposer {
         SlideHookCommand SlideToStart1 = new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kStartPosition);
         TelescopeHookCommand TelescopeExtend1=new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kExtendedPosition);
         // DriveDistanceCommand DriveToBar1 = new DriveDistanceCommand(DriveSubsystem.get(), DriveConstants.toBarPosition);
+        
         TelescopeHookCommand TelescopeRetract1 =new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kRetractedPosition);
         SlideHookCommand SlideToTelescope1 = new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kToTelescopePosition);
+        WaitCommand UntilTelescopeDown=new WaitCommand(SlideHookConstants.kUntilTelescopeDown);
+    SequentialCommandGroup SlideToTelescopeWithWait1=new SequentialCommandGroup(UntilTelescopeDown, SlideToTelescope1);
+        
+        // ParallelCommandGroup TelescopeToSlideTransfer=new ParallelCommandGroup(TelescopeRetract1, )
+
         TelescopeHookCommand TelescopeRelease1 = new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kDisengageFromRetractedPosition);
         SlideHookCommand SlideToTelescopeBehind1 = new SlideHookCommand(SlideHookCommand.Operation.CMD_TO_ANGLE, SlideHookConstants.kTelescopeBehindRung);
         TelescopeHookCommand TelescopeExtend2=new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kExtendedPosition);
@@ -55,7 +62,7 @@ public class CommandComposer {
         TelescopeHookCommand TelescopeRetractFromControlled1 = new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kDisengageFromControlledPosition);
 
         SlideHookCommand SlideToStart2 = new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kStartPosition);
-        TelescopeHookCommand TelescopeExtend3=new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kExtendedPosition);
+        TelescopeHookCommand TelescopeRetract2=new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kRetractedPosition);
         SlideHookCommand SlideToTelescope2 = new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kToTelescopePosition);
         TelescopeHookCommand TelescopeRelease2 = new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kDisengageFromRetractedPosition);
         SlideHookCommand SlideToTelescopeBehind2 = new SlideHookCommand(SlideHookCommand.Operation.CMD_TO_ANGLE, SlideHookConstants.kTelescopeBehindRung);
@@ -66,14 +73,37 @@ public class CommandComposer {
         SlideHookCommand SlideControlledExtend2 = new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kControlled);
         ParallelCommandGroup ControlledMove2 = new ParallelCommandGroup(TelescopeControlledRetract2,SlideControlledExtend2);
 
-        TelescopeHookCommand TelescopeRetract2 =new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kRetractedPosition);
+        TelescopeHookCommand TelescopeRetract3 =new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kRetractedPosition);
 
-        return new SequentialCommandGroup(TelescopeExtend1, 
+        return new SequentialCommandGroup( 
+        TelescopeExtend1, 
         //DriveToBar1, 
-        TelescopeRetract1, SlideToTelescope1, 
-        TelescopeRelease1, SlideToTelescopeBehind1, TelescopeExtend2, SlideToTelescopeTouching1, ControlledMove1, 
-        TelescopeRetractFromControlled1, SlideToStart2, TelescopeExtend3, SlideToTelescope2, TelescopeRelease2,
-        SlideToTelescopeBehind2, TelescopeExtend4, SlideToTelescopeTouching2, ControlledMove2, TelescopeRetract2);
+        TelescopeRetract1, //on mid bar
+        SlideToTelescope1, 
+        TelescopeRelease1, 
+        SlideToTelescopeBehind1, 
+        TelescopeExtend2, 
+        SlideToTelescopeTouching1, 
+
+
+
+        ControlledMove1, //climbing to high
+
+        TelescopeRetractFromControlled1,
+
+        SlideToStart2, 
+        TelescopeRetract2, 
+        SlideToTelescope2, 
+        TelescopeRelease2,
+        SlideToTelescopeBehind2, 
+        TelescopeExtend4, 
+        SlideToTelescopeTouching2, 
+
+
+
+        ControlledMove2, 
+
+        TelescopeRetract3);
     }
 
     public static Command getLoadCommand(){
