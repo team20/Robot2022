@@ -35,7 +35,7 @@ public class LimelightTurnCommand extends CommandBase {
 
         m_limelightSubsystem = limelightSubsystem;
         m_driveSubsystem = driveSubsystem;
-        m_arduinoSubsystem = arduinoSubsystem;
+        //m_arduinoSubsystem = arduinoSubsystem;
         m_setpointAngle = setpointAngle;
 
         addRequirements(m_limelightSubsystem, m_driveSubsystem);
@@ -95,8 +95,8 @@ public class LimelightTurnCommand extends CommandBase {
         m_limelightSubsystem.turnOffLight();
         m_driveSubsystem.tankDrive(0, 0);
         //m_arduinoSubsystem.resetLEDs();
-        new UpdateLEDsCommand(m_arduinoSubsystem, () -> LEDModes.kTheaterLights,
-        () -> LEDColors.kGreen, () -> LEDModes.kTheaterLights, () -> LEDColors.kGreen).execute(); //change this to Arya's theater lights
+        // new UpdateLEDsCommand(m_arduinoSubsystem, () -> LEDModes.kTheaterLights,
+        // () -> LEDColors.kGreen, () -> LEDModes.kTheaterLights, () -> LEDColors.kGreen).execute(); //change this to Arya's theater lights
     }
 
     public boolean isFinished() { // TODO: assumes you would only press the button once, no holding down
