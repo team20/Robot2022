@@ -118,12 +118,13 @@ public class RobotContainer {
     SmartDashboard.putData(m_autoChooser);
     
     configureButtonBindings();
+    // configureTestingBindings();
   }
 
   private void configureButtonBindings() {
 
-    // Driver
     // get distance to target from limelight and then adjust the rpm and angle of
+
     new POVButton(m_operatorController, 180).whenHeld(new SequentialCommandGroup(
         new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem),
         new ParallelCommandGroup(new ShootSetupCommand(
@@ -158,7 +159,6 @@ public class RobotContainer {
     new POVButton(m_driverController, 270).whenReleased(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
     
     new JoystickButton(m_driverController, 3).whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP));
-    
     new JoystickButton(m_driverController, 2).whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN));
     
     new POVButton(m_operatorController, 0).whenPressed(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, 0.3));
