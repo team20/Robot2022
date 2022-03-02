@@ -10,7 +10,18 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.LinearRangeFinder;
 import frc.robot.RangeFinder;
 import frc.robot.RegressionRangeFinder;
+
 public class ShootCommandComposer {
+
+  public enum Operation{
+    LIMELIGHT_LINEAR,
+    LIMELIGHT_REGRESSION,
+    PRESET_LAUNCHPAD,
+    PRESET_TARMAC,
+    PRESET_FENDER_HIGH,
+    PRESET_FENDER_LOW
+  }
+
   public static Command getShootCommand(double distance, String shootClass) {
     RangeFinder distanceClass;
     if (shootClass.equals("LINEAR")) {
@@ -19,7 +30,7 @@ public class ShootCommandComposer {
       // shootClass.equals("REGRESSION")
       distanceClass = new RegressionRangeFinder();
     }
-
+    
     double hoodSetpoint = distanceClass.getAngleAndRPM(distance)[0];
     double flywheelSetpoint = distanceClass.getAngleAndRPM(distance)[1];
 

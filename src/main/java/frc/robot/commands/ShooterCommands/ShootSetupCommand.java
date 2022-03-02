@@ -22,6 +22,7 @@ public class ShootSetupCommand extends CommandBase {
     private double m_distance;
     private boolean m_preset;
 
+    
     /**
      * Setup the flywheel and hood
      * 
