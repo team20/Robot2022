@@ -26,6 +26,7 @@ import frc.robot.Constants.LoggingConstants;
 import frc.robot.Constants.ArduinoConstants.LEDModes;
 import frc.robot.Constants.ArduinoConstants.LEDColors;
 import frc.robot.Constants.ControllerConstants.Axis;
+import frc.robot.Constants.ControllerConstants.Button;
 import frc.robot.commands.DeferredCommand;
 import frc.robot.commands.ArduinoCommands.UpdateLEDsCommand;
 import frc.robot.commands.AutoCommands.ComplexAutoSequence;
@@ -46,6 +47,8 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.subsystems.IntakeArmSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.SlideHookSubsystem;
 import frc.robot.subsystems.TelescopeHookSubsystem;
@@ -62,14 +65,17 @@ import frc.robot.subsystems.TelescopeHookSubsystem;
 
 public class RobotContainer {
   // subsystems
-  private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
-  private final LimelightSubsystem m_limelightSubsystem = new LimelightSubsystem();
-  private final HoodSubsystem m_hoodSubsystem = new HoodSubsystem();
-  private final FlywheelSubsystem m_flywheelSubsystem = new FlywheelSubsystem();
-  private final IndexerSubsystem m_indexerSubsystem = new IndexerSubsystem();
   private final ArduinoSubsystem m_arduinoSubsystem = new ArduinoSubsystem();
+  private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
+  private final FlywheelSubsystem m_flywheelSubsystem = new FlywheelSubsystem();
+  private final HoodSubsystem m_hoodSubsystem = new HoodSubsystem();
+  private final IndexerSubsystem m_indexerSubsystem = new IndexerSubsystem();
+  private final IntakeArmSubsystem m_intakeArmSubsystem = new IntakeArmSubsystem();
+  private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+  private final LimelightSubsystem m_limelightSubsystem = new LimelightSubsystem();
   private final SlideHookSubsystem m_slideHookSubsystem = new SlideHookSubsystem();
-  private final TelescopeHookSubsystem m_telescopeHookSubsystem=new TelescopeHookSubsystem();
+  private final TelescopeHookSubsystem m_telescopeHookSubsystem = new TelescopeHookSubsystem();
+
   // controllers
   private final Joystick m_driverController = new Joystick(ControllerConstants.kDriverControllerPort);
   private final Joystick m_operatorController = new Joystick(ControllerConstants.kOperatorControllerPort);
@@ -110,19 +116,13 @@ public class RobotContainer {
     // shoot both with taxiing
 
     SmartDashboard.putData(m_autoChooser);
-
+    
     configureButtonBindings();
     // configureTestingBindings();
   }
 
   private void configureButtonBindings() {
 
-    // new JoystickButton(m_driverController, 5).whenHeld(new
-    // SlideHookMoveCommand(m_slideHookSubsystem, .1));
-    // new JoystickButton(m_driverController, 5).whenHeld(new
-    // SlideHookPositionCommand(m_slideHookSubsystem, 1));
-    new JoystickButton(m_driverController, 5).whenHeld(CommandComposer.getClimbCommand());
-    // new JoystickButton(m_driverController, 5).whenHeld(command)
     // get distance to target from limelight and then adjust the rpm and angle of
 
     new POVButton(m_operatorController, 180).whenHeld(new SequentialCommandGroup(
@@ -132,15 +132,14 @@ public class RobotContainer {
             "LINEAR"),
             new AutoIndexCommand(
                 m_indexerSubsystem, m_flywheelSubsystem::atSetpoint))));
-
+    // arcade drive
     m_driveSubsystem.setDefaultCommand(
-        new ArcadeDriveCommand(m_driveSubsystem, m_arduinoSubsystem, () -> -m_operatorController.getRawAxis(Axis.kLeftY),
+        new ArcadeDriveCommand(m_driveSubsystem, m_arduinoSubsystem,
+            () -> -m_operatorController.getRawAxis(Axis.kLeftY),
             () -> m_operatorController.getRawAxis(Axis.kLeftTrigger),
             () -> m_operatorController.getRawAxis(Axis.kRightTrigger)));
 
-    // m_arduinoSubsystem.setDefaultCommand(
-    // new UpdateLEDsCommand();
-
+    // operator
   }
 
   public void configureTestingBindings() {
@@ -184,6 +183,10 @@ public class RobotContainer {
     // m_limelightSubsystem, m_driveSubsystem, 0,
     // m_limelightSubsystem.getDistance())); // last input is in units of
     // // inches
+  
+//     new JoystickButton(m_operatorController, Button.kX).whenPressed(new LimelightTurnCommand(
+//     m_limelightSubsystem, m_driveSubsystem, m_arduinoSubsystem, 0));
+
   }
 
   public void configureShuffleboard() {
@@ -199,45 +202,20 @@ public class RobotContainer {
   }
 
   public void generateAutonomousCommands() {
-    m_autoChooser.setDefaultOption("Shoot then Taxi", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,2));
-    
-    m_autoChooser.addOption("Taxi Only", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,1));
-    m_autoChooser.addOption("Shoot then Taxi", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,2));
-    m_autoChooser.addOption("Drive to Cargo, Shoot Twice", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,3));
-    m_autoChooser.addOption("Shoot Lower Two Cargo", new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem,m_hoodSubsystem,m_indexerSubsystem,4));
+    m_autoChooser.setDefaultOption("Shoot then Taxi",
+        new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem, m_hoodSubsystem, m_indexerSubsystem, 2));
+    m_autoChooser.addOption("Taxi Only",
+        new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem, m_hoodSubsystem, m_indexerSubsystem, 1));
+    m_autoChooser.addOption("Shoot then Taxi",
+        new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem, m_hoodSubsystem, m_indexerSubsystem, 2));
+    m_autoChooser.addOption("Drive to Cargo, Shoot Twice",
+        new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem, m_hoodSubsystem, m_indexerSubsystem, 3));
+    m_autoChooser.addOption("Shoot Lower Two Cargo",
+        new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem, m_hoodSubsystem, m_indexerSubsystem, 4));
 
     SmartDashboard.putData(m_autoChooser);
-    
-    
-    // TODO lots of problems here....
-    // // An example trajectory to follow. All units in meters.
-    // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-    // // Start at the origin facing the +X direction
-    // new Pose2d(0, 0, new Rotation2d(0)),
-    // // Pass through these two interior waypoints, making an 's' curve path
-    // List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-    // // End 3 meters straight ahead of where we started, facing forward
-    // new Pose2d(3, 0, new Rotation2d(0)),
-    // // Pass config
-    // config);
 
-    // Hashtable<String, Trajectory> trajectories = new Hashtable<String,
-    // Trajectory>();
-    // File[] files = new File("\\home\\lvuser\\deploy\\paths\\output").listFiles();
-    // for (File file : files)
-    // try {
-    // trajectories.put(file.getName(), TrajectoryUtil
-    // .fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve(file.getPath())));
-    // } catch (IOException e) {
-    // Shuffleboard.getTab("Errors").add("Trajectory Error",
-    // e.getStackTrace().toString()).withSize(4, 4)
-    // .withPosition(0, 0).withWidget(BuiltInWidgets.kTextView);
-    // }
-    // for (String name : trajectories.keySet())
-    // m_autoChooser.addOption(name, new TrajectoryFollowCommand(m_driveSubsystem,
-    // trajectories.get(name)));
 
-    // }
 
   }
 
