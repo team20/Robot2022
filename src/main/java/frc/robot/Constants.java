@@ -131,7 +131,7 @@ public final class Constants {
 
 		// TODO irrelevant if we use the SPARK MAX PID controller
 		public static final double kPDriveVel = 8.5;
-
+		public static final double kPixySpeed=.4;//TODO: EMILY change val if needed for pixy autofollow
 		// TODO change the trackwidth to match our robot - trackwidth = horizontal
 		// distance between the wheels
 		public static final double kTrackwidthMeters = 0.7815245428457417;

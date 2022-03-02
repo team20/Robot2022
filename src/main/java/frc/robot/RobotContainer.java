@@ -35,6 +35,7 @@ import frc.robot.commands.AutoCommands.SitAndShootLow;
 import frc.robot.commands.ClimberCommands.SlideHookCommand;
 import frc.robot.commands.ClimberCommands.TelescopeHookCommand;
 import frc.robot.commands.DriveCommands.ArcadeDriveCommand;
+import frc.robot.commands.DriveCommands.PixyTargetCommand;
 import frc.robot.commands.IndexerCommands.IndexerCommand;
 import frc.robot.commands.IntakeCommands.IntakeArmCommand;
 import frc.robot.commands.IntakeCommands.IntakeCommand;
@@ -123,6 +124,19 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
 
+<<<<<<< Updated upstream
+=======
+    // Driver
+
+    //x button: pixy ball follow
+    new JoystickButton(m_driverController, ControllerConstants.Button.kX).whenHeld(new PixyTargetCommand(m_driveSubsystem, m_arduinoSubsystem, ()->DriveConstants.kPixySpeed));
+    
+    //left bumper and ___: climb
+    new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+    .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle))
+    .whenActive(new CommandComposer.getClimbCommand());
+
+>>>>>>> Stashed changes
     // get distance to target from limelight and then adjust the rpm and angle of
 
     new POVButton(m_operatorController, 180).whenHeld(new SequentialCommandGroup(
@@ -140,6 +154,7 @@ public class RobotContainer {
             () -> m_operatorController.getRawAxis(Axis.kRightTrigger)));
 
     // operator
+
   }
 
   public void configureTestingBindings() {
