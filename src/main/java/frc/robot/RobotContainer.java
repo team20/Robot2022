@@ -119,26 +119,28 @@ public class RobotContainer {
     SmartDashboard.putData(m_autoChooser);
     
     configureButtonBindings();
-    // configureTestingBindings();
   }
 
   private void configureButtonBindings() {
 
-<<<<<<< Updated upstream
-=======
     // Driver
 
     //x button: pixy ball follow
     new JoystickButton(m_driverController, ControllerConstants.Button.kX).whenHeld(new PixyTargetCommand(m_driveSubsystem, m_arduinoSubsystem, ()->DriveConstants.kPixySpeed));
     
-    //left bumper and ___: climb
-    new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-    .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle))
-    .whenActive(new CommandComposer.getClimbCommand());
+    //left bumper and triangle button: traversal climb
+    new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).and(new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)).whenActive(CommandComposer.getTraversalClimbCommand());
 
->>>>>>> Stashed changes
+    //left bumper and square button: high climb
+    new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).and(new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)).whenActive(CommandComposer.getHighClimbCommand());
+
+    //Slide hook variable speed (when L bumper held and R joystick pressed)
+    new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftStick)).whenActive(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, m_operatorController.getRawAxis(Axis.kRightY)));
+
+    //Telescope hook variable speed (when L bumper held and L joystick pressed)
+    new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftStick)).whenActive(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, m_operatorController.getRawAxis(Axis.kLeftY)));
+
     // get distance to target from limelight and then adjust the rpm and angle of
-
     new POVButton(m_operatorController, 180).whenHeld(new SequentialCommandGroup(
         new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem),
         new ParallelCommandGroup(new ShootSetupCommand(
@@ -174,6 +176,7 @@ public class RobotContainer {
     new POVButton(m_driverController, 270).whenReleased(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
     
     new JoystickButton(m_driverController, 3).whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP));
+    
     new JoystickButton(m_driverController, 2).whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN));
     
     new POVButton(m_operatorController, 0).whenPressed(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, 0.3));
