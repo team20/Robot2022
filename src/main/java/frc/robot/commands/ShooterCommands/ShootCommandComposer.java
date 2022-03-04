@@ -11,7 +11,19 @@ import frc.robot.LinearRangeFinder;
 import frc.robot.RangeFinder;
 import frc.robot.RegressionRangeFinder;
 public class ShootCommandComposer {
-  public static Command getShootCommand(double distance, String shootClass) {
+
+  public static enum Operation{
+    LIMELIGHT_LINEAR,
+    LIMELIGHT_REGRESSION,
+    PRESET_LAUNCHPAD,
+    PRESET_TARMAC,
+    PRESET_FENDER_HIGH,
+    PRESET_FENDER_LOW
+  }
+
+  public static Command getShootCommand(double distance, Operation shootClass) {
+
+    
     RangeFinder distanceClass;
     if (shootClass.equals("LINEAR")) {
       distanceClass = new LinearRangeFinder();

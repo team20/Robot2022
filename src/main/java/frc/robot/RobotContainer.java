@@ -36,6 +36,7 @@ import frc.robot.commands.AutoCommands.SitAndShootLow;
 import frc.robot.commands.ClimberCommands.SlideHookCommand;
 import frc.robot.commands.ClimberCommands.TelescopeHookCommand;
 import frc.robot.commands.DriveCommands.ArcadeDriveCommand;
+import frc.robot.commands.DriveCommands.PixyTargetCommand;
 import frc.robot.commands.IndexerCommands.IndexerCommand;
 import frc.robot.commands.IntakeArmCommands.DriveArmCommand;
 import frc.robot.commands.IntakeArmCommands.ExtendArmCommand;
@@ -45,6 +46,7 @@ import frc.robot.commands.IntakeCommands.IntakeCommand;
 import frc.robot.commands.LimelightCommands.LimelightTurnCommand;
 import frc.robot.commands.ShooterCommands.AutoIndexCommand;
 import frc.robot.commands.ShooterCommands.FlywheelCommand;
+import frc.robot.commands.ShooterCommands.ShootCommandComposer;
 import frc.robot.commands.ShooterCommands.ShootSetupCommand;
 import frc.robot.subsystems.ArduinoSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -128,6 +130,30 @@ public class RobotContainer {
 
     // Driver
 
+    //x button: pixy ball follow
+    new JoystickButton(m_driverController, ControllerConstants.Button.kX).whenHeld(new PixyTargetCommand(m_driveSubsystem, m_arduinoSubsystem, ()->DriveConstants.kPixySpeed));
+    
+    //left bumper and triangle button: traversal climb
+    new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).and(new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)).whenActive(CommandComposer.getTraversalClimbCommand());
+
+    //left bumper and square button: high climb
+    new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).and(new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)).whenActive(CommandComposer.getHighClimbCommand());
+
+    //Slide hook variable speed (when L bumper held and R joystick pressed)
+    new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftStick)).whenActive(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, m_operatorController.getRawAxis(Axis.kRightY)));
+
+    //Telescope hook variable speed (when L bumper held and L joystick pressed)
+    new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftStick)).whenActive(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, m_operatorController.getRawAxis(Axis.kLeftY)));
+
+    // get distance to target from limelight and then adjust the rpm and angle of
+    new POVButton(m_operatorController, 180).whenHeld(new SequentialCommandGroup(
+        new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem),
+        new ParallelCommandGroup(new ShootSetupCommand(
+            m_flywheelSubsystem, m_hoodSubsystem, ((m_limelightSubsystem.getDistance() / 12.0) - (8.75 / 12.0)),
+            "LINEAR"),
+            new AutoIndexCommand(
+                m_indexerSubsystem, m_flywheelSubsystem::atSetpoint))));
+
     // bring the intake up
     new POVButton(m_driverController, DPad.kUp)
     .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP));
@@ -155,11 +181,31 @@ public class RobotContainer {
             () -> m_driverController.getRawAxis(Axis.kLeftTrigger),
             () -> m_driverController.getRawAxis(Axis.kRightTrigger)));
 
+    new JoystickButton(m_driverController, ControllerConstants.Button.kTriangle).whenHeld(CommandComposer.getAimAndPrepCommand(ShootCommandComposer.Operation.LIMELIGHT_LINEAR));
+
+    new JoystickButton(m_driverController, ControllerConstants.Button.kCircle).whenHeld(CommandComposer.getShootCommand());
+    
     // operator
 
     // manually drive the intake
     // m_intakeSubsystem.setDefaultCommand(
     //     new DriveArmCommand(m_intakeArmSubsystem, () -> m_operatorController.getRawAxis(Axis.kLeftY)));
+
+  }
+
+    //Right trigger: spit one ball out
+    new JoystickButton(m_operatorController, Constants.ControllerConstants.Axis.kRightTrigger).whenHeld(CommandComposer.getSpitCommand());
+
+    //Left Trigger: intake and index one ball
+    new JoystickButton(m_operatorController, Constants.ControllerConstants.Axis.kLeftTrigger).whenHeld(CommandComposer.getLoadCommand());
+
+    new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare).whenHeld(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_TARMAC));
+
+    new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle).whenHeld(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_LAUNCHPAD));
+
+    new JoystickButton(m_operatorController, ControllerConstants.Button.kCircle).whenHeld(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_FENDER_HIGH));
+
+    new JoystickButton(m_operatorController, ControllerConstants.Button.kX).whenHeld(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_FENDER_LOW));
 
   }
 
@@ -247,5 +293,4 @@ public class RobotContainer {
     SmartDashboard.putData(m_autoChooser);
 
   }
-
 }
