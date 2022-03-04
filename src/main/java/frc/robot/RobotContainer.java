@@ -27,6 +27,7 @@ import frc.robot.Constants.ArduinoConstants.LEDModes;
 import frc.robot.Constants.ArduinoConstants.LEDColors;
 import frc.robot.Constants.ControllerConstants.Axis;
 import frc.robot.Constants.ControllerConstants.Button;
+import frc.robot.Constants.ControllerConstants.DPad;
 import frc.robot.commands.DeferredCommand;
 import frc.robot.commands.ArduinoCommands.UpdateLEDsCommand;
 import frc.robot.commands.AutoCommands.ComplexAutoSequence;
@@ -36,6 +37,9 @@ import frc.robot.commands.ClimberCommands.SlideHookCommand;
 import frc.robot.commands.ClimberCommands.TelescopeHookCommand;
 import frc.robot.commands.DriveCommands.ArcadeDriveCommand;
 import frc.robot.commands.IndexerCommands.IndexerCommand;
+import frc.robot.commands.IntakeArmCommands.DriveArmCommand;
+import frc.robot.commands.IntakeArmCommands.ExtendArmCommand;
+import frc.robot.commands.IntakeArmCommands.RetractArmCommand;
 import frc.robot.commands.IntakeCommands.IntakeArmCommand;
 import frc.robot.commands.IntakeCommands.IntakeCommand;
 import frc.robot.commands.LimelightCommands.LimelightTurnCommand;
@@ -116,34 +120,54 @@ public class RobotContainer {
     // shoot both with taxiing
 
     SmartDashboard.putData(m_autoChooser);
-    
+
     configureButtonBindings();
   }
 
   private void configureButtonBindings() {
 
     // Driver
-    // get distance to target from limelight and then adjust the rpm and angle of
-    new POVButton(m_operatorController, 180).whenHeld(new SequentialCommandGroup(
-        new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem),
-        new ParallelCommandGroup(new ShootSetupCommand(
-            m_flywheelSubsystem, m_hoodSubsystem, ((m_limelightSubsystem.getDistance() / 12.0) - (8.75 / 12.0)),
-            "LINEAR"),
-            new AutoIndexCommand(
-                m_indexerSubsystem, m_flywheelSubsystem::atSetpoint))));
+
+    // bring the intake up
+    new POVButton(m_driverController, DPad.kUp)
+    .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP));
+
+    //new POVButton(m_driverController, DPad.kUp).whenPressed(new RetractArmCommand(m_intakeArmSubsystem));
+
+    // bring the intake down
+    new POVButton(m_driverController, DPad.kDown)
+    .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN));
+
+    //new POVButton(m_driverController, DPad.kDown).whenPressed(new ExtendArmCommand(m_intakeArmSubsystem));
+
+    // fine steering left
+    new JoystickButton(m_driverController, Button.kLeftBumper).whenHeld(new ArcadeDriveCommand(m_driveSubsystem,
+        () -> 0.0, () -> -DriveConstants.kFineTurningSpeed, () -> DriveConstants.kFineTurningSpeed));
+
+    // fine steering right
+    new JoystickButton(m_driverController, Button.kRightBumper).whenHeld(new ArcadeDriveCommand(m_driveSubsystem,
+        () -> 0.0, () -> DriveConstants.kFineTurningSpeed, () -> -DriveConstants.kFineTurningSpeed));
+
     // arcade drive
     m_driveSubsystem.setDefaultCommand(
-        new ArcadeDriveCommand(m_driveSubsystem, m_arduinoSubsystem,
-            () -> -m_operatorController.getRawAxis(Axis.kLeftY),
-            () -> m_operatorController.getRawAxis(Axis.kLeftTrigger),
-            () -> m_operatorController.getRawAxis(Axis.kRightTrigger)));
+        new ArcadeDriveCommand(m_driveSubsystem,
+            () -> -m_driverController.getRawAxis(Axis.kLeftY),
+            () -> m_driverController.getRawAxis(Axis.kLeftTrigger),
+            () -> m_driverController.getRawAxis(Axis.kRightTrigger)));
 
     // operator
+
+    // manually drive the intake
+    // m_intakeSubsystem.setDefaultCommand(
+    //     new DriveArmCommand(m_intakeArmSubsystem, () -> m_operatorController.getRawAxis(Axis.kLeftY)));
+
   }
 
   public void configureTestingBindings() {
-    new JoystickButton(m_driverController, 1).whenPressed(new DeferredCommand(CommandComposer::getManualFlywheelCommand));
-    new JoystickButton(m_driverController, 1).whenReleased(new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY,0));
+    new JoystickButton(m_driverController, 1)
+        .whenPressed(new DeferredCommand(CommandComposer::getManualFlywheelCommand));
+    new JoystickButton(m_driverController, 1)
+        .whenReleased(new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0));
 
     new POVButton(m_driverController, 0).whenPressed(new IndexerCommand(IndexerCommand.Operation.CMD_FWD_MAN));
     new POVButton(m_driverController, 0).whenReleased(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
@@ -156,22 +180,28 @@ public class RobotContainer {
 
     new POVButton(m_driverController, 270).whenPressed(new IntakeCommand(IntakeCommand.Operation.CMD_RUN_REV));
     new POVButton(m_driverController, 270).whenReleased(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
-    
+
     new JoystickButton(m_driverController, 3).whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP));
-    
-    new JoystickButton(m_driverController, 2).whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN));
-    
+
+    new JoystickButton(m_driverController, 2)
+        .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN));
+
     new POVButton(m_operatorController, 0).whenPressed(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, 0.3));
     new POVButton(m_operatorController, 0).whenReleased(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, 0));
 
-    new POVButton(m_operatorController, 180).whenPressed(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, -0.3));
+    new POVButton(m_operatorController, 180)
+        .whenPressed(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, -0.3));
     new POVButton(m_operatorController, 180).whenReleased(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, 0));
 
-    new POVButton(m_operatorController, 90).whenPressed(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0.3));
-    new POVButton(m_operatorController, 90).whenReleased(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
+    new POVButton(m_operatorController, 90)
+        .whenPressed(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0.3));
+    new POVButton(m_operatorController, 90)
+        .whenReleased(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
 
-    new POVButton(m_operatorController, 270).whenPressed(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, -0.3));
-    new POVButton(m_operatorController, 270).whenReleased(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
+    new POVButton(m_operatorController, 270)
+        .whenPressed(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, -0.3));
+    new POVButton(m_operatorController, 270)
+        .whenReleased(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
     // new JoystickButton(m_operatorController, 2).whenPressed(new LimelightCommand(
     // // 2 is x
     // m_limelightSubsystem, m_driveSubsystem, 0, 178)); // last input is in units
@@ -183,9 +213,10 @@ public class RobotContainer {
     // m_limelightSubsystem, m_driveSubsystem, 0,
     // m_limelightSubsystem.getDistance())); // last input is in units of
     // // inches
-  
-//     new JoystickButton(m_operatorController, Button.kX).whenPressed(new LimelightTurnCommand(
-//     m_limelightSubsystem, m_driveSubsystem, m_arduinoSubsystem, 0));
+
+    // new JoystickButton(m_operatorController, Button.kX).whenPressed(new
+    // LimelightTurnCommand(
+    // m_limelightSubsystem, m_driveSubsystem, m_arduinoSubsystem, 0));
 
   }
 
@@ -214,8 +245,6 @@ public class RobotContainer {
         new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem, m_hoodSubsystem, m_indexerSubsystem, 4));
 
     SmartDashboard.putData(m_autoChooser);
-
-
 
   }
 
