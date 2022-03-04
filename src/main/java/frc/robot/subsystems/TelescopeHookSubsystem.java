@@ -63,6 +63,7 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
 
     public void periodic() {
         SmartDashboard.putNumber("Telescope Hook Position", getPosition());
+        System.out.println("Telescope Hook Position: "+getPosition());
     }
 
     /**
@@ -101,7 +102,7 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
      */
     public void setPosition(double position) {
         m_setPosition = position;
-        m_pidController.setReference(position, ControlType.kSmartMotion, TelescopeHookConstants.kSlotID);
+        m_pidController.setReference(position, ControlType.kPosition, TelescopeHookConstants.kSlotID);
     }
 
     /**
