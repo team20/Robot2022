@@ -146,15 +146,6 @@ public class RobotContainer {
     //Telescope hook variable speed (when L bumper held and L joystick pressed)
     new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftStick)).whenActive(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, m_operatorController.getRawAxis(Axis.kLeftY)));
 
-    // get distance to target from limelight and then adjust the rpm and angle of
-    new POVButton(m_operatorController, 180).whenHeld(new SequentialCommandGroup(
-        new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem),
-        new ParallelCommandGroup(new ShootSetupCommand(
-            m_flywheelSubsystem, m_hoodSubsystem, ((m_limelightSubsystem.getDistance() / 12.0) - (8.75 / 12.0)),
-            "LINEAR"),
-            new AutoIndexCommand(
-                m_indexerSubsystem, m_flywheelSubsystem::atSetpoint))));
-
     // bring the intake up
     new POVButton(m_driverController, DPad.kUp)
     .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP));
@@ -196,7 +187,7 @@ public class RobotContainer {
     // m_intakeSubsystem.setDefaultCommand(
     //     new DriveArmCommand(m_intakeArmSubsystem, () -> m_operatorController.getRawAxis(Axis.kLeftY)));
 
-  }
+  
 
     //Right trigger: spit one ball out
     new JoystickButton(m_operatorController, Constants.ControllerConstants.Axis.kRightTrigger).whenHeld(CommandComposer.getSpitCommand());
