@@ -35,7 +35,7 @@ public class IntakeArmCommand extends CommandBase {
     } else if(m_operation == Operation.CMD_ARM_DOWN){
       IntakeArmSubsystem.get().setPosition(IntakeArmSubsystem.Position.DOWN_POSITION);
       IntakeArmSubsystem.get().setPercentOutput(0);//TODO find speed
-    }
+    } 
   }
 
   // Called once the command ends or is interrupted.
