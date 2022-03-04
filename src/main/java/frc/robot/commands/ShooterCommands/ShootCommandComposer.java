@@ -10,12 +10,20 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.LinearRangeFinder;
 import frc.robot.RangeFinder;
 import frc.robot.RegressionRangeFinder;
-import frc.robot.subsystems.FlywheelSubsystem;
-import frc.robot.subsystems.HoodSubsystem;
-
 public class ShootCommandComposer {
-  public static Command getShootCommand(FlywheelSubsystem flywheelSubsystem, HoodSubsystem hoodSubsystem,
-      double distance, String shootClass) {
+
+  public static enum Operation{
+    LIMELIGHT_LINEAR,
+    LIMELIGHT_REGRESSION,
+    PRESET_LAUNCHPAD,
+    PRESET_TARMAC,
+    PRESET_FENDER_HIGH,
+    PRESET_FENDER_LOW
+  }
+
+  public static Command getShootCommand(double distance, Operation shootClass) {
+
+    
     RangeFinder distanceClass;
     if (shootClass.equals("LINEAR")) {
       distanceClass = new LinearRangeFinder();
@@ -29,20 +37,20 @@ public class ShootCommandComposer {
 
     // set the setpoints
     ParallelCommandGroup setGroup = new ParallelCommandGroup(
-        new FlywheelCommand(flywheelSubsystem, FlywheelCommand.Operation.CMD_SET_VELOCITY, flywheelSetpoint),
-        new HoodCommand(hoodSubsystem, HoodCommand.Operation.CMD_SET_POSITION, hoodSetpoint));
+        new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, flywheelSetpoint),
+        new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, hoodSetpoint));
     // wait for the setpoints
     ParallelCommandGroup settleGroup = new ParallelCommandGroup(
-        new FlywheelCommand(flywheelSubsystem, FlywheelCommand.Operation.CMD_SETTLE, 0),
-        new HoodCommand(hoodSubsystem, HoodCommand.Operation.CMD_SETTLE, 0));
+        new FlywheelCommand(FlywheelCommand.Operation.CMD_SETTLE, 0),
+        new HoodCommand(HoodCommand.Operation.CMD_SETTLE, 0));
     // first set the setpoints, then wait for them to settle
     return new SequentialCommandGroup(setGroup, settleGroup);
   }
 
-  public static Command getShootStopCommand(FlywheelSubsystem flywheelSubsystem, HoodSubsystem hoodSubsystem) {
+  public static Command getShootStopCommand() {
 
     return new ParallelCommandGroup(
-        new FlywheelCommand(flywheelSubsystem, FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
-        new HoodCommand(hoodSubsystem, HoodCommand.Operation.CMD_SET_POSITION, 0));
+        new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
+        new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0));
   }
 }

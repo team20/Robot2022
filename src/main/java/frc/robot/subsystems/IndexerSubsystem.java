@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
@@ -13,9 +14,11 @@ import frc.robot.ShuffleboardLogging;
 import frc.robot.Constants.IndexerConstants;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -41,22 +44,28 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     private boolean m_proximitySensorStartState;
     private boolean m_proximitySensorCenterState;
 
+    private boolean m_rtsState;
     private byte m_targetState;
     
     //used to mask out all but the last three bits when calculating sensor states
-    private byte andState = 00000111;
+    private byte andState = 0x07;
     
     //used to add a bit back in at the RTF position if that is required
-    private byte orState = 00000100;
+    private byte orState = 0x04;
     
-    private final int kRTSThreshold = 100;
+
+    private double lastSpeed = 0;
+    private static IndexerSubsystem s_indexerSubsystem;
+    public static IndexerSubsystem get(){return s_indexerSubsystem;}
     public IndexerSubsystem() {
-		// m_motor.setNeutralMode(NeutralMode.Coast);
+        s_indexerSubsystem = this;
+        configureShuffleboard();
+		 m_motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 		// m_motor.enableVoltageCompensation(true);
 		// m_motor.setInverted(true);
 		m_motor.setIdleMode(IdleMode.kBrake);
 		m_motor.enableVoltageCompensation(12);
-		m_motor.setInverted(false);
+		m_motor.setInverted(true);
 
 		m_neoController.setP(IndexerConstants.kP);
         m_neoController.setI(IndexerConstants.kI);
@@ -68,6 +77,7 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
         i2cPort = I2C.Port.kMXP; //52
 
         m_colorSensor = new ColorSensorV3(i2cPort);
+        
         m_colorMatcher = new ColorMatch();
 
         m_colorMatcher.addColorMatch(kBlueTarget);
@@ -91,20 +101,25 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
         
         // get the color seen by sensor
         m_colorSensed = m_colorSensor.getColor();
-
+        m_rtsState = m_colorSensorProximity > 1000;
         //find the closest match for the color of the ball, will return null if nothing is there
         m_match = m_colorMatcher.matchClosestColor(m_colorSensed);
-        if(m_colorSensorProximity < 100){
+        if(m_colorSensorProximity < 1000){
             m_colorString = "Null";
         }else if(m_match.color == kBlueTarget){
             m_colorString = "Blue";
         }else if(m_match.color == kRedTarget){
             m_colorString = "Red";
+        }else{
+            m_colorString = "Null";
         }
-
+        
         //save if either the center or start proximity sensors sense a ball
         m_proximitySensorStartState = !m_proximitySensorStart.get();
         m_proximitySensorCenterState = !m_proximitySensorCenter.get();
+        SmartDashboard.putBoolean("Indexer RTF", m_proximitySensorStartState);
+        SmartDashboard.putBoolean("Indexer BIC", m_proximitySensorCenterState);
+        SmartDashboard.putString("Color String", m_colorString);
     }
 
     /**
@@ -115,7 +130,10 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     }
 
     public void setSpeed(double speed){
-        m_motor.set(speed);
+        m_neoController.setReference(speed, ControlType.kVelocity, 0);
+        if(speed !=0){
+            lastSpeed = speed;
+        }
     }
     
     public void reset(){
@@ -129,7 +147,7 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
         return m_proximitySensorCenterState;
     }
     public boolean gamePieceRTS(){
-        return m_colorSensorProximity > kRTSThreshold;
+        return m_rtsState;
     }
 
     /**
@@ -145,7 +163,7 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
      * @return return closest position to where I am without going above
      */
     public byte getCurrTargetState(){
-        return m_targetState;
+        return getCurrStateSubsystem();
     }
 
     /**
@@ -164,16 +182,25 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     }
 
     public byte getAdvanceTargetState(){
+        System.out.println("CURR SUBSYSTEM STATE: " + Integer.toBinaryString(getCurrStateSubsystem()));
+        System.out.println("RETURNING STATE(FWD): " + Integer.toBinaryString((byte)( getCurrStateSubsystem()>> 1)));
         //find sensor states if moved forward one position
-        return (byte)(m_targetState >> 1);
+        return (byte)( getCurrStateSubsystem()>> 1);
     }
     public byte getReverseTargetState(boolean preserveRTF){
+        
         if(preserveRTF){
+            System.out.println("CURR SUBSYSTEM STATE: " + Integer.toBinaryString(getCurrStateSubsystem()));
+            System.out.println("RETURNING STATE(REV): " + Integer.toBinaryString((byte)((getCurrStateSubsystem() << 1) & andState | orState)));
+            
             //find sensor states if moved backward one position, preserving ball RTF and removing everything but the last 3 bits
-            return (byte)((byte)(m_targetState << 1) & andState | orState);
+            return (byte)((getCurrStateSubsystem() << 1) & andState | orState);
         }else{
+            System.out.println("CURR SUBSYSTEM STATE: " + Integer.toBinaryString(getCurrStateSubsystem()));
+            System.out.println("RETURNING STATE(REV): " + Integer.toBinaryString((byte)((getCurrStateSubsystem() << 1) & andState)));
+            
             //find sensor states if moved backward one position, WITHOUT preserving ball RTF and removing everything but the last 3 bits
-            return (byte)((byte)(m_targetState << 1) & andState);
+            return (byte)((getCurrStateSubsystem() << 1) & andState);
         }
     }
 
@@ -187,9 +214,16 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     public String getColorString(){
         return m_colorString;
     }
+    public double getLastSpeed(){
+        return lastSpeed;
+    }
     public void configureShuffleboard(){
+        
         ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Color");
-        shuffleboardTab.addBoolean("isBlue", () -> (m_colorString.equals("Blue"))).withSize(2, 2).withPosition(0, 0).withWidget(BuiltInWidgets.kBooleanBox);
-        shuffleboardTab.addBoolean("isRed", () -> (m_colorString.equals("Red"))).withSize(2, 2).withPosition(2, 0).withWidget(BuiltInWidgets.kBooleanBox);
+        // shuffleboardTab.addBoolean("isBlue", () -> (m_colorString.equals("Blue"))).withSize(2, 2).withPosition(0, 0).withWidget(BuiltInWidgets.kBooleanBox);
+        // shuffleboardTab.addBoolean("isRed", ()->(m_colorString.equals("Null") ? new Boolean(null) : m_colorString.equals("Red"))).withSize(2, 2).withPosition(2, 0).withWidget(BuiltInWidgets.kBooleanBox);
+        shuffleboardTab.addBoolean("rtf", () -> (m_proximitySensorStartState)).withSize(2, 2).withPosition(4, 0).withWidget(BuiltInWidgets.kBooleanBox);
+        shuffleboardTab.addBoolean("bic", () -> (m_proximitySensorCenterState)).withSize(2, 2).withPosition(6, 0).withWidget(BuiltInWidgets.kBooleanBox);
+        shuffleboardTab.addBoolean("rts", () -> (m_rtsState)).withSize(2, 2).withPosition(8, 0).withWidget(BuiltInWidgets.kBooleanBox);
     }
 }

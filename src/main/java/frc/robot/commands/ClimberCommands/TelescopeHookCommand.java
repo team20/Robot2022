@@ -13,12 +13,7 @@ public class TelescopeHookCommand extends CommandBase {
         CMD_POSITION_SETTLE
     }
     private final Operation m_operation;
-    /**
-     * Drive the hood using setpoints
-     * 
-     * @param hoodSubsystem The hood subsystem to be used
-     * @param setpoint      The desired encoder position
-     */
+    
     public TelescopeHookCommand(Operation operation, double param) {
         m_operation = operation;
         m_param = param;
@@ -31,6 +26,7 @@ public class TelescopeHookCommand extends CommandBase {
     public void execute() {
         TelescopeHookSubsystem subsystem = TelescopeHookSubsystem.get();
         if(m_operation == Operation.CMD_POSITION){
+            System.out.println("setting position to "+m_param);
             subsystem.setPosition(m_param);
             System.out.println("Motor current is "+subsystem.getOutputCurrent());
         }else if(m_operation == Operation.CMD_MOVE){
@@ -42,12 +38,11 @@ public class TelescopeHookCommand extends CommandBase {
     @Override
     public boolean isFinished(){
         if(m_operation == Operation.CMD_POSITION){
-            return true;
-        } else if(m_operation == Operation.CMD_MOVE){
-            return true;
-        } else if(m_operation == Operation.CMD_POSITION_SETTLE){
             return TelescopeHookSubsystem.get().atSetpoint();
         }
         return true;
+    }
+    public void end(boolean interrupted){
+        TelescopeHookSubsystem.get().setSpeed(0.0);
     }
 }

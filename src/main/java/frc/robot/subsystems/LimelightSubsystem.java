@@ -16,6 +16,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLogging {
     
+    private static LimelightSubsystem s_subsytem;
+    public static LimelightSubsystem get(){ return s_subsytem;}
+
     private final NetworkTable m_limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
 
     private boolean isTargetVisible;
@@ -27,6 +30,7 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
     private double totalRollingAverage = 0;
 
     public LimelightSubsystem() {
+        s_subsytem = this;
         turnOffLight();
     }
 
@@ -42,7 +46,7 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
 
         //System.out.println("limelight y angle" + calculateRollingAverage(getYAngle()));
 
-        System.out.println("distance is: " + distance);
+        //System.out.println("distance is: " + distance);
     }
 
     /**
