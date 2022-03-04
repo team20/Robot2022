@@ -5,8 +5,6 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.SPI;
 
 public final class Constants {
@@ -94,14 +92,14 @@ public final class Constants {
 	}
 
 	public static final class DriveConstants {
-		public static final int kFrontLeftPort = 1000;
+		public static final int kFrontLeftPort = 3;
 		public static final boolean kFrontLeftInvert = true;
-		public static final int kBackLeftPort=2000;
+		public static final int kBackLeftPort=2;
 		public static final boolean kBackLeftOppose = false;
 
-		public static final int kFrontRightPort = 4000;
+		public static final int kFrontRightPort = 4;
 		public static final boolean kFrontRightInvert = false;
-		public static final int kBackRightPort = 3000;
+		public static final int kBackRightPort = 5;
 		public static final boolean kBackRightOppose = false;
 
 		public static final int kSmartCurrentLimit = 60;
@@ -191,8 +189,8 @@ public final class Constants {
 	}
 
 	public static final class FlywheelConstants {
-		public static final int kMasterPort = 11;
-		public static final int kFollowerPort = 13;
+		public static final int kMasterPort = 9;
+		public static final int kFollowerPort = 10;
 		public static final boolean kMasterInvert = false;
 		public static final boolean kFollowerOppose = true;
 		public static final int kSmartCurrentLimit = 50;
@@ -210,7 +208,7 @@ public final class Constants {
 	}
 
 	public static final class HoodConstants {
-		public static final int kMotorPort = 12;
+		public static final int kMotorPort = 6;
 		public static final boolean kInvert = true;
 		public static final int kSmartCurrentLimit = 60;
 		public static final double kP = 0.000_1;
@@ -233,7 +231,7 @@ public final class Constants {
 	}
 
 	public static final class IndexerConstants {
-    public static final int kMotorPort = 23;
+    public static final int kMotorPort = 15;
 		public static final boolean kInvert = false;
 		public static final int kSmartCurrentLimit = 60;
 		public static final double kP = 0; // TODO: tune PID
@@ -263,7 +261,7 @@ public final class Constants {
 		public static final double kMaxEncoderValue = 42.0;
 		public static final double kMinAngle = 24.36;
 		public static final double kMaxAngle = 77.64;
-		public static final int kMotorPort = 24;
+		public static final int kMotorPort = 14;
 		public static final boolean kInvert = false;
 		public static final int kSmartCurrentLimit = 0;
 		public static final double kP = 0; // TODO: tune PID
@@ -288,7 +286,7 @@ public final class Constants {
 
 
 	public static final class IntakeConstants {
-		public static final int kMotorPort = 25;
+		public static final int kMotorPort = 13;
 		public static final boolean kInvert = false;
 	}
 
@@ -311,8 +309,8 @@ public final class Constants {
 	}
 
 	public static final class SlideHookConstants {
-		public static final int kMasterPort = 10;
-		public static final int kFollowerPort = 30;
+		public static final int kMasterPort = 7;
+		public static final int kFollowerPort = 8;
 		public static final boolean kMasterInvert = false;
 		public static final boolean kFollowerOppose = false;
 		public static final int kSmartCurrentLimit = 60;// TODO: change
@@ -345,8 +343,8 @@ public final class Constants {
 	}
 
 	public static final class TelescopeHookConstants {
-		public static final int kMasterPort = 20;
-		public static final int kFollowerPort = 40;
+		public static final int kMasterPort = 11;
+		public static final int kFollowerPort = 12;
 		public static final boolean kMasterInvert = false;
 		public static final boolean kFollowerOppose = false;
 		public static final int kSmartCurrentLimit = 60;// TODO: change
