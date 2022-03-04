@@ -41,6 +41,7 @@ import frc.robot.commands.IntakeCommands.IntakeCommand;
 import frc.robot.commands.LimelightCommands.LimelightTurnCommand;
 import frc.robot.commands.ShooterCommands.AutoIndexCommand;
 import frc.robot.commands.ShooterCommands.FlywheelCommand;
+import frc.robot.commands.ShooterCommands.ShootCommandComposer;
 import frc.robot.commands.ShooterCommands.ShootSetupCommand;
 import frc.robot.subsystems.ArduinoSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -131,6 +132,10 @@ public class RobotContainer {
             "LINEAR"),
             new AutoIndexCommand(
                 m_indexerSubsystem, m_flywheelSubsystem::atSetpoint))));
+
+    
+
+
     // arcade drive
     m_driveSubsystem.setDefaultCommand(
         new ArcadeDriveCommand(m_driveSubsystem, m_arduinoSubsystem,
@@ -138,7 +143,27 @@ public class RobotContainer {
             () -> m_operatorController.getRawAxis(Axis.kLeftTrigger),
             () -> m_operatorController.getRawAxis(Axis.kRightTrigger)));
 
+
+    new JoystickButton(m_driverController, ControllerConstants.Button.kTriangle).whenHeld(CommandComposer.getAimAndPrepCommand(ShootCommandComposer.Operation.LIMELIGHT_LINEAR));
+
+    new JoystickButton(m_driverController, ControllerConstants.Button.kCircle).whenHeld(CommandComposer.getShootCommand());
+    
     // operator
+
+    //Right trigger: spit one ball out
+    new JoystickButton(m_operatorController, Constants.ControllerConstants.Axis.kRightTrigger).whenHeld(CommandComposer.getSpitCommand());
+
+    //Left Trigger: intake and index one ball
+    new JoystickButton(m_operatorController, Constants.ControllerConstants.Axis.kLeftTrigger).whenHeld(CommandComposer.getLoadCommand());
+
+    new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare).whenHeld(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_TARMAC));
+
+    new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle).whenHeld(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_LAUNCHPAD));
+
+    new JoystickButton(m_operatorController, ControllerConstants.Button.kCircle).whenHeld(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_FENDER_HIGH));
+
+    new JoystickButton(m_operatorController, ControllerConstants.Button.kX).whenHeld(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_FENDER_LOW));
+
   }
 
   public void configureTestingBindings() {
