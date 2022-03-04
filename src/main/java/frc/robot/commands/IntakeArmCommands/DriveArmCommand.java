@@ -27,7 +27,7 @@ public class DriveArmCommand extends CommandBase {
      * Update the motor output
      */
     public void execute() {
-        double speed = Math.abs(m_speed.get()) > ControllerConstants.kTriggerDeadzone ? m_speed.get() : 0;
+        double speed = .3 * Math.abs(m_speed.get()) > ControllerConstants.kTriggerDeadzone ? m_speed.get() : 0;
         m_intakeArmSubsystem.setPercentOutput(speed);
         System.out.println("Arm encoder position: " + m_intakeArmSubsystem.getPosition());
     }
