@@ -22,7 +22,7 @@ public class ExtendArmCommand extends CommandBase {
      * Update arm setpoint
      */
     public void initialize() {
-        m_intakeArmSubsystem.zeroTheArm();
+        //m_intakeArmSubsystem.zeroTheArm();
         m_intakeArmSubsystem.setPosition(IntakeArmConstants.kOutPosition);
     }
 }
