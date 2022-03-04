@@ -21,20 +21,29 @@ import frc.robot.Constants.*;
 /** Add your docs here. */
 public class CommandComposer {
 
-    public static Command getAimAndShootCommand(String shootClass) {
+    public static Command getAimAndPrepCommand(ShootCommandComposer.Operation shootType) {
         // base of the hub is 8.75" offset from the tape at the top
         double distanceBase = (LimelightSubsystem.get().getDistance() - 8.75) / 12.0;
 
         Command aimCommand = new LimelightTurnCommand(LimelightSubsystem.get(), DriveSubsystem.get());
         //Command aimCommand = new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem, m_arduinoSubsystem);
 
-        Command startFlywheelAndPrepRTS = new ParallelCommandGroup(new DeferredCommand(() -> (ShootCommandComposer.getShootCommand(distanceBase, shootClass))), new DeferredCommand(IndexerCommandComposer::getReadyToShoot));
+        Command startFlywheelAndPrepRTS = new ParallelCommandGroup(new DeferredCommand(() -> ShootCommandComposer.getShootCommand(distanceBase, shootType)), new DeferredCommand(IndexerCommandComposer::getReadyToShoot));
         Command shootCommand = new SequentialCommandGroup(startFlywheelAndPrepRTS, new DeferredCommand(IndexerCommandComposer::getShootCommand), ShootCommandComposer.getShootStopCommand());
 
         return new SequentialCommandGroup(aimCommand, shootCommand);
     }
+    public static Command getShootCommand() {
+        
+        Command shootCommand = new SequentialCommandGroup(new ParallelCommandGroup(new FlywheelCommand(FlywheelCommand.Operation.CMD_SETTLE, 0), new HoodCommand(HoodCommand.Operation.CMD_SETTLE, 0)), new DeferredCommand(IndexerCommandComposer::getShootCommand), ShootCommandComposer.getShootStopCommand());
+
+        return new SequentialCommandGroup(shootCommand);
+    }
     public static Command getSpitCommand(){
         return new SequentialCommandGroup(new IndexerCommand(IndexerCommand.Operation.CMD_REV_MAN), new IndexerCommand(IndexerCommand.Operation.CMD_WAIT_RTF), new IndexerCommand(IndexerCommand.Operation.CMD_STOP), new IntakeCommand(IntakeCommand.Operation.CMD_RUN_REV));
+    }
+    public static Command getPresetShootCommand(ShootCommandComposer.Operation shootType) {
+       return new ParallelCommandGroup(new DeferredCommand(() -> (ShootCommandComposer.getShootCommand(0, shootType))), new DeferredCommand(IndexerCommandComposer::getReadyToShoot));
     }
 
     public Command getClimbCommand() {
