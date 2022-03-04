@@ -41,6 +41,7 @@ import frc.robot.commands.IndexerCommands.IndexerCommand;
 import frc.robot.commands.IntakeArmCommands.DriveArmCommand;
 import frc.robot.commands.IntakeArmCommands.ExtendArmCommand;
 import frc.robot.commands.IntakeArmCommands.RetractArmCommand;
+import frc.robot.commands.IntakeCommands.DriveIntakeArmCommand;
 import frc.robot.commands.IntakeCommands.IntakeArmCommand;
 import frc.robot.commands.IntakeCommands.IntakeCommand;
 import frc.robot.commands.LimelightCommands.LimelightTurnCommand;
@@ -185,6 +186,10 @@ public class RobotContainer {
 
     new JoystickButton(m_driverController, ControllerConstants.Button.kCircle).whenHeld(CommandComposer.getShootCommand());
     
+    new POVButton(m_driverController, ControllerConstants.DPad.kUp).whenHeld(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP));
+
+    new POVButton(m_driverController, ControllerConstants.DPad.kDown).whenHeld(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN));
+
     // operator
 
     // manually drive the intake
@@ -199,14 +204,15 @@ public class RobotContainer {
     //Left Trigger: intake and index one ball
     new JoystickButton(m_operatorController, Constants.ControllerConstants.Axis.kLeftTrigger).whenHeld(CommandComposer.getLoadCommand());
 
-    new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare).whenHeld(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_TARMAC));
+    new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare).and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate()).whileActiveOnce(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_TARMAC));
 
-    new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle).whenHeld(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_LAUNCHPAD));
+    new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle).and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate()).whileActiveOnce(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_LAUNCHPAD));
 
     new JoystickButton(m_operatorController, ControllerConstants.Button.kCircle).whenHeld(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_FENDER_HIGH));
 
     new JoystickButton(m_operatorController, ControllerConstants.Button.kX).whenHeld(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_FENDER_LOW));
 
+    new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftStick).whenHeld(new DriveIntakeArmCommand(() -> m_operatorController.getRawAxis(Axis.kLeftY)));
   }
 
   public void configureTestingBindings() {
