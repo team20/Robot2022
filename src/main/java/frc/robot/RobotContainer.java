@@ -182,7 +182,6 @@ public class RobotContainer {
     new JoystickButton(m_operatorController, ControllerConstants.Button.kX).whenHeld(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_FENDER_LOW));
 
   }
-
   public void configureTestingBindings() {
     new JoystickButton(m_driverController, 1).whenPressed(new DeferredCommand(CommandComposer::getManualFlywheelCommand));
     new JoystickButton(m_driverController, 1).whenReleased(new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY,0));
@@ -260,5 +259,4 @@ public class RobotContainer {
 
 
   }
-
 }
