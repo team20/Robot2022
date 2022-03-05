@@ -119,7 +119,7 @@ public final class Constants {
 		// navX stuff
 		public static final SPI.Port kGyroPort = SPI.Port.kMXP;
 		public static final boolean kGyroReversed = true;
-		public static final double kTurnP = 0.0;
+		public static final double kTurnP = 0.03;
 		public static final double kTurnI = 0.0;
 		public static final double kTurnD = 0.0;
 		public static final double kTurnTolerance = 3;
@@ -234,9 +234,9 @@ public final class Constants {
     public static final int kMotorPort = 15;
 		public static final boolean kInvert = false;
 		public static final int kSmartCurrentLimit = 60;
-		public static final double kP = 0; // TODO: tune PID
+		public static final double kP = .02; // TODO: tune PID
 		public static final double kI = 0;
-		public static final double kD = 0.0000;// 0.000_03;
+		public static final double kD = 0.00003;// 0.000_03;
 		public static final double kIz = 0.0;
 		public static final double kFF = .0;// 0.000_193;
 		public static final double kMaxOutput = 1;
@@ -264,9 +264,9 @@ public final class Constants {
 		public static final int kMotorPort = 14;
 		public static final boolean kInvert = false;
 		public static final int kSmartCurrentLimit = 0;
-		public static final double kP = 0; // TODO: tune PID
+		public static final double kP = .02; // TODO: tune PID
 		public static final double kI = 0;
-		public static final double kD = 0.0000;// 0.000_03;
+		public static final double kD = 0.00003;// 0.000_03;
 		public static final double kIz = 0.0;
 		public static final double kFF = .0;// 0.000_193;
 		public static final double kMinOutput = 0;
