@@ -208,8 +208,8 @@ public final class Constants {
 	}
 
 	public static final class HoodConstants {
-		public static final int kMotorPort = 6;
-		public static final boolean kInvert = true;
+		public static final int kMotorPort = 7;
+		public static final boolean kInvert = false;
 		public static final int kSmartCurrentLimit = 60;
 		public static final double kP = 0.000_1;
 		public static final double kI = 0.0;
@@ -232,7 +232,7 @@ public final class Constants {
 
 	public static final class IndexerConstants {
     public static final int kMotorPort = 15;
-		public static final boolean kInvert = false;
+		public static final boolean kInvert = true;
 		public static final int kSmartCurrentLimit = 60;
 		public static final double kP = .02; // TODO: tune PID
 		public static final double kI = 0;
@@ -287,7 +287,7 @@ public final class Constants {
 
 	public static final class IntakeConstants {
 		public static final int kMotorPort = 13;
-		public static final boolean kInvert = false;
+		public static final boolean kInvert = true;
 	}
 
 	public static final class LimelightConstants { // TODO: tune PID loop
@@ -309,7 +309,7 @@ public final class Constants {
 	}
 
 	public static final class SlideHookConstants {
-		public static final int kMasterPort = 7;
+		public static final int kMasterPort = 6;
 		public static final int kFollowerPort = 8;
 		public static final boolean kMasterInvert = false;
 		public static final boolean kFollowerOppose = false;
@@ -346,7 +346,7 @@ public final class Constants {
 		public static final int kMasterPort = 11;
 		public static final int kFollowerPort = 12;
 		public static final boolean kMasterInvert = false;
-		public static final boolean kFollowerOppose = false;
+		public static final boolean kFollowerOppose = true;
 		public static final int kSmartCurrentLimit = 60;// TODO: change
 		public static final double kP = .01; // TODO: tune PID
 		public static final double kI = 0;
