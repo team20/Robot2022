@@ -75,18 +75,18 @@ public class IndexerCommand extends CommandBase {
       //set speeds and/or target states depending on desired operations
       if(m_operation == Operation.CMD_ADV){
         indexerSubsystem.setTargetState(m_desiredIndexerState);
-        indexerSubsystem.setSpeed(50); //TODO find speed
+        indexerSubsystem.setSpeed(.5); //TODO find speed
       }else if(m_operation == Operation.CMD_REV){
         indexerSubsystem.setTargetState(m_desiredIndexerState);
-        indexerSubsystem.setSpeed(-50); //TODO find speed
+        indexerSubsystem.setSpeed(-.5); //TODO find speed
       } else if(m_operation == Operation.CMD_FWD_MAN){
-        indexerSubsystem.setSpeed(50); //TODO find speed
+        indexerSubsystem.setSpeed(.5); //TODO find speed
       }else if(m_operation == Operation.CMD_REV_MAN){
-        indexerSubsystem.setSpeed(-50); //TODO find speed
+        indexerSubsystem.setSpeed(-.5); //TODO find speed
       }else if(m_operation == Operation.CMD_TO_EXPECTED_POSITION){
         indexerSubsystem.setSpeed(indexerSubsystem.getLastSpeed());
       }else if(m_operation == Operation.CMD_STOP){
-        indexerSubsystem.setSpeed(50);
+        indexerSubsystem.setSpeed(0);
       }
   }
 
@@ -107,7 +107,7 @@ public class IndexerCommand extends CommandBase {
       double elapsed = Duration.between(m_startTime, Instant.now()).toMillis();
           
       //max time to run to get to a state(will be ignored if controlled manually)
-      double max_duration = 100000;
+      double max_duration = 2000;
 
       //finish when we reach our target state or timeout
       if(elapsed > max_duration){

@@ -25,15 +25,25 @@ public class ShootCommandComposer {
 
     
     RangeFinder distanceClass;
-    if (shootClass.equals("LINEAR")) {
-      distanceClass = new LinearRangeFinder();
-    } else {
-      // shootClass.equals("REGRESSION")
-      distanceClass = new RegressionRangeFinder();
+    // if (shootClass.equals("LINEAR")) {
+    //   distanceClass = new LinearRangeFinder();
+    // } else {
+    //   // shootClass.equals("REGRESSION")
+    //   distanceClass = new RegressionRangeFinder();
+    double hoodSetpoint;
+    double flywheelSetpoint;
+    if(shootClass==Operation.PRESET_TARMAC){
+      hoodSetpoint=5;
+      flywheelSetpoint=3000;
     }
+    else{
+      hoodSetpoint=0;
+      flywheelSetpoint=0;
+    }
+    
 
-    double hoodSetpoint = distanceClass.getAngleAndRPM(distance)[0];
-    double flywheelSetpoint = distanceClass.getAngleAndRPM(distance)[1];
+    // double hoodSetpoint = distanceClass.getAngleAndRPM(distance)[0];
+    // double flywheelSetpoint = distanceClass.getAngleAndRPM(distance)[1];
 
     // set the setpoints
     ParallelCommandGroup setGroup = new ParallelCommandGroup(

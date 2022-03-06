@@ -60,7 +60,7 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     public IndexerSubsystem() {
         s_indexerSubsystem = this;
         configureShuffleboard();
-		 m_motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+		//  m_motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 		// m_motor.enableVoltageCompensation(true);
 		// m_motor.setInverted(true);
 		m_motor.setIdleMode(IdleMode.kBrake);
@@ -101,10 +101,10 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
         
         // get the color seen by sensor
         m_colorSensed = m_colorSensor.getColor();
-        m_rtsState = m_colorSensorProximity > 1000;
+        m_rtsState = m_colorSensorProximity >=800;
         //find the closest match for the color of the ball, will return null if nothing is there
         m_match = m_colorMatcher.matchClosestColor(m_colorSensed);
-        if(m_colorSensorProximity < 1000){
+        if(!m_rtsState){
             m_colorString = "Null";
         }else if(m_match.color == kBlueTarget){
             m_colorString = "Blue";
@@ -130,10 +130,12 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     }
 
     public void setSpeed(double speed){
-        m_neoController.setReference(speed, ControlType.kVelocity, 0);
+        // m_neoController.setReference(speed, ControlType.kVelocity, 0);
+        m_motor.set(speed);
         if(speed !=0){
             lastSpeed = speed;
         }
+        else{}
     }
     
     public void reset(){
@@ -191,10 +193,10 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
         
         if(preserveRTF){
             System.out.println("CURR SUBSYSTEM STATE: " + Integer.toBinaryString(getCurrStateSubsystem()));
-            System.out.println("RETURNING STATE(REV): " + Integer.toBinaryString((byte)((getCurrStateSubsystem() << 1) & andState | orState)));
+            System.out.println("RETURNING STATE(REV): " + Integer.toBinaryString((byte)((getCurrStateSubsystem() << 1) & andState | (getCurrStateSubsystem() & orState))));
             
             //find sensor states if moved backward one position, preserving ball RTF and removing everything but the last 3 bits
-            return (byte)((getCurrStateSubsystem() << 1) & andState | orState);
+            return (byte)((getCurrStateSubsystem() << 1) & andState | (getCurrStateSubsystem() & orState));
         }else{
             System.out.println("CURR SUBSYSTEM STATE: " + Integer.toBinaryString(getCurrStateSubsystem()));
             System.out.println("RETURNING STATE(REV): " + Integer.toBinaryString((byte)((getCurrStateSubsystem() << 1) & andState)));

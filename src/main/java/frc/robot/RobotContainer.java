@@ -47,6 +47,7 @@ import frc.robot.commands.IntakeCommands.IntakeCommand;
 import frc.robot.commands.LimelightCommands.LimelightTurnCommand;
 import frc.robot.commands.ShooterCommands.AutoIndexCommand;
 import frc.robot.commands.ShooterCommands.FlywheelCommand;
+import frc.robot.commands.ShooterCommands.HoodCommand;
 import frc.robot.commands.ShooterCommands.ShootCommandComposer;
 import frc.robot.commands.ShooterCommands.ShootSetupCommand;
 import frc.robot.subsystems.ArduinoSubsystem;
@@ -214,15 +215,16 @@ public class RobotContainer {
                 .whenHeld(CommandComposer.getSpitCommand());
 
         // Left Trigger: intake and index one ball
-        new JoystickButton(m_operatorController, Constants.ControllerConstants.Axis.kLeftTrigger)
+        new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
                 .whenHeld(CommandComposer.getLoadCommand());
+      
+        new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
+                .whenReleased(new IntakeCommand(IntakeCommand.Operation.CMD_STOP));
 
-        //shoot from tarmac        
         new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
-                .whileActiveOnce(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_TARMAC));
-
-        //shoot from launchpad        
+                .whenInactive(new ParallelCommandGroup(new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
+        
         new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
                 .whileActiveOnce(

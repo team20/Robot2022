@@ -32,9 +32,9 @@ public class IntakeCommand extends CommandBase {
   @Override
   public void execute() {
     if(m_operation == Operation.CMD_RUN_FWD){
-      IntakeSubsystem.get().setSpeed(.5);
+      IntakeSubsystem.get().setSpeed(150);
     }else if(m_operation == Operation.CMD_RUN_REV){
-      IntakeSubsystem.get().setSpeed(-.5);
+      IntakeSubsystem.get().setSpeed(-150);
     }else if(m_operation == Operation.CMD_STOP){
       IntakeSubsystem.get().setSpeed(0);
     }
