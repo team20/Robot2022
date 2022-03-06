@@ -136,37 +136,37 @@ public class RobotContainer {
                 .whenHeld(new PixyTargetCommand(m_driveSubsystem, m_arduinoSubsystem, () -> DriveConstants.kPixySpeed));
 
         // left bumper and triangle button: traversal climb
-        new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle))
-                .whenActive(CommandComposer.getTraversalClimbCommand());
+        // new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+        //         .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle))
+        //         .whenActive(CommandComposer.getTraversalClimbCommand());
 
         // left bumper and square button: high climb
-        new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle))
-                .whenActive(CommandComposer.getHighClimbCommand());
+        // new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+        //         .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle))
+        //         .whenActive(CommandComposer.getHighClimbCommand());
 
         // Slide hook variable speed (when L bumper held and R joystick pressed)
-        new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftStick))
-                .whenActive(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE,
-                        m_operatorController.getRawAxis(Axis.kRightY)));
+        // new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+        //         .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftStick))
+        //         .whenActive(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE,
+        //                 m_operatorController.getRawAxis(Axis.kRightY)));
 
         // Telescope hook variable speed (when L bumper held and L joystick pressed)
-        new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftStick))
-                .whenActive(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE,
-                        m_operatorController.getRawAxis(Axis.kLeftY)));
+        // new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+        //         .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftStick))
+        //         .whenActive(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE,
+        //                 m_operatorController.getRawAxis(Axis.kLeftY)));
 
         // bring the intake up
-        new POVButton(m_driverController, DPad.kUp)
-                .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP));
+        // new POVButton(m_driverController, DPad.kUp)
+        //         .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP));
 
         // new POVButton(m_driverController, DPad.kUp).whenPressed(new
         // RetractArmCommand(m_intakeArmSubsystem));
 
         // bring the intake down
-        new POVButton(m_driverController, DPad.kDown)
-                .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN));
+        // new POVButton(m_driverController, DPad.kDown)
+        //         .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN));
 
         // new POVButton(m_driverController, DPad.kDown).whenPressed(new
         // ExtendArmCommand(m_intakeArmSubsystem));
@@ -186,15 +186,19 @@ public class RobotContainer {
                         () -> m_driverController.getRawAxis(Axis.kLeftTrigger),
                         () -> m_driverController.getRawAxis(Axis.kRightTrigger)));
 
+        //aim and shoot linear limelight                
         new JoystickButton(m_driverController, ControllerConstants.Button.kTriangle)
                 .whenHeld(CommandComposer.getAimAndPrepCommand(ShootCommandComposer.Operation.LIMELIGHT_LINEAR));
 
+        //get shoot command
         new JoystickButton(m_driverController, ControllerConstants.Button.kCircle)
                 .whenHeld(CommandComposer.getShootCommand());
 
+        //bring arm up driver        
         new POVButton(m_driverController, ControllerConstants.DPad.kUp)
                 .whenHeld(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP));
 
+        //bring arm down driver        
         new POVButton(m_driverController, ControllerConstants.DPad.kDown)
                 .whenHeld(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN));
 
@@ -213,21 +217,26 @@ public class RobotContainer {
         new JoystickButton(m_operatorController, Constants.ControllerConstants.Axis.kLeftTrigger)
                 .whenHeld(CommandComposer.getLoadCommand());
 
+        //shoot from tarmac        
         new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
                 .whileActiveOnce(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_TARMAC));
 
+        //shoot from launchpad        
         new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
                 .whileActiveOnce(
                         CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_LAUNCHPAD));
 
+        //shoot from fender high                
         new JoystickButton(m_operatorController, ControllerConstants.Button.kCircle)
                 .whenHeld(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_FENDER_HIGH));
-
+        
+        //shoot from fender low        
         new JoystickButton(m_operatorController, ControllerConstants.Button.kX)
                 .whenHeld(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_FENDER_LOW));
 
+        //manually drive the arm 
         new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftStick)
                 .whenHeld(new DriveIntakeArmCommand(() -> m_operatorController.getRawAxis(Axis.kLeftY)));
     }
