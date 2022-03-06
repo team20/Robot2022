@@ -159,15 +159,15 @@ public class RobotContainer {
         //                 m_operatorController.getRawAxis(Axis.kLeftY)));
 
         // bring the intake up
-        new POVButton(m_driverController, DPad.kUp)
-                .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP));
+        // new POVButton(m_driverController, DPad.kUp)
+        //         .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP));
 
         // new POVButton(m_driverController, DPad.kUp).whenPressed(new
         // RetractArmCommand(m_intakeArmSubsystem));
 
         // bring the intake down
-        new POVButton(m_driverController, DPad.kDown)
-                .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN));
+        // new POVButton(m_driverController, DPad.kDown)
+        //         .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN));
 
         // new POVButton(m_driverController, DPad.kDown).whenPressed(new
         // ExtendArmCommand(m_intakeArmSubsystem));
@@ -187,15 +187,19 @@ public class RobotContainer {
                         () -> m_driverController.getRawAxis(Axis.kLeftTrigger),
                         () -> m_driverController.getRawAxis(Axis.kRightTrigger)));
 
+        //aim and shoot linear limelight                
         new JoystickButton(m_driverController, ControllerConstants.Button.kTriangle)
                 .whenHeld(CommandComposer.getAimAndPrepCommand(ShootCommandComposer.Operation.LIMELIGHT_LINEAR));
 
+        //get shoot command
         new JoystickButton(m_driverController, ControllerConstants.Button.kCircle)
                 .whenHeld(CommandComposer.getShootCommand());
 
+        //bring arm up driver        
         new POVButton(m_driverController, ControllerConstants.DPad.kUp)
                 .whenHeld(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP));
 
+        //bring arm down driver        
         new POVButton(m_driverController, ControllerConstants.DPad.kDown)
                 .whenHeld(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN));
 
@@ -213,29 +217,28 @@ public class RobotContainer {
         // Left Trigger: intake and index one ball
         new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
                 .whenHeld(CommandComposer.getLoadCommand());
-
+      
         new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
                 .whenReleased(new IntakeCommand(IntakeCommand.Operation.CMD_STOP));
 
         new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
-                .whileActiveOnce(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_TARMAC));
-
-        new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
-                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
                 .whenInactive(new ParallelCommandGroup(new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
         
-                new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
+        new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
                 .whileActiveOnce(
                         CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_LAUNCHPAD));
 
+        //shoot from fender high                
         new JoystickButton(m_operatorController, ControllerConstants.Button.kCircle)
                 .whenHeld(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_FENDER_HIGH));
-
+        
+        //shoot from fender low        
         new JoystickButton(m_operatorController, ControllerConstants.Button.kX)
                 .whenHeld(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_FENDER_LOW));
 
+        //manually drive the arm 
         new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftStick)
                 .whenHeld(new DriveIntakeArmCommand(() -> m_operatorController.getRawAxis(Axis.kLeftY)));
     }
