@@ -211,7 +211,7 @@ public final class Constants {
 		public static final int kMotorPort = 7;
 		public static final boolean kInvert = false;
 		public static final int kSmartCurrentLimit = 60;
-		public static final double kP = 0.000_1;
+		public static final double kP = 0.02;
 		public static final double kI = 0.0;
 		public static final double kD = 0.0;
 		public static final double kIz = 0;
@@ -222,7 +222,7 @@ public final class Constants {
 		public static final double kMinVelocity = 0;
 		public static final double kMaxAcel = 20_000;
 		public static final double kMaxVelocity = 10_000;
-		public static final double kAllowedError = 0.2;
+		public static final double kAllowedError = 0.05;
 
 		public static final double kMinEncoderValue = 0.0;
 		public static final double kMaxEncoderValue = 42.0;
@@ -234,11 +234,11 @@ public final class Constants {
     public static final int kMotorPort = 15;
 		public static final boolean kInvert = true;
 		public static final int kSmartCurrentLimit = 60;
-		public static final double kP = .02; // TODO: tune PID
+		public static final double kP = .000167; // TODO: tune PID
 		public static final double kI = 0;
-		public static final double kD = 0.00003;// 0.000_03;
+		public static final double kD = 0.000_0125;// 0.000_03;
 		public static final double kIz = 0.0;
-		public static final double kFF = .0;// 0.000_193;
+		public static final double kFF = .000_0804;// 0.000_193;
 		public static final double kMaxOutput = 1;
 		public static final double kMinOutput = -1;
 		public static final int kSlotID = 0;
@@ -251,22 +251,22 @@ public final class Constants {
     	public static final double kAllowedErrorPercent = .2;
 		public static final double kSpeed = 1.0;
 		public static final int kStartProximitySensorPort = 0;
-		public static final int kCenterProximitySensorPort = 1;
+		public static final int kCenterProximitySensorPort = 2;
 	}
 
 	public static final class IntakeArmConstants {
-		public static final int kCountsPerRevolution = 8192;
+		public static final int kCountsPerRevolution = 42;
 		public static final double kAllowedError = 0.2;
 		public static final double kMinEncoderValue = 0.0;
 		public static final double kMaxEncoderValue = 42.0;
 		public static final double kMinAngle = 24.36;
 		public static final double kMaxAngle = 77.64;
 		public static final int kMotorPort = 14;
-		public static final boolean kInvert = false;
+		public static final boolean kInvert = true;
 		public static final int kSmartCurrentLimit = 0;
 		public static final double kP = .02; // TODO: tune PID
 		public static final double kI = 0;
-		public static final double kD = 0.00003;// 0.000_03;
+		public static final double kD = 0;// 0.000_03;
 		public static final double kIz = 0.0;
 		public static final double kFF = .0;// 0.000_193;
 		public static final double kMinOutput = 0;
@@ -283,7 +283,6 @@ public final class Constants {
 		public static final double kBounceUpPosition = 0;
 		public static final double kBounceTime = 0;
 	}
-
 
 	public static final class IntakeConstants {
 		public static final int kMotorPort = 13;

@@ -23,19 +23,19 @@ public class CommandComposer {
 
     public static Command getAimAndPrepCommand(ShootCommandComposer.Operation shootType) {
         // base of the hub is 8.75" offset from the tape at the top
-        double distanceBase = (LimelightSubsystem.get().getDistance() - 8.75) / 12.0;
+        // double distanceBase = (LimelightSubsystem.get().getDistance() - 8.75) / 12.0;
 
         Command aimCommand = new LimelightTurnCommand(LimelightSubsystem.get(), DriveSubsystem.get());
         //Command aimCommand = new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem, m_arduinoSubsystem);
 
-        Command startFlywheelAndPrepRTS = new ParallelCommandGroup(new DeferredCommand(() -> ShootCommandComposer.getShootCommand(distanceBase, shootType)), new DeferredCommand(IndexerCommandComposer::getReadyToShoot));
-        Command shootCommand = new SequentialCommandGroup(startFlywheelAndPrepRTS, new DeferredCommand(IndexerCommandComposer::getShootCommand), ShootCommandComposer.getShootStopCommand());
+        Command startFlywheelAndPrepRTS = new ParallelCommandGroup(new DeferredCommand(() -> ShootCommandComposer.getShootCommand(10, shootType)));
+        // Command shootCommand = new SequentialCommandGroup(startFlywheelAndPrepRTS, new DeferredCommand(IndexerCommandComposer::getShootCommand), ShootCommandComposer.getShootStopCommand());
 
-        return new SequentialCommandGroup(aimCommand, shootCommand);
+        return new SequentialCommandGroup(startFlywheelAndPrepRTS);
     }
     public static Command getShootCommand() {
         
-        Command shootCommand = new SequentialCommandGroup(new ParallelCommandGroup(new FlywheelCommand(FlywheelCommand.Operation.CMD_SETTLE, 0), new HoodCommand(HoodCommand.Operation.CMD_SETTLE, 0)), new DeferredCommand(IndexerCommandComposer::getShootCommand), ShootCommandComposer.getShootStopCommand());
+        Command shootCommand = new SequentialCommandGroup(new DeferredCommand(IndexerCommandComposer::getShootCommand), ShootCommandComposer.getShootStopCommand());
 
         return new SequentialCommandGroup(shootCommand);
     }
@@ -156,7 +156,7 @@ public class CommandComposer {
         IntakeCommand stopIntake = new IntakeCommand(IntakeCommand.Operation.CMD_STOP);
         Command index = new DeferredCommand(IndexerCommandComposer::getLoadCommand);
 
-        return new SequentialCommandGroup(startIntake, waitRTF, stopIntake, index);
+        return new SequentialCommandGroup(startIntake, waitRTF, index);
     }
     public static Command getManualFlywheelCommand(){
         NetworkTableEntry flywheelSpeed = Shuffleboard.getTab("Testing").add("Flywheel RPMS",1).getEntry();

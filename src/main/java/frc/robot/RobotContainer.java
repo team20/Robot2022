@@ -47,6 +47,7 @@ import frc.robot.commands.IntakeCommands.IntakeCommand;
 import frc.robot.commands.LimelightCommands.LimelightTurnCommand;
 import frc.robot.commands.ShooterCommands.AutoIndexCommand;
 import frc.robot.commands.ShooterCommands.FlywheelCommand;
+import frc.robot.commands.ShooterCommands.HoodCommand;
 import frc.robot.commands.ShooterCommands.ShootCommandComposer;
 import frc.robot.commands.ShooterCommands.ShootSetupCommand;
 import frc.robot.subsystems.ArduinoSubsystem;
@@ -136,26 +137,26 @@ public class RobotContainer {
                 .whenHeld(new PixyTargetCommand(m_driveSubsystem, m_arduinoSubsystem, () -> DriveConstants.kPixySpeed));
 
         // left bumper and triangle button: traversal climb
-        new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle))
-                .whenActive(CommandComposer.getTraversalClimbCommand());
+        // new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+        //         .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle))
+        //         .whenActive(CommandComposer.getTraversalClimbCommand());
 
         // left bumper and square button: high climb
-        new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle))
-                .whenActive(CommandComposer.getHighClimbCommand());
+        // new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+        //         .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle))
+        //         .whenActive(CommandComposer.getHighClimbCommand());
 
         // Slide hook variable speed (when L bumper held and R joystick pressed)
-        new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftStick))
-                .whenActive(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE,
-                        m_operatorController.getRawAxis(Axis.kRightY)));
+        // new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+        //         .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftStick))
+        //         .whenActive(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE,
+        //                 m_operatorController.getRawAxis(Axis.kRightY)));
 
         // Telescope hook variable speed (when L bumper held and L joystick pressed)
-        new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftStick))
-                .whenActive(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE,
-                        m_operatorController.getRawAxis(Axis.kLeftY)));
+        // new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+        //         .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftStick))
+        //         .whenActive(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE,
+        //                 m_operatorController.getRawAxis(Axis.kLeftY)));
 
         // bring the intake up
         new POVButton(m_driverController, DPad.kUp)
@@ -210,14 +211,21 @@ public class RobotContainer {
                 .whenHeld(CommandComposer.getSpitCommand());
 
         // Left Trigger: intake and index one ball
-        new JoystickButton(m_operatorController, Constants.ControllerConstants.Axis.kLeftTrigger)
+        new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
                 .whenHeld(CommandComposer.getLoadCommand());
+
+        new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
+                .whenReleased(new IntakeCommand(IntakeCommand.Operation.CMD_STOP));
 
         new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
                 .whileActiveOnce(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_TARMAC));
 
-        new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
+        new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
+                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
+                .whenInactive(new ParallelCommandGroup(new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
+        
+                new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
                 .whileActiveOnce(
                         CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_LAUNCHPAD));

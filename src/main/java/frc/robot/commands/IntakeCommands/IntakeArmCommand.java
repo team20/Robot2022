@@ -31,10 +31,10 @@ public class IntakeArmCommand extends CommandBase {
   public void execute() {
     if(m_operation == Operation.CMD_ARM_UP){
       IntakeArmSubsystem.get().setPosition(IntakeArmSubsystem.Position.UP_POSITION);
-      IntakeArmSubsystem.get().setPercentOutput(0);//TODO find speed
+      // IntakeArmSubsystem.get().setPercentOutput(0);//TODO find speed
     } else if(m_operation == Operation.CMD_ARM_DOWN){
       IntakeArmSubsystem.get().setPosition(IntakeArmSubsystem.Position.DOWN_POSITION);
-      IntakeArmSubsystem.get().setPercentOutput(0);//TODO find speed
+      // IntakeArmSubsystem.get().setPercentOutput(0);//TODO find speed
     } 
   }
 

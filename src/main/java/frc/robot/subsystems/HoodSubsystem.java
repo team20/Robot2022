@@ -97,7 +97,7 @@ public class HoodSubsystem extends SubsystemBase implements ShuffleboardLogging 
      */
     public void setPosition(double position) {
         m_setPosition = position;
-        m_pidController.setReference(position, CANSparkMax.ControlType.kSmartMotion, HoodConstants.kSlotID);
+        m_pidController.setReference(position, CANSparkMax.ControlType.kPosition, HoodConstants.kSlotID);
         System.out.println("reference position is: " + position);
     }
 

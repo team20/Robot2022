@@ -30,7 +30,7 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
         UP_POSITION
     }
 
-    private final double downPositionEncoderPosition = 0; // TODO find encoder position
+    private final double downPositionEncoderPosition = 36.75; // TODO find encoder position
     private final double upPositionEncoderPosition = 0; // TODO find encoder position
 
     private static IntakeArmSubsystem s_system;
@@ -110,7 +110,7 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
      */
     public void setPosition(double position) {
         m_setPosition = position;
-        m_pidController.setReference(position, ControlType.kSmartMotion, IntakeArmConstants.kSlotID);
+        m_pidController.setReference(position, ControlType.kPosition, IntakeArmConstants.kSlotID);
     }
 
     /**
@@ -122,7 +122,7 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
         } else {
             m_setPosition = upPositionEncoderPosition;
         }
-        m_pidController.setReference(m_setPosition, ControlType.kSmartMotion, IntakeArmConstants.kSlotID);
+        m_pidController.setReference(m_setPosition, ControlType.kPosition, IntakeArmConstants.kSlotID);
     }
 
     /**
