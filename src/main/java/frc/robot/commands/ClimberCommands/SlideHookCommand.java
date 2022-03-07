@@ -30,13 +30,13 @@ public class SlideHookCommand extends CommandBase {
         SlideHookSubsystem subsystem = SlideHookSubsystem.get();
         if(m_operation == Operation.CMD_POSITION){
             subsystem.setPosition(m_param/SlideHookConstants.kInchesPerQuarterTurn);
-            System.out.println("Setting slide hook position to "+m_param+ " inches");
+            // System.out.println("Setting slide hook position to "+m_param+ " inches");
         }
         else if (m_operation == Operation.CMD_MOVE){
             subsystem.setSpeed(m_param);
         }
         else if(m_operation == Operation.CMD_TO_ANGLE){
-            System.out.println("NAVX ANGLE IS "+subsystem.getHeading());//TODO: might not be yaw depending on orientation of navx
+            // System.out.println("NAVX ANGLE IS "+subsystem.getHeading());//TODO: might not be yaw depending on orientation of navx
             subsystem.setSpeed(m_param);
         }
         

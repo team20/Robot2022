@@ -114,12 +114,12 @@ public final class Constants {
 		public static final double kMinOutput = -1;
 		public static final int kSlotID = 0;
 
-		public static final double kFineTurningSpeed = 0.2;
+		public static final double kFineTurningSpeed = .1;
 
 		// navX stuff
 		public static final SPI.Port kGyroPort = SPI.Port.kMXP;
 		public static final boolean kGyroReversed = true;
-		public static final double kTurnP = 0.0;
+		public static final double kTurnP = 0.03;
 		public static final double kTurnI = 0.0;
 		public static final double kTurnD = 0.0;
 		public static final double kTurnTolerance = 3;
@@ -147,8 +147,8 @@ public final class Constants {
 		public static final double kMaxAccelerationMetersPerSecondSquared = .5;
 
 		public static final double kMaxRotSpeedMetersPerSecond = 1;
-		public static final double kWheelDiameterMeters = Units.inchesToMeters(6);
-		public static final double kGearRatio = 8.18;
+		public static final double kWheelDiameterMeters = 4;
+		public static final double kGearRatio = 7;
 
 		public static final double kTurningMultiplier = .45;
 		public static final double kQuickStopThreshold = .2;
@@ -208,10 +208,10 @@ public final class Constants {
 	}
 
 	public static final class HoodConstants {
-		public static final int kMotorPort = 6;
-		public static final boolean kInvert = true;
+		public static final int kMotorPort = 7;
+		public static final boolean kInvert = false;
 		public static final int kSmartCurrentLimit = 60;
-		public static final double kP = 0.000_1;
+		public static final double kP = 0.02;
 		public static final double kI = 0.0;
 		public static final double kD = 0.0;
 		public static final double kIz = 0;
@@ -222,7 +222,7 @@ public final class Constants {
 		public static final double kMinVelocity = 0;
 		public static final double kMaxAcel = 20_000;
 		public static final double kMaxVelocity = 10_000;
-		public static final double kAllowedError = 0.2;
+		public static final double kAllowedError = 0.05;
 
 		public static final double kMinEncoderValue = 0.0;
 		public static final double kMaxEncoderValue = 42.0;
@@ -232,13 +232,13 @@ public final class Constants {
 
 	public static final class IndexerConstants {
     public static final int kMotorPort = 15;
-		public static final boolean kInvert = false;
+		public static final boolean kInvert = true;
 		public static final int kSmartCurrentLimit = 60;
-		public static final double kP = 0; // TODO: tune PID
+		public static final double kP = .000167; // TODO: tune PID
 		public static final double kI = 0;
-		public static final double kD = 0.0000;// 0.000_03;
+		public static final double kD = 0.000_0125;// 0.000_03;
 		public static final double kIz = 0.0;
-		public static final double kFF = .0;// 0.000_193;
+		public static final double kFF = .000_0804;// 0.000_193;
 		public static final double kMaxOutput = 1;
 		public static final double kMinOutput = -1;
 		public static final int kSlotID = 0;
@@ -251,22 +251,22 @@ public final class Constants {
     	public static final double kAllowedErrorPercent = .2;
 		public static final double kSpeed = 1.0;
 		public static final int kStartProximitySensorPort = 0;
-		public static final int kCenterProximitySensorPort = 1;
+		public static final int kCenterProximitySensorPort = 2;
 	}
 
 	public static final class IntakeArmConstants {
-		public static final int kCountsPerRevolution = 8192;
-		public static final double kAllowedError = 0.2;
+		public static final int kCountsPerRevolution = 42;
+		public static final double kAllowedError = 2;
 		public static final double kMinEncoderValue = 0.0;
 		public static final double kMaxEncoderValue = 42.0;
 		public static final double kMinAngle = 24.36;
 		public static final double kMaxAngle = 77.64;
 		public static final int kMotorPort = 14;
-		public static final boolean kInvert = false;
+		public static final boolean kInvert = true;
 		public static final int kSmartCurrentLimit = 0;
-		public static final double kP = 0; // TODO: tune PID
+		public static final double kP = .02; // TODO: tune PID
 		public static final double kI = 0;
-		public static final double kD = 0.0000;// 0.000_03;
+		public static final double kD = 0;// 0.000_03;
 		public static final double kIz = 0.0;
 		public static final double kFF = .0;// 0.000_193;
 		public static final double kMinOutput = 0;
@@ -284,10 +284,9 @@ public final class Constants {
 		public static final double kBounceTime = 0;
 	}
 
-
 	public static final class IntakeConstants {
 		public static final int kMotorPort = 13;
-		public static final boolean kInvert = false;
+		public static final boolean kInvert = true;
 	}
 
 	public static final class LimelightConstants { // TODO: tune PID loop
@@ -309,7 +308,7 @@ public final class Constants {
 	}
 
 	public static final class SlideHookConstants {
-		public static final int kMasterPort = 7;
+		public static final int kMasterPort = 6;
 		public static final int kFollowerPort = 8;
 		public static final boolean kMasterInvert = false;
 		public static final boolean kFollowerOppose = false;
@@ -346,7 +345,7 @@ public final class Constants {
 		public static final int kMasterPort = 11;
 		public static final int kFollowerPort = 12;
 		public static final boolean kMasterInvert = false;
-		public static final boolean kFollowerOppose = false;
+		public static final boolean kFollowerOppose = true;
 		public static final int kSmartCurrentLimit = 60;// TODO: change
 		public static final double kP = .01; // TODO: tune PID
 		public static final double kI = 0;

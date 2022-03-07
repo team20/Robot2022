@@ -13,6 +13,7 @@ public class IntakeArmCommand extends CommandBase {
     CMD_ARM_UP,
     CMD_ARM_DOWN,
     CMD_ARM_SETTLE,
+    CMD_RESET_ENCODER,
   }
 
   private Operation m_operation;
@@ -31,11 +32,15 @@ public class IntakeArmCommand extends CommandBase {
   public void execute() {
     if(m_operation == Operation.CMD_ARM_UP){
       IntakeArmSubsystem.get().setPosition(IntakeArmSubsystem.Position.UP_POSITION);
-      IntakeArmSubsystem.get().setPercentOutput(0);//TODO find speed
+      System.out.println("setting to up");
+      // IntakeArmSubsystem.get().setPercentOutput(0);//TODO find speed
     } else if(m_operation == Operation.CMD_ARM_DOWN){
       IntakeArmSubsystem.get().setPosition(IntakeArmSubsystem.Position.DOWN_POSITION);
-      IntakeArmSubsystem.get().setPercentOutput(0);//TODO find speed
+      // IntakeArmSubsystem.get().setPercentOutput(0);//TODO find speed
     } 
+    else if(m_operation==Operation.CMD_RESET_ENCODER){
+      IntakeArmSubsystem.get().resetEncoder();
+    }
   }
 
   // Called once the command ends or is interrupted.

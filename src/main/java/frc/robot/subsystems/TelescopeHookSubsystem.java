@@ -63,7 +63,7 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
 
     public void periodic() {
         SmartDashboard.putNumber("Telescope Hook Position", getPosition());
-        System.out.println("Telescope Hook Position: "+getPosition());
+        // System.out.println("Telescope Hook Position: "+getPosition());
     }
 
     /**

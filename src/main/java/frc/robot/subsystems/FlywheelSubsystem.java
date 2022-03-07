@@ -22,8 +22,8 @@ public class FlywheelSubsystem extends SubsystemBase implements ShuffleboardLogg
     public static FlywheelSubsystem get(){return s_subsystem;};
     private final CANSparkMax m_neoFlywheelMaster = new CANSparkMax(FlywheelConstants.kMasterPort,
             MotorType.kBrushless);
-    //private final CANSparkMax m_neoFlywheelFollower = new CANSparkMax(FlywheelConstants.kFollowerPort,
-    //        MotorType.kBrushless);
+    private final CANSparkMax m_neoFlywheelFollower = new CANSparkMax(FlywheelConstants.kFollowerPort,
+           MotorType.kBrushless);
     private final SparkMaxPIDController m_neoController = m_neoFlywheelMaster.getPIDController();
     private final RelativeEncoder m_neoEncoderMaster = m_neoFlywheelMaster.getEncoder();
     private double m_setVelocity;
@@ -43,14 +43,14 @@ public class FlywheelSubsystem extends SubsystemBase implements ShuffleboardLogg
                 FlywheelConstants.kPeakCurrentDurationMillis);
         m_neoFlywheelMaster.setSoftLimit(SoftLimitDirection.kForward, 0.0f);
 
-        /*m_neoFlywheelFollower.restoreFactoryDefaults();
+        m_neoFlywheelFollower.restoreFactoryDefaults();
         m_neoFlywheelFollower.setIdleMode(IdleMode.kBrake);
         m_neoFlywheelFollower.enableVoltageCompensation(12);
         m_neoFlywheelFollower.setSmartCurrentLimit(FlywheelConstants.kSmartCurrentLimit);
         m_neoFlywheelFollower.setSecondaryCurrentLimit(FlywheelConstants.kPeakCurrentLimit,
                 FlywheelConstants.kPeakCurrentDurationMillis);
         m_neoFlywheelFollower.follow(m_neoFlywheelMaster, FlywheelConstants.kFollowerOppose);
-        */
+        
         m_neoEncoderMaster.setPositionConversionFactor(1 / FlywheelConstants.kGearRatio);
         m_neoEncoderMaster.setVelocityConversionFactor(1 / FlywheelConstants.kGearRatio);
 
@@ -66,6 +66,7 @@ public class FlywheelSubsystem extends SubsystemBase implements ShuffleboardLogg
         SmartDashboard.putBoolean("Flywheel at Setpoint", atSetpoint());
         SmartDashboard.putNumber("Flywheel Velocity", getVelocity());
         SmartDashboard.putNumber("Flywheel Setpoint", m_setVelocity);
+        System.out.println("FLYWHEEL VELOCITY IS "+getVelocity());
         if (m_setVelocity == 0) {
             m_neoFlywheelMaster.stopMotor();
         } else {
