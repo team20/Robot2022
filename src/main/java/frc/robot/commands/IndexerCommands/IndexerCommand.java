@@ -56,7 +56,7 @@ public class IndexerCommand extends CommandBase {
     IndexerSubsystem indexerSubsystem = IndexerSubsystem.get();
     if(m_operation == Operation.CMD_ADV){
       m_desiredIndexerState = indexerSubsystem.getAdvanceTargetState();
-      System.out.println("Desired state: " + (byte)m_desiredIndexerState);
+      // System.out.println("Desired state: " + (byte)m_desiredIndexerState);
     } else if(m_operation == Operation.CMD_REV){
       m_desiredIndexerState = indexerSubsystem.getReverseTargetState(m_keepBallRTF);
       System.out.println((byte)m_desiredIndexerState);

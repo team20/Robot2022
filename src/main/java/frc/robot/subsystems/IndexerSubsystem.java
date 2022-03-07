@@ -184,22 +184,22 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     }
 
     public byte getAdvanceTargetState(){
-        System.out.println("CURR SUBSYSTEM STATE: " + Integer.toBinaryString(getCurrStateSubsystem()));
-        System.out.println("RETURNING STATE(FWD): " + Integer.toBinaryString((byte)( getCurrStateSubsystem()>> 1)));
+        // System.out.println("CURR SUBSYSTEM STATE: " + Integer.toBinaryString(getCurrStateSubsystem()));
+        // System.out.println("RETURNING STATE(FWD): " + Integer.toBinaryString((byte)( getCurrStateSubsystem()>> 1)));
         //find sensor states if moved forward one position
         return (byte)( getCurrStateSubsystem()>> 1);
     }
     public byte getReverseTargetState(boolean preserveRTF){
         
         if(preserveRTF){
-            System.out.println("CURR SUBSYSTEM STATE: " + Integer.toBinaryString(getCurrStateSubsystem()));
-            System.out.println("RETURNING STATE(REV): " + Integer.toBinaryString((byte)((getCurrStateSubsystem() << 1) & andState | (getCurrStateSubsystem() & orState))));
+            // System.out.println("CURR SUBSYSTEM STATE: " + Integer.toBinaryString(getCurrStateSubsystem()));
+            // System.out.println("RETURNING STATE(REV): " + Integer.toBinaryString((byte)((getCurrStateSubsystem() << 1) & andState | (getCurrStateSubsystem() & orState))));
             
             //find sensor states if moved backward one position, preserving ball RTF and removing everything but the last 3 bits
             return (byte)((getCurrStateSubsystem() << 1) & andState | (getCurrStateSubsystem() & orState));
         }else{
-            System.out.println("CURR SUBSYSTEM STATE: " + Integer.toBinaryString(getCurrStateSubsystem()));
-            System.out.println("RETURNING STATE(REV): " + Integer.toBinaryString((byte)((getCurrStateSubsystem() << 1) & andState)));
+            // System.out.println("CURR SUBSYSTEM STATE: " + Integer.toBinaryString(getCurrStateSubsystem()));
+            // System.out.println("RETURNING STATE(REV): " + Integer.toBinaryString((byte)((getCurrStateSubsystem() << 1) & andState)));
             
             //find sensor states if moved backward one position, WITHOUT preserving ball RTF and removing everything but the last 3 bits
             return (byte)((getCurrStateSubsystem() << 1) & andState);

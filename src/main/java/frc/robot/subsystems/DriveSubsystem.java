@@ -93,7 +93,7 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
                 m_backRight.follow(m_frontRight, DriveConstants.kBackRightOppose);
 
                 m_leftEncoder.setPositionConversionFactor(
-                                (1 / DriveConstants.kGearRatio) * Math.PI * DriveConstants.kWheelDiameterMeters);
+                                (1 / DriveConstants.kGearRatio) * Math.PI* DriveConstants.kWheelDiameterMeters);
                 m_leftEncoder.setVelocityConversionFactor(
                                 (1 / DriveConstants.kGearRatio) * Math.PI * DriveConstants.kWheelDiameterMeters / 60.0);
 

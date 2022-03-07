@@ -21,14 +21,16 @@ public class DriveDistanceCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    DriveSubsystem.get().resetEncoders();
     m_startDistanceLeft = DriveSubsystem.get().getLeftEncoderPosition();
     m_startDistanceRight= DriveSubsystem.get().getRightEncoderPosition();
-    DriveSubsystem.get().tankDrive(.2, .2); //TODO set speeds
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    DriveSubsystem.get().tankDrive(.2, .2); //TODO set speeds
+  }
 
   // Called once the command ends or is interrupted.
   @Override

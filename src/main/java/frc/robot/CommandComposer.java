@@ -153,7 +153,7 @@ public class CommandComposer {
         //Command prepIndexer = IndexerCommandComposer.prep(m_indexerSubsystem);
         IntakeCommand startIntake = new IntakeCommand(IntakeCommand.Operation.CMD_RUN_FWD);
         IndexerCommand waitRTF = new IndexerCommand(IndexerCommand.Operation.CMD_WAIT_RTF);
-        IntakeCommand stopIntake = new IntakeCommand(IntakeCommand.Operation.CMD_STOP);
+        // IntakeCommand stopIntake = new IntakeCommand(IntakeCommand.Operation.CMD_STOP);
         Command index = new DeferredCommand(IndexerCommandComposer::getLoadCommand);
 
         return new SequentialCommandGroup(startIntake, waitRTF, index);

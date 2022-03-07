@@ -25,7 +25,7 @@ public class IntakeCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("starting intake command");
+    System.out.println("GGGGGGGGGGGGGGGGGGGG starting intake command");
   }
 
   // Called every time the scheduler runs while the command is scheduled.

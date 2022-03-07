@@ -26,9 +26,9 @@ public class TelescopeHookCommand extends CommandBase {
     public void execute() {
         TelescopeHookSubsystem subsystem = TelescopeHookSubsystem.get();
         if(m_operation == Operation.CMD_POSITION){
-            System.out.println("setting position to "+m_param);
+            // System.out.println("setting position to "+m_param);
             subsystem.setPosition(m_param);
-            System.out.println("Motor current is "+subsystem.getOutputCurrent());
+            // System.out.println("Motor current is "+subsystem.getOutputCurrent());
         }else if(m_operation == Operation.CMD_MOVE){
             subsystem.setSpeed(m_param);
         }
