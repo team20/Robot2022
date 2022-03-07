@@ -114,7 +114,7 @@ public final class Constants {
 		public static final double kMinOutput = -1;
 		public static final int kSlotID = 0;
 
-		public static final double kFineTurningSpeed = 0.2;
+		public static final double kFineTurningSpeed = .1;
 
 		// navX stuff
 		public static final SPI.Port kGyroPort = SPI.Port.kMXP;
@@ -147,8 +147,8 @@ public final class Constants {
 		public static final double kMaxAccelerationMetersPerSecondSquared = .5;
 
 		public static final double kMaxRotSpeedMetersPerSecond = 1;
-		public static final double kWheelDiameterMeters = Units.inchesToMeters(6);
-		public static final double kGearRatio = 8.18;
+		public static final double kWheelDiameterMeters = 4;
+		public static final double kGearRatio = 7;
 
 		public static final double kTurningMultiplier = .45;
 		public static final double kQuickStopThreshold = .2;
@@ -256,7 +256,7 @@ public final class Constants {
 
 	public static final class IntakeArmConstants {
 		public static final int kCountsPerRevolution = 42;
-		public static final double kAllowedError = 0.2;
+		public static final double kAllowedError = 2;
 		public static final double kMinEncoderValue = 0.0;
 		public static final double kMaxEncoderValue = 42.0;
 		public static final double kMinAngle = 24.36;

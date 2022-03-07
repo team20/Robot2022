@@ -66,7 +66,7 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
 
     public void periodic() {
         SmartDashboard.putNumber("Slide Hook Position", getPosition());
-        System.out.println("Slide Hook Position is "+getPosition());
+        // System.out.println("Slide Hook Position is "+getPosition());
     }
 
     /**

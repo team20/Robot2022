@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -31,6 +32,7 @@ import frc.robot.Constants.ControllerConstants.DPad;
 import frc.robot.commands.DeferredCommand;
 import frc.robot.commands.ArduinoCommands.UpdateLEDsCommand;
 import frc.robot.commands.AutoCommands.ComplexAutoSequence;
+import frc.robot.commands.AutoCommands.DriveDistanceCommand;
 import frc.robot.commands.AutoCommands.SitAndShootHigh;
 import frc.robot.commands.AutoCommands.SitAndShootLow;
 import frc.robot.commands.ClimberCommands.SlideHookCommand;
@@ -44,6 +46,7 @@ import frc.robot.commands.IntakeArmCommands.RetractArmCommand;
 import frc.robot.commands.IntakeCommands.DriveIntakeArmCommand;
 import frc.robot.commands.IntakeCommands.IntakeArmCommand;
 import frc.robot.commands.IntakeCommands.IntakeCommand;
+import frc.robot.commands.IntakeCommands.IntakeArmCommand.Operation;
 import frc.robot.commands.LimelightCommands.LimelightTurnCommand;
 import frc.robot.commands.ShooterCommands.AutoIndexCommand;
 import frc.robot.commands.ShooterCommands.FlywheelCommand;
@@ -174,11 +177,11 @@ public class RobotContainer {
 
         // fine steering left
         new JoystickButton(m_driverController, Button.kLeftBumper).whenHeld(new ArcadeDriveCommand(m_driveSubsystem,
-                () -> 0.0, () -> -DriveConstants.kFineTurningSpeed, () -> DriveConstants.kFineTurningSpeed));
+                () -> 0.0, () -> DriveConstants.kFineTurningSpeed, () -> -DriveConstants.kFineTurningSpeed));
 
         // fine steering right
         new JoystickButton(m_driverController, Button.kRightBumper).whenHeld(new ArcadeDriveCommand(m_driveSubsystem,
-                () -> 0.0, () -> DriveConstants.kFineTurningSpeed, () -> -DriveConstants.kFineTurningSpeed));
+                () -> 0.0, () -> -DriveConstants.kFineTurningSpeed, () -> DriveConstants.kFineTurningSpeed));
 
         // arcade drive
         m_driveSubsystem.setDefaultCommand(
@@ -187,17 +190,29 @@ public class RobotContainer {
                         () -> m_driverController.getRawAxis(Axis.kLeftTrigger),
                         () -> m_driverController.getRawAxis(Axis.kRightTrigger)));
 
+        // new JoystickButton(m_driverController, ControllerConstants.Button.kTriangle)
+        //         .whenHeld(CommandComposer.getAimAndPrepCommand(ShootCommandComposer.Operation.LIMELIGHT_LINEAR));
+        // new JoystickButton(m_driverController, ControllerConstants.Button.kTriangle)
         new JoystickButton(m_driverController, ControllerConstants.Button.kTriangle)
-                .whenHeld(CommandComposer.getAimAndPrepCommand(ShootCommandComposer.Operation.LIMELIGHT_LINEAR));
+        .whenHeld(new IndexerCommand(IndexerCommand.Operation.CMD_FWD_MAN));
+
+        new JoystickButton(m_driverController, ControllerConstants.Button.kTriangle)
+        .whenReleased(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
+
+        new JoystickButton(m_driverController, ControllerConstants.Button.kShare)
+        .whenHeld(new ParallelCommandGroup(new IndexerCommand(IndexerCommand.Operation.CMD_REV_MAN), new IntakeCommand(IntakeCommand.Operation.CMD_RUN_REV)));
+
+        new JoystickButton(m_driverController, ControllerConstants.Button.kShare)
+        .whenReleased(new ParallelCommandGroup(new IndexerCommand(IndexerCommand.Operation.CMD_STOP), new IntakeCommand(IntakeCommand.Operation.CMD_STOP)));
 
         new JoystickButton(m_driverController, ControllerConstants.Button.kCircle)
                 .whenHeld(CommandComposer.getShootCommand());
 
-        new POVButton(m_driverController, ControllerConstants.DPad.kUp)
-                .whenHeld(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP));
+        // new POVButton(m_driverController, ControllerConstants.DPad.kUp)
+        //         .whenHeld(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP));
 
-        new POVButton(m_driverController, ControllerConstants.DPad.kDown)
-                .whenHeld(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN));
+        // new POVButton(m_driverController, ControllerConstants.DPad.kDown)
+        //         .whenHeld(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN));
 
         // operator
 
@@ -210,34 +225,56 @@ public class RobotContainer {
         new JoystickButton(m_operatorController, Constants.ControllerConstants.Axis.kRightTrigger)
                 .whenHeld(CommandComposer.getSpitCommand());
 
-        // Left Trigger: intake and index one ball
         new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
-                .whenHeld(CommandComposer.getLoadCommand());
+                .whenHeld(new IntakeCommand(IntakeCommand.Operation.CMD_RUN_FWD));
 
         new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
                 .whenReleased(new IntakeCommand(IntakeCommand.Operation.CMD_STOP));
+        // Left Trigger: intake and index one ball
+        // new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
+        //         .whenHeld(CommandComposer.getLoadCommand());
+
+        // new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
+        //         .whenReleased(new IntakeCommand(IntakeCommand.Operation.CMD_STOP));
+
+        // new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
+        //         .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
+        //         .whileActiveOnce(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_TARMAC));
 
         new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
-                .whileActiveOnce(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_TARMAC));
-
+                .whileActiveOnce(new ParallelCommandGroup(new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 9.5), new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4000)));
+        
         new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
                 .whenInactive(new ParallelCommandGroup(new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
         
-                new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
+        new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
-                .whileActiveOnce(
-                        CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_LAUNCHPAD));
+                .whileActiveOnce(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_LAUNCHPAD));
 
         new JoystickButton(m_operatorController, ControllerConstants.Button.kCircle)
                 .whenHeld(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_FENDER_HIGH));
 
-        new JoystickButton(m_operatorController, ControllerConstants.Button.kX)
-                .whenHeld(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_FENDER_LOW));
+        // new JoystickButton(m_operatorController, ControllerConstants.Button.kX)
+        //         .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
+        //         .whileActiveOnce(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_FENDER_LOW));
 
+        // hoodSetpoint=9.5;
+    //   flywheelSetpoint=4000;
+    // }
+        new JoystickButton(m_operatorController, ControllerConstants.Button.kX)
+                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
+                .whileActiveOnce(new ParallelCommandGroup(new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11), new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2000)));
+        
+
+        new JoystickButton(m_operatorController, ControllerConstants.Button.kX)
+                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
+                .whenInactive(new ParallelCommandGroup(new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
+        
         new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftStick)
                 .whenHeld(new DriveIntakeArmCommand(() -> m_operatorController.getRawAxis(Axis.kLeftY)));
+        new JoystickButton(m_operatorController, ControllerConstants.Button.kTrackpad).whenPressed(new IntakeArmCommand(Operation.CMD_RESET_ENCODER));
     }
 
     public void configureTestingBindings() {
@@ -310,7 +347,20 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return m_autoChooser.getSelected();
+        return new SequentialCommandGroup(
+            new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
+            new ParallelCommandGroup(new DriveDistanceCommand(80), new IntakeCommand(IntakeCommand.Operation.CMD_RUN_FWD)), 
+            new IntakeCommand(IntakeCommand.Operation.CMD_STOP).withTimeout(1), 
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 10), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 6000)).withTimeout(10),
+            new IndexerCommand(IndexerCommand.Operation.CMD_FWD_MAN).withTimeout(5),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)),
+                new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
+        // DriveDistanceCommand(80);
+        // return m_autoChooser.getSelected();
     }
 
     public void generateAutonomousCommands() {

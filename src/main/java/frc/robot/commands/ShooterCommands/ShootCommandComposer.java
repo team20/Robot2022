@@ -33,8 +33,12 @@ public class ShootCommandComposer {
     double hoodSetpoint;
     double flywheelSetpoint;
     if(shootClass==Operation.PRESET_TARMAC){
-      hoodSetpoint=5;
-      flywheelSetpoint=3000;
+      hoodSetpoint=9.5;
+      flywheelSetpoint=4000;
+    }
+    else if(shootClass==Operation.PRESET_FENDER_LOW){
+      hoodSetpoint=11;
+      flywheelSetpoint=2000;
     }
     else{
       hoodSetpoint=0;
