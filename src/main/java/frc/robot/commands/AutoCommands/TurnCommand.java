@@ -10,7 +10,7 @@ public class TurnCommand extends CommandBase {
     private final DriveSubsystem m_driveSubsystem;
     private final double m_angle;
     private final PIDController m_turnController = new PIDController(DriveConstants.kTurnP, DriveConstants.kTurnI,
-            DriveConstants.kTurnP);
+            DriveConstants.kTurnD);
 
     public TurnCommand(DriveSubsystem driveSubsystem, double turnAngle) {
         m_driveSubsystem = driveSubsystem;
@@ -19,6 +19,7 @@ public class TurnCommand extends CommandBase {
     }
 
     public void initialize() {
+        m_driveSubsystem.zeroHeading();
         m_turnController.setSetpoint(m_angle);
         m_turnController.setTolerance(DriveConstants.kTurnTolerance);
     }

@@ -35,7 +35,13 @@ public class CommandComposer {
     }
     public static Command getShootCommand() {
         
-        Command shootCommand = new SequentialCommandGroup(new DeferredCommand(IndexerCommandComposer::getShootCommand), ShootCommandComposer.getShootStopCommand());
+        Command shootCommand = new SequentialCommandGroup(new DeferredCommand(IndexerCommandComposer::getShootCommand));
+
+        return new SequentialCommandGroup(shootCommand);
+    }
+    public static Command getAutoShootCommand() {
+        
+        Command shootCommand = new SequentialCommandGroup(new ParallelCommandGroup(new FlywheelCommand(FlywheelCommand.Operation.CMD_SETTLE,0), new HoodCommand(HoodCommand.Operation.CMD_SETTLE,0)).withTimeout(2), new DeferredCommand(IndexerCommandComposer::getShootCommand), new DeferredCommand(IndexerCommandComposer::getShootCommand));
 
         return new SequentialCommandGroup(shootCommand);
     }
@@ -43,7 +49,7 @@ public class CommandComposer {
         return new SequentialCommandGroup(new IndexerCommand(IndexerCommand.Operation.CMD_REV_MAN), new IndexerCommand(IndexerCommand.Operation.CMD_WAIT_RTF), new IndexerCommand(IndexerCommand.Operation.CMD_STOP), new IntakeCommand(IntakeCommand.Operation.CMD_RUN_REV));
     }
     public static Command getPresetShootCommand(ShootCommandComposer.Operation shootType) {
-       return new ParallelCommandGroup(new DeferredCommand(() -> (ShootCommandComposer.getShootCommand(0, shootType))), new DeferredCommand(IndexerCommandComposer::getReadyToShoot));
+       return new ParallelCommandGroup(new DeferredCommand(() -> (ShootCommandComposer.getShootCommand(0, shootType))));
     }
 
     public static Command getTraversalClimbCommand() {

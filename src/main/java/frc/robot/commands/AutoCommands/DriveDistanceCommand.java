@@ -4,6 +4,7 @@
 
 package frc.robot.commands.AutoCommands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -41,6 +42,7 @@ public class DriveDistanceCommand extends CommandBase {
   public boolean isFinished() {
     double currDistanceLeft = DriveSubsystem.get().getLeftEncoderPosition();
     double currDistanceRight= DriveSubsystem.get().getRightEncoderPosition();
+    SmartDashboard.putBoolean("DriveDistance finished", (currDistanceLeft - m_startDistanceLeft) > m_distance && (currDistanceRight - m_startDistanceRight) > m_distance);
     return (currDistanceLeft - m_startDistanceLeft) > m_distance && (currDistanceRight - m_startDistanceRight) > m_distance;
   }
 }
