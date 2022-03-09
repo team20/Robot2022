@@ -31,7 +31,7 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
     }
 
     private final double downPositionEncoderPosition = 36.75; // TODO find encoder position
-    private final double upPositionEncoderPosition = -3; // TODO find encoder position
+    private final double upPositionEncoderPosition = 0; // TODO find encoder position
 
     private static IntakeArmSubsystem s_system;
 
@@ -46,7 +46,7 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
         s_system = this;
         m_motor.restoreFactoryDefaults();
         m_motor.setInverted(IntakeArmConstants.kInvert);
-        m_motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        m_motor.setIdleMode(CANSparkMax.IdleMode.kCoast);
         m_motor.enableVoltageCompensation(12);
         m_motor.setSmartCurrentLimit(IntakeArmConstants.kSmartCurrentLimit);
 
@@ -69,7 +69,6 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
 
     public void periodic() {
         //SmartDashboard.putNumber("Arm Position", getPosition());
-        System.out.println("arm position: " + getPosition());
         if (atSetpoint()) {
             m_motor.stopMotor();
         }
@@ -121,7 +120,7 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
             m_setPosition = downPositionEncoderPosition;
         } else {
             m_setPosition = upPositionEncoderPosition;
-            System.out.println("JJJJJJJJJ subsystem - val is "+m_setPosition);
+            //System.out.println("JJJJJJJJJ subsystem - val is "+m_setPosition);
         }
         m_pidController.setReference(m_setPosition, ControlType.kPosition, IntakeArmConstants.kSlotID);
     }

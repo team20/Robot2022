@@ -35,6 +35,7 @@ import frc.robot.commands.AutoCommands.ComplexAutoSequence;
 import frc.robot.commands.AutoCommands.DriveDistanceCommand;
 import frc.robot.commands.AutoCommands.SitAndShootHigh;
 import frc.robot.commands.AutoCommands.SitAndShootLow;
+import frc.robot.commands.AutoCommands.TurnCommand;
 import frc.robot.commands.ClimberCommands.SlideHookCommand;
 import frc.robot.commands.ClimberCommands.TelescopeHookCommand;
 import frc.robot.commands.DriveCommands.ArcadeDriveCommand;
@@ -225,17 +226,17 @@ public class RobotContainer {
         new JoystickButton(m_operatorController, Constants.ControllerConstants.Axis.kRightTrigger)
                 .whenHeld(CommandComposer.getSpitCommand());
 
-        new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
-                .whenHeld(new IntakeCommand(IntakeCommand.Operation.CMD_RUN_FWD));
+        //new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
+        //        .whenHeld(new IntakeCommand(IntakeCommand.Operation.CMD_RUN_FWD));
 
-        new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
-                .whenReleased(new IntakeCommand(IntakeCommand.Operation.CMD_STOP));
+        //new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
+        //        .whenReleased(new IntakeCommand(IntakeCommand.Operation.CMD_STOP));
         // Left Trigger: intake and index one ball
-        // new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
-        //         .whenHeld(CommandComposer.getLoadCommand());
+         new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
+                 .whenHeld(CommandComposer.getLoadCommand());
 
-        // new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
-        //         .whenReleased(new IntakeCommand(IntakeCommand.Operation.CMD_STOP));
+         new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
+                 .whenReleased(new IntakeCommand(IntakeCommand.Operation.CMD_STOP));
 
         // new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
         //         .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
@@ -255,6 +256,8 @@ public class RobotContainer {
 
         new JoystickButton(m_operatorController, ControllerConstants.Button.kCircle)
                 .whenHeld(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_FENDER_HIGH));
+        new JoystickButton(m_operatorController, ControllerConstants.Button.kCircle)
+                .whenReleased(new ParallelCommandGroup(new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
 
         // new JoystickButton(m_operatorController, ControllerConstants.Button.kX)
         //         .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
@@ -273,7 +276,7 @@ public class RobotContainer {
                 .whenInactive(new ParallelCommandGroup(new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
         
         new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftStick)
-                .whenHeld(new DriveIntakeArmCommand(() -> m_operatorController.getRawAxis(Axis.kLeftY)));
+                .whenHeld(new DriveIntakeArmCommand(() -> m_operatorController.getRawAxis(Axis.kLeftY) * 0.1));
         new JoystickButton(m_operatorController, ControllerConstants.Button.kTrackpad).whenPressed(new IntakeArmCommand(Operation.CMD_RESET_ENCODER));
     }
 
@@ -347,18 +350,35 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new SequentialCommandGroup(
+        //Two ball auto
+        /*return new SequentialCommandGroup(
             new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
-            new ParallelCommandGroup(new DriveDistanceCommand(80), new IntakeCommand(IntakeCommand.Operation.CMD_RUN_FWD)), 
-            new IntakeCommand(IntakeCommand.Operation.CMD_STOP).withTimeout(1), 
+            new ParallelCommandGroup(new DriveDistanceCommand(45),CommandComposer.getLoadCommand()), 
+            new IntakeCommand(IntakeCommand.Operation.CMD_STOP).withTimeout(1),
             new ParallelCommandGroup(
-                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 10), 
-                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 6000)).withTimeout(10),
-            new IndexerCommand(IndexerCommand.Operation.CMD_FWD_MAN).withTimeout(5),
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 9.5), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4000)),
+            CommandComposer.getAutoShootCommand(),
             new ParallelCommandGroup(
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)),
-                new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP));
+        */
+        return new SequentialCommandGroup(
+            new ParallelCommandGroup(new DriveDistanceCommand(45),CommandComposer.getLoadCommand()), 
+            new IntakeCommand(IntakeCommand.Operation.CMD_STOP).withTimeout(1),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 9.5), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4250)),
+            CommandComposer.getAutoShootCommand(),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)),
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
+            new TurnCommand(DriveSubsystem.get(), 115).withTimeout(2),
+            new ParallelCommandGroup(new DriveDistanceCommand(75),CommandComposer.getLoadCommand()), 
+            new TurnCommand(DriveSubsystem.get(),-115));
+        
         // DriveDistanceCommand(80);
         // return m_autoChooser.getSelected();
     }

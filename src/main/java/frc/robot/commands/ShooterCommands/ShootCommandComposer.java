@@ -40,6 +40,10 @@ public class ShootCommandComposer {
       hoodSetpoint=11;
       flywheelSetpoint=2000;
     }
+    else if(shootClass==Operation.PRESET_FENDER_HIGH){
+      hoodSetpoint=0.5;
+      flywheelSetpoint=3550;
+    }
     else{
       hoodSetpoint=0;
       flywheelSetpoint=0;

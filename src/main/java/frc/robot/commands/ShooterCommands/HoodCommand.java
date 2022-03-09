@@ -4,6 +4,7 @@
 
 package frc.robot.commands.ShooterCommands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.HoodSubsystem;
 
@@ -49,6 +50,7 @@ public class HoodCommand extends CommandBase {
     if (m_operation == Operation.CMD_SET_POSITION) {
       return true;
     } else if (m_operation == Operation.CMD_SETTLE) {
+      SmartDashboard.putBoolean("Hood at Setpoint", HoodSubsystem.get().atSetpoint());
       return HoodSubsystem.get().atSetpoint();
     }
     return true;

@@ -4,6 +4,7 @@
 
 package frc.robot.commands.ShooterCommands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.FlywheelSubsystem;
 
@@ -54,6 +55,7 @@ public class FlywheelCommand extends CommandBase {
     if (m_operation == Operation.CMD_SET_VELOCITY) {
       return true;
     } else if (m_operation == Operation.CMD_SETTLE) {
+      SmartDashboard.putBoolean("Flywheel at setpoint", FlywheelSubsystem.get().atSetpoint());
       return FlywheelSubsystem.get().atSetpoint();
     }
     return true;
