@@ -4,9 +4,11 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController.AccelStrategy;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -20,15 +22,31 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
     private final CANSparkMax m_motor = new CANSparkMax(IntakeArmConstants.kMotorPort, MotorType.kBrushless);
     private final RelativeEncoder m_encoder = m_motor.getEncoder();
     private final SparkMaxPIDController m_pidController = m_motor.getPIDController();
+    //private final DigitalInput m_bumpSwitch = new DigitalInput(4); // IntakeArmConstants.kBumpSwitchPort
     private double m_setPosition = 0;
+
+    public enum Position {
+        DOWN_POSITION,
+        UP_POSITION
+    }
+
+    private final double downPositionEncoderPosition = 36.75; // TODO find encoder position
+    private final double upPositionEncoderPosition = 0; // TODO find encoder position
+
+    private static IntakeArmSubsystem s_system;
+
+    public static IntakeArmSubsystem get() {
+        return s_system;
+    }
 
     /**
      * Initializes a new instance of the {@link ArmSubsystem} class.
      */
     public IntakeArmSubsystem() {
+        s_system = this;
         m_motor.restoreFactoryDefaults();
         m_motor.setInverted(IntakeArmConstants.kInvert);
-        m_motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        m_motor.setIdleMode(CANSparkMax.IdleMode.kCoast);
         m_motor.enableVoltageCompensation(12);
         m_motor.setSmartCurrentLimit(IntakeArmConstants.kSmartCurrentLimit);
 
@@ -42,14 +60,18 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
         m_pidController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, IntakeArmConstants.kSlotID);
         m_pidController.setSmartMotionMaxAccel(IntakeArmConstants.kMaxAcel, IntakeArmConstants.kSlotID);
         m_pidController.setSmartMotionMaxVelocity(IntakeArmConstants.kMaxVelocity, IntakeArmConstants.kSlotID);
-        m_pidController.setSmartMotionAllowedClosedLoopError(IntakeArmConstants.kAllowedError, IntakeArmConstants.kSlotID);
+        m_pidController.setSmartMotionAllowedClosedLoopError(IntakeArmConstants.kAllowedError,
+                IntakeArmConstants.kSlotID);
         m_pidController.setSmartMotionMinOutputVelocity(IntakeArmConstants.kMinVelocity, IntakeArmConstants.kSlotID);
 
         resetEncoder();
     }
 
     public void periodic() {
-        SmartDashboard.putNumber("Arm Position", getPosition());
+        //SmartDashboard.putNumber("Arm Position", getPosition());
+        if (atSetpoint()) {
+            m_motor.stopMotor();
+        }
     }
 
     /**
@@ -58,7 +80,6 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
     public double getPosition() {
         return m_encoder.getPosition();
     }
-
     /**
      * @return Current velocity (motor rotations/s)
      */
@@ -77,9 +98,9 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
      * @param speed Percent output of the arm
      */
     public void setPercentOutput(double speed) {
-        if (speed < 0 && getPosition() < IntakeArmConstants.kMinPosition)
-            m_motor.set(0);
-        else
+        // if (speed < 0 && getPosition() < IntakeArmConstants.kMinPosition)
+        //     m_motor.set(0);
+        // else
             m_motor.set(speed);
     }
 
@@ -88,13 +109,42 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
      */
     public void setPosition(double position) {
         m_setPosition = position;
-        m_pidController.setReference(position, ControlType.kSmartMotion, IntakeArmConstants.kSlotID);
+        m_pidController.setReference(position, ControlType.kPosition, IntakeArmConstants.kSlotID);
+    }
+
+    /**
+     * @param position Setpoint (position)
+     */
+    public void setPosition(Position position) {
+        if (position == Position.DOWN_POSITION) {
+            m_setPosition = downPositionEncoderPosition;
+        } else {
+            m_setPosition = upPositionEncoderPosition;
+            //System.out.println("JJJJJJJJJ subsystem - val is "+m_setPosition);
+        }
+        m_pidController.setReference(m_setPosition, ControlType.kPosition, IntakeArmConstants.kSlotID);
     }
 
     /**
      * Zero the encoder position
      */
     public void resetEncoder() {
+        m_encoder.setPosition(0);
+        setPosition(0);
+    }
+
+    public void setBrakeMode() {
+        m_motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    }
+
+    public void setCoastMode() {
+        m_motor.setIdleMode(CANSparkMax.IdleMode.kCoast);
+    }
+
+    public void zeroTheArm() {
+        // while (!m_bumpSwitch.get()) {
+        //     m_motor.set(0.2); // TODO might need to flip this the other way
+        // }
         m_encoder.setPosition(0);
         setPosition(0);
     }

@@ -10,10 +10,13 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -21,11 +24,15 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.ShuffleboardLogging;
 import frc.robot.Constants.DriveConstants;
 
-public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging {
-
+public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging {	
+  
+        private static DriveSubsystem s_subsystem;
+        public static DriveSubsystem get(){return s_subsystem;}
         private final CANSparkMax m_frontLeft = new CANSparkMax(DriveConstants.kFrontLeftPort, MotorType.kBrushless);
         private final CANSparkMax m_frontRight = new CANSparkMax(DriveConstants.kFrontRightPort, MotorType.kBrushless);
         private final CANSparkMax m_backLeft = new CANSparkMax(DriveConstants.kBackLeftPort, MotorType.kBrushless);
@@ -37,6 +44,7 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
         private final SparkMaxPIDController m_rightPIDController = m_frontRight.getPIDController();
 
         private final AHRS m_gyro = new AHRS(DriveConstants.kGyroPort);
+        //private final PIDController m_turnController = new PIDController(DriveConstants.kTurnP, DriveConstants.kTurnI, DriveConstants.kTurnP);
 
         private final DifferentialDriveOdometry m_odometry;
 
@@ -46,6 +54,8 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
         private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
 
         public DriveSubsystem() {
+
+                s_subsystem = this;
                 m_frontLeft.restoreFactoryDefaults();
                 m_frontLeft.setInverted(DriveConstants.kFrontLeftInvert);
                 m_frontLeft.setIdleMode(IdleMode.kBrake);
@@ -83,7 +93,7 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
                 m_backRight.follow(m_frontRight, DriveConstants.kBackRightOppose);
 
                 m_leftEncoder.setPositionConversionFactor(
-                                (1 / DriveConstants.kGearRatio) * Math.PI * DriveConstants.kWheelDiameterMeters);
+                                (1 / DriveConstants.kGearRatio) * Math.PI* DriveConstants.kWheelDiameterMeters);
                 m_leftEncoder.setVelocityConversionFactor(
                                 (1 / DriveConstants.kGearRatio) * Math.PI * DriveConstants.kWheelDiameterMeters / 60.0);
 
@@ -109,6 +119,8 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
                 m_rightPIDController.setFF(DriveConstants.kFF);
                 m_rightPIDController.setOutputRange(DriveConstants.kMinOutput, DriveConstants.kMaxOutput);
                 m_rightPIDController.setFeedbackDevice(m_rightEncoder);
+
+                //m_turnController.setTolerance(DriveConstants.kTurnTolerance);
 
                 m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
                 // this is what they did in 2020 with the navX:
@@ -172,6 +184,14 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
                 return new DifferentialDriveWheelSpeeds(getLeftEncoderVelocity(), getRightEncoderVelocity());
         }
 
+        // public double getLeftMotorSpeeds() {
+        //         return m_frontLeft.get();
+        // }
+
+        // public double getRightMotorSpeeds() {
+        //         return m_frontRight.get();
+        // }
+
         /**
          * @return The heading of the gyro (degrees)
          */
@@ -185,6 +205,10 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
         public double getTurnRate() {
                 return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
         }
+
+        // public void setTurnAngle(double angle) {
+        //         m_turnController.setSetpoint(angle);
+        // }
 
         /**
          * Resets gyro position to 0
@@ -223,8 +247,13 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
          * @param rightSpeed Right motors percent output
          */
         public void tankDrive(double leftSpeed, double rightSpeed) {
+                // System.out.println("Left speed: " + leftSpeed);
+                // System.out.println("Right speed:" + rightSpeed);
                 m_frontLeft.set(leftSpeed);
+                m_backLeft.set(leftSpeed);
+                m_frontRight.set(rightSpeed);
                 m_backRight.set(rightSpeed);
+                
         }
 
         /**
@@ -268,15 +297,16 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
 
         public void configureShuffleboard() {
                 ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Drive");
-                shuffleboardTab.addNumber("Left speed", () -> getWheelSpeeds().leftMetersPerSecond).withSize(4, 2)
-                                .withPosition(0, 0).withWidget(BuiltInWidgets.kGraph);
-                shuffleboardTab.addNumber("Right speed", () -> getWheelSpeeds().rightMetersPerSecond).withSize(4, 2)
-                                .withPosition(4, 0).withWidget(BuiltInWidgets.kGraph);
+                // shuffleboardTab.addNumber("Left speed", () -> m_frontLeft.get()).withSize(4, 2)
+                //                 .withPosition(0, 0).withWidget(BuiltInWidgets.kGraph);
+                // shuffleboardTab.addNumber("Right speed", () -> m_frontRight.get()).withSize(4, 2)
+                //                 .withPosition(4, 0).withWidget(BuiltInWidgets.kGraph);
                 shuffleboardTab.addNumber("Left motor speed", () -> getLeftEncoderPosition()).withSize(1, 1)
                                 .withPosition(0, 2).withWidget(BuiltInWidgets.kTextView);
                 shuffleboardTab.addNumber("Right motor speed", () -> getRightEncoderPosition()).withSize(1, 1)
                                 .withPosition(1, 2).withWidget(BuiltInWidgets.kTextView);
                 shuffleboardTab.addNumber("Heading", () -> getHeading()).withSize(1, 1).withPosition(2, 2)
                                 .withWidget(BuiltInWidgets.kTextView);
+
         }
 }

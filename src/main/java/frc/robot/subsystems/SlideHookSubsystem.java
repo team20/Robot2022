@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController.AccelStrategy;
@@ -13,6 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SlideHookConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.ShuffleboardLogging;
 
 public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLogging {
@@ -20,14 +22,19 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
     private final CANSparkMax m_masterMotor = new CANSparkMax(SlideHookConstants.kMasterPort, MotorType.kBrushless);
     private final CANSparkMax m_followerMotor = new CANSparkMax(SlideHookConstants.kFollowerPort, MotorType.kBrushless);
 
+    private final AHRS m_gyro = new AHRS(DriveConstants.kGyroPort);
+
     private final RelativeEncoder m_encoder = m_masterMotor.getEncoder();
     private final SparkMaxPIDController m_pidController = m_masterMotor.getPIDController();
     private double m_setPosition = 0;
 
+    private static SlideHookSubsystem s_system;
+    public static SlideHookSubsystem get() { return s_system; }
     /**
      * Initializes a new instance of the {@link SlideHookSubsystem} class.
      */
     public SlideHookSubsystem() {
+        s_system = this;
         m_masterMotor.restoreFactoryDefaults();
         m_masterMotor.setInverted(SlideHookConstants.kMasterInvert);
         m_masterMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
@@ -59,6 +66,7 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
 
     public void periodic() {
         SmartDashboard.putNumber("Slide Hook Position", getPosition());
+        // System.out.println("Slide Hook Position is "+getPosition());
     }
 
     /**
@@ -73,6 +81,13 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
      */
     public double getVelocity() {
         return m_encoder.getVelocity();
+    }
+
+    /**
+     * @return The heading of the gyro (degrees)
+     */
+    public double getHeading() {
+        return m_gyro.getYaw() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
     }
 
     /**
@@ -97,7 +112,7 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
      */
     public void setPosition(double position) {
         m_setPosition = position;
-        m_pidController.setReference(position, ControlType.kSmartMotion, SlideHookConstants.kSlotID);
+        m_pidController.setReference(position, ControlType.kPosition, SlideHookConstants.kSlotID);
     }
 
     /**

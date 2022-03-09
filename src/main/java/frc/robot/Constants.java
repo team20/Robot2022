@@ -5,14 +5,12 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.SPI;
 
 public final class Constants {
 
 	public static final class ArduinoConstants {
-		public static final int kAddress = 10;
+		public static final int kAddress = 23;
 		public static final double kDistanceP = 0;
 		public static final double kDistanceI = 0;
 		public static final double kDistanceD = 0;
@@ -32,16 +30,26 @@ public final class Constants {
 		public static final int kWriteShooterLEDMode = 2;
 		public static final int kWriteShooterLEDValue = 3;
 
-		public static final class MainLEDModes {
-			public static final byte kOff = 0;
-			public static final byte kChasing = 1;
+		public static final class LEDModes {
+			public static final byte kReset = 0;
+			public static final byte kOff = 1;
 			public static final byte kSolid = 2;
-			public static final byte kColorWipe = 3;
+			public static final byte kChasing = 3;
+			public static final byte kTheaterLights = 4;
+			public static final byte kRedGreenGradient = 5;
+			public static final byte kBlueGreenGradient = 6;
+			public static final byte kBackForthTimer = 7;
 		}
 
-		public static final class ShooterLEDModes {
+		public static final class LEDColors {
 			public static final byte kOff = 0;
-			public static final byte kFlywheelPercent = 1;
+			public static final byte kRed = 1;
+			public static final byte kOrange = 2;
+			public static final byte kYellow = 3;
+			public static final byte kGreen = 4;
+			public static final byte kBlue = 5;
+			public static final byte kPurple = 6;
+			public static final byte kWhite = 7;
 		}
 	}
 
@@ -84,14 +92,14 @@ public final class Constants {
 	}
 
 	public static final class DriveConstants {
-		public static final int kFrontLeftPort = 40;
+		public static final int kFrontLeftPort = 3;
 		public static final boolean kFrontLeftInvert = true;
-		public static final int kBackLeftPort = 30;
+		public static final int kBackLeftPort=2;
 		public static final boolean kBackLeftOppose = false;
 
-		public static final int kFrontRightPort = 10;
+		public static final int kFrontRightPort = 4;
 		public static final boolean kFrontRightInvert = false;
-		public static final int kBackRightPort = 20;
+		public static final int kBackRightPort = 5;
 		public static final boolean kBackRightOppose = false;
 
 		public static final int kSmartCurrentLimit = 60;
@@ -106,9 +114,15 @@ public final class Constants {
 		public static final double kMinOutput = -1;
 		public static final int kSlotID = 0;
 
+		public static final double kFineTurningSpeed = .1;
+
 		// navX stuff
 		public static final SPI.Port kGyroPort = SPI.Port.kMXP;
 		public static final boolean kGyroReversed = true;
+		public static final double kTurnP = 0.005;
+		public static final double kTurnI = 0.0001;
+		public static final double kTurnD = 0.0;
+		public static final double kTurnTolerance = 1;
 
 		// TODO these need to be updated to reflect this year's robot
 		public static final double ksVolts = 0.196;
@@ -117,7 +131,7 @@ public final class Constants {
 
 		// TODO irrelevant if we use the SPARK MAX PID controller
 		public static final double kPDriveVel = 8.5;
-
+		public static final double kPixySpeed=.4;//TODO: EMILY change val if needed for pixy autofollow
 		// TODO change the trackwidth to match our robot - trackwidth = horizontal
 		// distance between the wheels
 		public static final double kTrackwidthMeters = 0.7815245428457417;
@@ -133,8 +147,8 @@ public final class Constants {
 		public static final double kMaxAccelerationMetersPerSecondSquared = .5;
 
 		public static final double kMaxRotSpeedMetersPerSecond = 1;
-		public static final double kWheelDiameterMeters = Units.inchesToMeters(6);
-		public static final double kGearRatio = 8.18;
+		public static final double kWheelDiameterMeters = 4;
+		public static final double kGearRatio = 7;
 
 		public static final double kTurningMultiplier = .45;
 		public static final double kQuickStopThreshold = .2;
@@ -158,17 +172,31 @@ public final class Constants {
 				* DriveConstants.kWheelDiameterMeters * 60;
 
 		public static final double toBarPosition = 2;// inches
+
+		// NEW FROM AIDAN
+		public static final DifferentialDriveVoltageConstraint autoVoltageConstraint = 
+			new DifferentialDriveVoltageConstraint(
+				new SimpleMotorFeedforward(DriveConstants.ksVolts,
+				DriveConstants.kvVoltSecondsPerMeter,
+				DriveConstants.kaVoltSecondsSquaredPerMeter),
+				DriveConstants.kDriveKinematics,
+				10);
+
+		public static final TrajectoryConfig kTrajectoryConfig = new TrajectoryConfig(kMaxSpeedMetersPerSecond,kMaxAccelerationMetersPerSecondSquared)
+		.setKinematics(DriveConstants.kDriveKinematics)
+		.addConstraint(autoVoltageConstraint);
+
 	}
 
 	public static final class FlywheelConstants {
-		public static final int kMasterPort = 11;
-		public static final int kFollowerPort = 13;
+		public static final int kMasterPort = 9;
+		public static final int kFollowerPort = 10;
 		public static final boolean kMasterInvert = false;
 		public static final boolean kFollowerOppose = true;
 		public static final int kSmartCurrentLimit = 50;
 		public static final double kPeakCurrentLimit = 60;
 		public static final int kPeakCurrentDurationMillis = 100;
-		public static final double kP = 0.000_167; // 0.000_375; then .0004
+		public static final double kP = 0.000_08; // 0.000_375; then .0004
 		public static final double kI = 0;
 		public static final double kD = 0.000_0125;// 0.000_03;
 		public static final double kIz = 0.0;
@@ -180,10 +208,10 @@ public final class Constants {
 	}
 
 	public static final class HoodConstants {
-		public static final int kMotorPort = 12;
-		public static final boolean kInvert = true;
+		public static final int kMotorPort = 7;
+		public static final boolean kInvert = false;
 		public static final int kSmartCurrentLimit = 60;
-		public static final double kP = 0.000_1;
+		public static final double kP = 0.02;
 		public static final double kI = 0.0;
 		public static final double kD = 0.0;
 		public static final double kIz = 0;
@@ -194,7 +222,7 @@ public final class Constants {
 		public static final double kMinVelocity = 0;
 		public static final double kMaxAcel = 20_000;
 		public static final double kMaxVelocity = 10_000;
-		public static final double kAllowedError = 0.2;
+		public static final double kAllowedError = 0.05;
 
 		public static final double kMinEncoderValue = 0.0;
 		public static final double kMaxEncoderValue = 42.0;
@@ -203,14 +231,14 @@ public final class Constants {
 	}
 
 	public static final class IndexerConstants {
-    public static final int kMotorPort = 0;
-		public static final boolean kInvert = false;
+    public static final int kMotorPort = 15;
+		public static final boolean kInvert = true;
 		public static final int kSmartCurrentLimit = 60;
-		public static final double kP = 0; // TODO: tune PID
-		public static final double kI = 0;
-		public static final double kD = 0.0000;// 0.000_03;
+		public static final double kP = .15; // TODO: tune PID
+		public static final double kI = 0.00001;
+		public static final double kD = 0;// 0.000_03;
 		public static final double kIz = 0.0;
-		public static final double kFF = .0;// 0.000_193;
+		public static final double kFF = 0;// 0.000_193;
 		public static final double kMaxOutput = 1;
 		public static final double kMinOutput = -1;
 		public static final int kSlotID = 0;
@@ -220,39 +248,45 @@ public final class Constants {
 		public static final double kGearRatio = 1 / 1; // TODO: change this
 		public static final double kAllowedError = .2;
 		public static final double kMinPosition = 0;
-    	public static final double kAllowedErrorPercent = .2;
+    	public static final double kAllowedErrorPercent = 1;
 		public static final double kSpeed = 1.0;
 		public static final int kStartProximitySensorPort = 0;
 		public static final int kCenterProximitySensorPort = 1;
 	}
 
 	public static final class IntakeArmConstants {
-		public static final double kAllowedError = 0.2;
+		public static final int kCountsPerRevolution = 42;
+		public static final double kAllowedError = 2;
 		public static final double kMinEncoderValue = 0.0;
 		public static final double kMaxEncoderValue = 42.0;
 		public static final double kMinAngle = 24.36;
 		public static final double kMaxAngle = 77.64;
-		public static final int kMotorPort = 0;
-		public static final boolean kInvert = false;
+		public static final int kMotorPort = 14;
+		public static final boolean kInvert = true;
 		public static final int kSmartCurrentLimit = 0;
-		public static final double kP = 0; // TODO: tune PID
+		public static final double kP = .02; // TODO: tune PID
 		public static final double kI = 0;
-		public static final double kD = 0.0000;// 0.000_03;
+		public static final double kD = 0;// 0.000_03;
 		public static final double kIz = 0.0;
 		public static final double kFF = .0;// 0.000_193;
-		public static final double kMinOutput = 0;
+		public static final double kMinOutput = -1;
 		public static final double kMaxOutput = 1;
 		public static final int kSlotID = 0;
 		public static final double kMaxAcel = 0;
 		public static final double kMaxVelocity = 0;
 		public static final double kMinVelocity = 0;
 		public static final double kMinPosition = 0;
+		public static final double kInPosition = 0;
+		public static final double kOutPosition = 0;
+		public static final int kBumpSwitchPort = 0;
+		public static final double kBounceDownPosition = 0;
+		public static final double kBounceUpPosition = 0;
+		public static final double kBounceTime = 0;
 	}
 
-
 	public static final class IntakeConstants {
-		public static final int kMotorPort = 0;
-		public static final boolean kInvert = false;
+		public static final int kMotorPort = 13;
+		public static final boolean kInvert = true;
 	}
 
 	public static final class LimelightConstants { // TODO: tune PID loop
@@ -274,24 +308,23 @@ public final class Constants {
 	}
 
 	public static final class SlideHookConstants {
-		public static final int kMasterPort = 10;
-		public static final int kFollowerPort = 20;
+		public static final int kMasterPort = 6;
+		public static final int kFollowerPort = 8;
 		public static final boolean kMasterInvert = false;
 		public static final boolean kFollowerOppose = false;
 		public static final int kSmartCurrentLimit = 60;// TODO: change
-		public static final double kP = 0; // TODO: tune PID
+		public static final double kP = .01; // TODO: tune PID
 		public static final double kI = 0;
-		public static final double kD = 0.0000;// 0.000_03;
+		public static final double kD = 0.00001249999968422344;// 0.000_03;
 		public static final double kIz = 0.0;
-		public static final double kFF = .0;// 0.000_193;
+		public static final double kFF = 0.00008040000102482736;// 0.000_193;
 		public static final double kMaxOutput = 1;
 		public static final double kMinOutput = -1;
 		public static final int kSlotID = 0;
 		public static final double kMinVelocity = 0;
 		public static final double kMaxAcel = 20_000;
 		public static final double kMaxVelocity = 10_000;
-		public static final double kGearRatio = 1 / 1; // TODO: change this
-		public static final double kAllowedError = .2;
+		public static final double kAllowedError = 7;
 
 		public static final double kInchesPerQuarterTurn = .125; // .125 inches of travel per quarter turn (unit
 																	// position)
@@ -302,28 +335,30 @@ public final class Constants {
 		public static final double kTelescopeTouchingRung = 20;// inches
 
 		public static final double kControlled = 13;// inches
+		public static final double kHookVelocity=.5;
 
+		public static final double kUntilSlideEngaged=2;
+		public static final double kUntilTelescopeDown=5;
 	}
 
 	public static final class TelescopeHookConstants {
-		public static final int kMasterPort = 10;
-		public static final int kFollowerPort = 20;
+		public static final int kMasterPort = 11;
+		public static final int kFollowerPort = 12;
 		public static final boolean kMasterInvert = false;
-		public static final boolean kFollowerOppose = false;
+		public static final boolean kFollowerOppose = true;
 		public static final int kSmartCurrentLimit = 60;// TODO: change
-		public static final double kP = 0; // TODO: tune PID
+		public static final double kP = .01; // TODO: tune PID
 		public static final double kI = 0;
-		public static final double kD = 0.0000;// 0.000_03;
+		public static final double kD = 0.00001249999968422344;// 0.000_03;
 		public static final double kIz = 0.0;
-		public static final double kFF = .0;// 0.000_193;
+		public static final double kFF = 0.00008040000102482736;// 0.000_193;
 		public static final double kMaxOutput = 1;
 		public static final double kMinOutput = -1;
 		public static final int kSlotID = 0;
 		public static final double kMinVelocity = 0;
 		public static final double kMaxAcel = 20_000;
 		public static final double kMaxVelocity = 10_000;
-		public static final double kGearRatio = 1 / 2.4; // TODO: change this
-		public static final double kAllowedError = .2;
+		public static final double kAllowedError = 7;
 
 		public static final double kExtendedPosition = 40;// inches
 		public static final double kRetractedPosition = 0;// inches
@@ -332,6 +367,13 @@ public final class Constants {
 		public static final double kControlled = 35;// inches
 		public static final double kDisengageFromControlledPosition = 30;// inches
 
+		public static final double kUntilTelescopeBehind=2;
+	}
+
+	public static final class LoggingConstants {
+		// Arduino, Arm, Carousel, Climber, Drive, Feeder, Flywheel, Hood, Intake,
+		// Limelight
+		public static final boolean[] kSubsystems = { true, true, true, true, true, true, true, true, true, true};
 	}
 
 	public enum FieldLocation {
