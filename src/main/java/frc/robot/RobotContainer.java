@@ -107,11 +107,13 @@ public class RobotContainer {
 
         configureShuffleboard();
 
-        m_autoChooser.addOption("Sit and shoot high",
-                new SitAndShootHigh(m_flywheelSubsystem, m_hoodSubsystem, m_indexerSubsystem));
-        m_autoChooser.addOption("Sit and shoot low",
-                new SitAndShootLow(m_flywheelSubsystem, m_hoodSubsystem, m_indexerSubsystem));
-        // m_autoChooser.addOption("Taxi" , new Taxi(m_driveSubsystem));
+        m_autoChooser.addOption("Two Ball", CommandComposer.getTwoBallAutoCommand());
+        m_autoChooser.addOption("Four To Two", CommandComposer.getFourToTwoAutoCommand());
+        m_autoChooser.addOption("One To Two", CommandComposer.getOneToTwoAutoCommand());
+        m_autoChooser.addOption("Four To Three", CommandComposer.getFourToThreeAutoCommand());
+        m_autoChooser.addOption("Two To Three", CommandComposer.getTwoToThreeAutoCommand());
+        m_autoChooser.addOption("Two To Four", CommandComposer.getTwoToFourAutoCommand());
+        m_autoChooser.addOption("Four To Two To Three", CommandComposer.getFourToTwoToThreeAutoCommand());        // m_autoChooser.addOption("Taxi" , new Taxi(m_driveSubsystem));
         // m_autoChooser.addOption("Taxi, shoot high");
         // m_autoChooser.addOption("Shoot high, taxi");
         // m_autoChooser.addOption("Shoot low, taxi");
