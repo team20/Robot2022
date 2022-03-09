@@ -86,6 +86,7 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
         m_proximitySensorStart = new DigitalInput(IndexerConstants.kStartProximitySensorPort);
         m_proximitySensorCenter = new DigitalInput(IndexerConstants.kCenterProximitySensorPort);
 
+        m_neoEncoder.setPosition(0);
 	}
 	
 	public void periodic(){
@@ -119,6 +120,8 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
         m_proximitySensorCenterState = !m_proximitySensorCenter.get();
         SmartDashboard.putBoolean("Indexer RTF", m_proximitySensorStartState);
         SmartDashboard.putBoolean("Indexer BIC", m_proximitySensorCenterState);
+        SmartDashboard.putNumber("Indexer Encoder Value", m_neoEncoder.getPosition());
+
         SmartDashboard.putString("Color String", m_colorString);
     }
 
@@ -138,6 +141,17 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
         else{}
     }
     
+    public void setPositionAdvance(){
+        System.out.println("SETTING FORWARD");
+        m_setPosition += 35;
+        m_neoController.setReference(m_setPosition, ControlType.kPosition, 0);
+    }
+    public void setPositionReverse(){
+        System.out.println("SETTING REVERSE");
+        m_setPosition -= 35;
+        m_neoController.setReference(m_setPosition, ControlType.kPosition, 0);
+    }
+
     public void reset(){
         m_neoEncoder.setPosition(0);
     }
@@ -160,6 +174,10 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
         return m_targetState == getCurrStateSubsystem();
     }
 
+    public boolean atTargetPosition() {
+        System.out.println("PERCENT ERROR: " + Math.abs(m_neoEncoder.getPosition() - getSetpoint() / getSetpoint()));
+        return Math.abs(m_neoEncoder.getPosition() - getSetpoint()) < IndexerConstants.kAllowedErrorPercent;
+    }
     /**
      * 
      * @return return closest position to where I am without going above
