@@ -39,12 +39,14 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
      */
 
     public void periodic() {
-        isLightOn();
+        //isLightOn();
         //turnOffLight();
-        SmartDashboard.putNumber("Avg Distance", getAverageDistance());
-        SmartDashboard.putNumber("Distance", getDistance());
-        SmartDashboard.putBoolean("Target Visible", isTargetVisible());
+        // SmartDashboard.putNumber("Avg Distance", getAverageDistance());
+        // SmartDashboard.putNumber("Distance", getDistance());
+        // SmartDashboard.putBoolean("Target Visible", isTargetVisible());
         System.out.println("is light on: " + isLightOn());
+        // System.out.println("the x angle is: " + getXAngle());
+        // System.out.println("the y angle is: " + getYAngle());
 
         //System.out.println("limelight y angle" + calculateRollingAverage(getYAngle()));
 
@@ -108,15 +110,16 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
      */
     public boolean isLightOn() {
         //System.out.println(m_limelightTable.getEntry("ledMode").getDouble(-1));
-        return m_limelightTable.getEntry("pipeline").getDouble(-1) == 1; //check force on
+        //return m_limelightTable.getEntry("pipeline").getDouble(-1) == 1; //check force on
+        return m_limelightTable.getEntry("ledMode").getDouble(-1) == 3;
     }
 
     /**
      * Turn on the LIME light
      */
     public void turnOnLight() {
-        //m_limelightTable.getEntry("ledMode").setNumber(3); //force on
-        m_limelightTable.getEntry("pipeline").setNumber(1);
+        m_limelightTable.getEntry("ledMode").setNumber(3); //force on
+        //m_limelightTable.getEntry("pipeline").setNumber(1);
     }
 
     /**
@@ -124,8 +127,8 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
      */
     public void turnOffLight() {
         //m_limelight
-       // m_limelightTable.getEntry("ledMode").setNumber(1); //force off
-        m_limelightTable.getEntry("pipeline").setNumber(0); //force off
+        m_limelightTable.getEntry("ledMode").setNumber(1); //force off
+        //m_limelightTable.getEntry("pipeline").setNumber(0); //force off
     }
 
     public void configureShuffleboard() {
