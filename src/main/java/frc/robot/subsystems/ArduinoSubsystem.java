@@ -58,15 +58,15 @@ public class ArduinoSubsystem extends SubsystemBase {
 		m_writeData[2] = m_shooterLEDMode;
 		m_writeData[3] = m_shooterLEDValue;
 
-		System.out.println("the main led MODE: " + m_mainLEDMode);
-		System.out.println("the main led COLOR: " + m_mainLEDValue);
-		System.out.println("the shooter led MODE: " + m_shooterLEDMode);
-		System.out.println("the shooter led COLOR: " + m_shooterLEDValue);
+		// System.out.println("the main led MODE: " + m_mainLEDMode);
+		// System.out.println("the main led COLOR: " + m_mainLEDValue);
+		// System.out.println("the shooter led MODE: " + m_shooterLEDMode);
+		// System.out.println("the shooter led COLOR: " + m_shooterLEDValue);
 
 		//m_wire.writeBulk(m_writeData);
 		m_wire.writeBulk(m_writeData, m_writeData.length);
 		
-		System.out.println("aborted?: " + m_wire.writeBulk(m_writeData, m_writeData.length));
+		// System.out.println("aborted?: " + m_wire.writeBulk(m_writeData, m_writeData.length));
 	}
 
 	public void setMainLEDMode(byte mode) {

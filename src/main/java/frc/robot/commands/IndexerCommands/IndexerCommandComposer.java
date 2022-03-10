@@ -40,7 +40,7 @@ public class IndexerCommandComposer {
      *         things
      */
     public static Command getShootCommand() {
-        if (IndexerSubsystem.get().gamePieceRTS()) {
+        if (IndexerSubsystem.get().gamePieceRTS() && !IndexerSubsystem.get().gamePieceAtCenter()) {
             return new IndexerCommand(IndexerCommand.Operation.CMD_ADV);
         } else if (IndexerSubsystem.get().gamePieceAtCenter()) {
             return new SequentialCommandGroup(new IndexerCommand(IndexerCommand.Operation.CMD_ADV),
