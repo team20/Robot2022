@@ -31,7 +31,7 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
 
     public LimelightSubsystem() {
         s_subsytem = this;
-        turnOffLight();
+        //turnOffLight();
     }
 
     /**
@@ -39,10 +39,12 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
      */
 
     public void periodic() {
-
+        isLightOn();
+        //turnOffLight();
         SmartDashboard.putNumber("Avg Distance", getAverageDistance());
         SmartDashboard.putNumber("Distance", getDistance());
         SmartDashboard.putBoolean("Target Visible", isTargetVisible());
+        System.out.println("is light on: " + isLightOn());
 
         //System.out.println("limelight y angle" + calculateRollingAverage(getYAngle()));
 
@@ -105,21 +107,25 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
      * @return Whether the LIME light is on
      */
     public boolean isLightOn() {
-        return m_limelightTable.getEntry("ledmode").getDouble(0) == 3; //check force on
+        //System.out.println(m_limelightTable.getEntry("ledMode").getDouble(-1));
+        return m_limelightTable.getEntry("pipeline").getDouble(-1) == 1; //check force on
     }
 
     /**
      * Turn on the LIME light
      */
     public void turnOnLight() {
-        m_limelightTable.getEntry("ledmode").setNumber(3); //force on
+        //m_limelightTable.getEntry("ledMode").setNumber(3); //force on
+        m_limelightTable.getEntry("pipeline").setNumber(1);
     }
 
     /**
      * Turn off the LIME light
      */
     public void turnOffLight() {
-        m_limelightTable.getEntry("ledmode").setNumber(1); //force off
+        //m_limelight
+       // m_limelightTable.getEntry("ledMode").setNumber(1); //force off
+        m_limelightTable.getEntry("pipeline").setNumber(0); //force off
     }
 
     public void configureShuffleboard() {

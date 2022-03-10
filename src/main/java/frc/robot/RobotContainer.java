@@ -24,6 +24,7 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FieldLocation;
 import frc.robot.Constants.LoggingConstants;
+import frc.robot.Constants.TelescopeHookConstants;
 import frc.robot.Constants.ArduinoConstants.LEDModes;
 import frc.robot.Constants.ArduinoConstants.LEDColors;
 import frc.robot.Constants.ControllerConstants.Axis;
@@ -104,6 +105,8 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
+        
+        m_limelightSubsystem.turnOffLight();
 
         configureShuffleboard();
 
@@ -134,11 +137,88 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
 
-        // Driver
+        //*******************************************
+        //**************DRIVER CONTROLS**************
+        //*******************************************
 
-        // x button: pixy ball follow
+        // ---------------X BUTTON--------------
+        //------------------Pixy----------------
         new JoystickButton(m_driverController, ControllerConstants.Button.kX)
                 .whenHeld(new PixyTargetCommand(m_driveSubsystem, m_arduinoSubsystem, () -> DriveConstants.kPixySpeed));
+
+        // --------------TRIANGLE BUTTON--------------
+        //-------------Indexer Manual Forwards--------
+        new JoystickButton(m_driverController, ControllerConstants.Button.kTriangle)
+                .whenHeld(new IndexerCommand(IndexerCommand.Operation.CMD_FWD_MAN));
+
+        new JoystickButton(m_driverController, ControllerConstants.Button.kTriangle)
+                .whenReleased(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
+
+        // --------------SQUARE BUTTON--------------
+
+        // --------------CIRCLE BUTTON--------------
+
+        //-----------------UP DPAD-----------------
+        //------Telescope To Top Position--------
+        new POVButton(m_driverController, DPad.kUp)
+                .whenPressed(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kExtendedPosition));
+
+        //-----------------RIGHT DPAD-----------------
+        //---------Move Right Telescope Manual--------
+        new POVButton(m_driverController, DPad.kRight)
+                .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE_FOLLOWER, .2));
+
+        //-----------------DOWN DPAD-----------------
+        //---------Telescope To Top Position----------
+        new POVButton(m_driverController, DPad.kDown)
+                .whenPressed(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kRetractedPosition));
+
+        //-----------------LEFT DPAD-----------------
+        //-----------Limelight Line Up---------------
+        new POVButton(m_operatorController, ControllerConstants.DPad.kLeft)
+                .whenHeld(new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem));
+
+        //---------------LEFT BUMPER---------------
+
+        //-------------Fine Steer Left------------
+        new JoystickButton(m_driverController, Button.kLeftBumper).whenHeld(new ArcadeDriveCommand(m_driveSubsystem,
+                () -> 0.0, () -> DriveConstants.kFineTurningSpeed, () -> -DriveConstants.kFineTurningSpeed));
+        
+        //---------------RIGHT BUMPER---------------
+        //-------------Fine Steer Right------------
+        new JoystickButton(m_driverController, Button.kRightBumper).whenHeld(new ArcadeDriveCommand(m_driveSubsystem,
+                () -> 0.0, () -> -DriveConstants.kFineTurningSpeed, () -> DriveConstants.kFineTurningSpeed));
+
+        //---------------LEFT AXIS JOYSTICK---------------
+
+        //-------------------LEFT TRIGGER------------------
+
+        //---------------RIGHT TRIGGER--------------- 
+        //----------------Arcade Drive----------------
+        m_driveSubsystem.setDefaultCommand(
+                new ArcadeDriveCommand(m_driveSubsystem,
+                        () -> -m_driverController.getRawAxis(Axis.kLeftY),
+                        () -> m_driverController.getRawAxis(Axis.kLeftTrigger),
+                        () -> m_driverController.getRawAxis(Axis.kRightTrigger)));
+
+        //---------------RIGHT AXIS JOYSTICK---------------
+
+        //---------------LEFT BUTTON JOYSTICK---------------
+
+        //---------------RIGHT BUTTON JOYSTICK---------------
+
+        //------------------SHARE BUTTON--------------------
+        //--------------Indexer Manual Reverse--------------
+        new JoystickButton(m_driverController, ControllerConstants.Button.kShare)
+                .whenHeld(new ParallelCommandGroup(new IndexerCommand(IndexerCommand.Operation.CMD_REV_MAN), new IntakeCommand(IntakeCommand.Operation.CMD_RUN_REV)));
+        new JoystickButton(m_driverController, ControllerConstants.Button.kShare)
+                .whenReleased(new ParallelCommandGroup(new IndexerCommand(IndexerCommand.Operation.CMD_STOP), new IntakeCommand(IntakeCommand.Operation.CMD_STOP)));
+
+        //------------------OPTIONS BUTTON--------------------
+
+        //------------------TRACKPAD BUTTON--------------------
+
+        // --------------NOT YET FINALIZED--------------
 
         // left bumper and triangle button: traversal climb
         // new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
@@ -162,125 +242,95 @@ public class RobotContainer {
         //         .whenActive(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE,
         //                 m_operatorController.getRawAxis(Axis.kLeftY)));
 
-        // bring the intake up
-        new POVButton(m_driverController, DPad.kUp)
-                .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP));
-
-        // new POVButton(m_driverController, DPad.kUp).whenPressed(new
-        // RetractArmCommand(m_intakeArmSubsystem));
-
-        // bring the intake down
-        new POVButton(m_driverController, DPad.kDown)
-                .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN));
-
-        // new POVButton(m_driverController, DPad.kDown).whenPressed(new
-        // ExtendArmCommand(m_intakeArmSubsystem));
-
-        // fine steering left
-        new JoystickButton(m_driverController, Button.kLeftBumper).whenHeld(new ArcadeDriveCommand(m_driveSubsystem,
-                () -> 0.0, () -> DriveConstants.kFineTurningSpeed, () -> -DriveConstants.kFineTurningSpeed));
-
-        // fine steering right
-        new JoystickButton(m_driverController, Button.kRightBumper).whenHeld(new ArcadeDriveCommand(m_driveSubsystem,
-                () -> 0.0, () -> -DriveConstants.kFineTurningSpeed, () -> DriveConstants.kFineTurningSpeed));
-
-        // arcade drive
-        m_driveSubsystem.setDefaultCommand(
-                new ArcadeDriveCommand(m_driveSubsystem,
-                        () -> -m_driverController.getRawAxis(Axis.kLeftY),
-                        () -> m_driverController.getRawAxis(Axis.kLeftTrigger),
-                        () -> m_driverController.getRawAxis(Axis.kRightTrigger)));
-
         // new JoystickButton(m_driverController, ControllerConstants.Button.kTriangle)
         //         .whenHeld(CommandComposer.getAimAndPrepCommand(ShootCommandComposer.Operation.LIMELIGHT_LINEAR));
-        // new JoystickButton(m_driverController, ControllerConstants.Button.kTriangle)
-        new JoystickButton(m_driverController, ControllerConstants.Button.kTriangle)
-        .whenHeld(new IndexerCommand(IndexerCommand.Operation.CMD_FWD_MAN));
 
-        new JoystickButton(m_driverController, ControllerConstants.Button.kTriangle)
-        .whenReleased(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
+        //*******************************************
+        //************OPERATOR CONTROLS**************
+        //*******************************************
 
-        new JoystickButton(m_driverController, ControllerConstants.Button.kShare)
-        .whenHeld(new ParallelCommandGroup(new IndexerCommand(IndexerCommand.Operation.CMD_REV_MAN), new IntakeCommand(IntakeCommand.Operation.CMD_RUN_REV)));
-
-        new JoystickButton(m_driverController, ControllerConstants.Button.kShare)
-        .whenReleased(new ParallelCommandGroup(new IndexerCommand(IndexerCommand.Operation.CMD_STOP), new IntakeCommand(IntakeCommand.Operation.CMD_STOP)));
-
-        new JoystickButton(m_driverController, ControllerConstants.Button.kCircle)
-                .whenHeld(CommandComposer.getShootCommand());
-
-        // new POVButton(m_driverController, ControllerConstants.DPad.kUp)
-        //         .whenHeld(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP));
-
-        // new POVButton(m_driverController, ControllerConstants.DPad.kDown)
-        //         .whenHeld(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN));
-
-        // operator
-
-        // manually drive the intake
-        // m_intakeSubsystem.setDefaultCommand(
-        // new DriveArmCommand(m_intakeArmSubsystem, () ->
-        // m_operatorController.getRawAxis(Axis.kLeftY)));
-
-        // Right trigger: spit one ball out
-        new JoystickButton(m_operatorController, Constants.ControllerConstants.Axis.kRightTrigger)
-                .whenHeld(CommandComposer.getSpitCommand());
-
-        //new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
-        //        .whenHeld(new IntakeCommand(IntakeCommand.Operation.CMD_RUN_FWD));
-
-        //new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
-        //        .whenReleased(new IntakeCommand(IntakeCommand.Operation.CMD_STOP));
-        // Left Trigger: intake and index one ball
-         new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
-                 .whenHeld(CommandComposer.getLoadCommand());
-
-         new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
-                 .whenReleased(new IntakeCommand(IntakeCommand.Operation.CMD_STOP));
-
-        // new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
-        //         .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
-        //         .whileActiveOnce(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_TARMAC));
-
-        new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
+        // ---------------X BUTTON--------------
+        //--------Ramp up for fender low shot---------
+        new JoystickButton(m_operatorController, ControllerConstants.Button.kX)
                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
-                .whileActiveOnce(new ParallelCommandGroup(new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 9.5), new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4000)));
-        
-        new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
+                .whileActiveOnce(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_FENDER_LOW));
+        new JoystickButton(m_operatorController, ControllerConstants.Button.kX)
                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
                 .whenInactive(new ParallelCommandGroup(new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
-        
+
+        // --------------TRIANGLE BUTTON--------------
+        //--------Ramp up for launchpad shot---------
         new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
                 .whileActiveOnce(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_LAUNCHPAD));
+        new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
+        .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
+                .whenInactive(new ParallelCommandGroup(new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
 
-        new JoystickButton(m_operatorController, ControllerConstants.Button.kCircle)
-                .whenHeld(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_FENDER_HIGH));
-        new JoystickButton(m_operatorController, ControllerConstants.Button.kCircle)
-                .whenReleased(new ParallelCommandGroup(new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
-
-        // new JoystickButton(m_operatorController, ControllerConstants.Button.kX)
-        //         .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
-        //         .whileActiveOnce(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_FENDER_LOW));
-
-        // hoodSetpoint=9.5;
-    //   flywheelSetpoint=4000;
-    // }
-        new JoystickButton(m_operatorController, ControllerConstants.Button.kX)
+        // --------------SQUARE BUTTON--------------
+        //--------Ramp up for tarmac shot---------
+        new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
-                .whileActiveOnce(new ParallelCommandGroup(new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11), new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2000)));
-        
+                .whileActiveOnce(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_TARMAC));
+        new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
+        .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
+                .whenInactive(new ParallelCommandGroup(new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
 
-        new JoystickButton(m_operatorController, ControllerConstants.Button.kX)
+        // --------------CIRCLE BUTTON--------------
+        //----------Ramp up for fender high shot-------
+        new JoystickButton(m_operatorController, ControllerConstants.Button.kCircle)
+                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
+                .whileActiveOnce(CommandComposer.getPresetShootCommand(ShootCommandComposer.Operation.PRESET_FENDER_HIGH));
+        new JoystickButton(m_operatorController, ControllerConstants.Button.kCircle)
                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper).negate())
                 .whenInactive(new ParallelCommandGroup(new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
-        
+
+        //-----------------UP DPAD-----------------
+
+        //-----------------RIGHT DPAD-----------------
+
+        //-----------------DOWN DPAD-----------------     
+
+        //-----------------LEFT DPAD-----------------
+
+        //---------------LEFT BUMPER----------------
+
+        //---------------RIGHT BUMPER---------------
+        //---------Intake and index one ball--------
+        new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
+                .whenHeld(CommandComposer.getLoadCommand());
+        new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
+                .whenReleased(new IntakeCommand(IntakeCommand.Operation.CMD_STOP));
+
+        //---------------LEFT AXIS JOYSTICK---------------
+
+        //-------------------LEFT TRIGGER------------------
+
+        //---------------RIGHT TRIGGER--------------- 
+
+        //---------------RIGHT AXIS JOYSTICK---------------
+
+        //---------------LEFT BUTTON JOYSTICK---------------
+
+        //---------------RIGHT BUTTON JOYSTICK---------------
+
+        //------------------SHARE BUTTON--------------------
+
+        //------------------OPTIONS BUTTON--------------------
+
+        //------------------TRACKPAD BUTTON--------------------
+
+
+        //------------------NOT YET FINALIZED------------------
+        new JoystickButton(m_operatorController, Constants.ControllerConstants.Axis.kRightTrigger)
+                .whenHeld(CommandComposer.getSpitCommand());
+
         new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftStick)
                 .whenHeld(new DriveIntakeArmCommand(() -> m_operatorController.getRawAxis(Axis.kLeftY) * 0.1));
         new JoystickButton(m_operatorController, ControllerConstants.Button.kTrackpad).whenPressed(new IntakeArmCommand(Operation.CMD_RESET_ENCODER));
-    }
+}
 
-    public void configureTestingBindings() {
+public void configureTestingBindings() {
         new JoystickButton(m_driverController, 1)
                 .whenPressed(new DeferredCommand(CommandComposer::getManualFlywheelCommand));
         new JoystickButton(m_driverController, 1)
