@@ -29,6 +29,8 @@ public final class Constants {
 		public static final int kWriteMainLEDValue = 1;
 		public static final int kWriteShooterLEDMode = 2;
 		public static final int kWriteShooterLEDValue = 3;
+		public static final int kWriteClimberLEDMode = 2;
+		public static final int kWriteClimberLEDValue = 3;
 
 		public static final class LEDModes {
 			public static final byte kReset = 0;
@@ -53,6 +55,7 @@ public final class Constants {
 		}
 	}
 
+	
 	public static final class ControllerConstants {
 		public static final int kDriverControllerPort = 0;
 		public static final int kOperatorControllerPort = 1;
