@@ -25,7 +25,7 @@ public class ArduinoSubsystem extends SubsystemBase {
 	private final I2C m_wire = new I2C(Port.kOnboard, ArduinoConstants.kAddress);
 	// data read from Arduino
 	private byte[] m_readData = new byte[7];
-	private byte[] m_writeData = new byte[4];
+	private byte[] m_writeData = new byte[6];
 	private boolean m_targetInView;
 	private int m_xValue;
 	private int m_distance;
@@ -36,6 +36,8 @@ public class ArduinoSubsystem extends SubsystemBase {
 	private byte m_mainLEDValue = 0;
 	private byte m_shooterLEDMode = 0;
 	private byte m_shooterLEDValue = 0;
+	private byte m_climberLEDMode = 0;
+	private byte m_climberLEDValue = 0;
 
 	/**
 	 * Initializes a new instance of the {@link ArduinoSubsystem} class.
@@ -57,6 +59,8 @@ public class ArduinoSubsystem extends SubsystemBase {
 		m_writeData[1] = m_mainLEDValue;
 		m_writeData[2] = m_shooterLEDMode;
 		m_writeData[3] = m_shooterLEDValue;
+		m_writeData[4] = m_climberLEDMode;
+		m_writeData[5] = m_climberLEDValue;
 
 		// System.out.println("the main led MODE: " + m_mainLEDMode);
 		// System.out.println("the main led COLOR: " + m_mainLEDValue);
@@ -69,20 +73,46 @@ public class ArduinoSubsystem extends SubsystemBase {
 		// System.out.println("aborted?: " + m_wire.writeBulk(m_writeData, m_writeData.length));
 	}
 
-	public void setMainLEDMode(byte mode) {
+	public void setMainLED() {
+		byte mode = LEDModes.kOff;
+		byte value = LEDColors.kOff;
+		boolean SAMPLE = SmartDashboard.getEntry("SAMPLE").getBoolean(false); //TODO SAMPLE
+		if(!DriverStation.isDisabled()){
+			if(SAMPLE){
+				mode = LEDModes.kTheaterLights;
+				value = LEDColors.kGreen;
+			}
+		}
 		m_mainLEDMode = mode;
-	}
-
-	public void setShooterLEDMode(byte mode) {
-		m_shooterLEDMode = mode;
-	}
-
-	public void setMainLEDValue(byte value) {
 		m_mainLEDValue = value;
 	}
-	
-	public void setShooterLEDValue(byte value) {
+
+	public void setShooterLED() {
+		byte mode = LEDModes.kOff;
+		byte value = LEDColors.kOff;
+		boolean SAMPLE = SmartDashboard.getEntry("SAMPLE").getBoolean(false); //TODO SAMPLE
+		if(!DriverStation.isDisabled()){
+			if(SAMPLE){
+				mode = LEDModes.kTheaterLights;
+				value = LEDColors.kGreen;
+			}
+		}
+		m_shooterLEDMode = mode;
 		m_shooterLEDValue = value;
+	}
+	public void setClimberLED(){
+		byte mode = LEDModes.kOff;
+		byte value = LEDColors.kOff;
+		boolean SAMPLE = SmartDashboard.getEntry("SAMPLE").getBoolean(false); //TODO SAMPLE
+		if(!DriverStation.isDisabled()){
+			if(SAMPLE){
+				mode = LEDModes.kTheaterLights;
+				value = LEDColors.kGreen;
+			}
+		}
+		
+		m_climberLEDMode = mode;
+		m_climberLEDValue = value;
 	}
 
 	/**
@@ -112,10 +142,8 @@ public class ArduinoSubsystem extends SubsystemBase {
 
 	public void update() {
 		if (DriverStation.isDisabled()) {
-			setMainLEDMode(LEDModes.kOff);
-			setMainLEDValue(LEDColors.kOff);
-			setShooterLEDMode(LEDModes.kOff);
-			setShooterLEDValue(LEDColors.kOff);
+			setMainLED();
+			setShooterLED();
 		}
 
 		// if (Timer.getFPGATimestamp() >= 120) {
