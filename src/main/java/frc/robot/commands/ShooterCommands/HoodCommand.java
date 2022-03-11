@@ -6,6 +6,7 @@ package frc.robot.commands.ShooterCommands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.commands.IntakeCommands.IntakeArmCommand.Operation;
 import frc.robot.subsystems.HoodSubsystem;
 
 public class HoodCommand extends CommandBase {
@@ -14,7 +15,8 @@ public class HoodCommand extends CommandBase {
 
   public enum Operation {
     CMD_SET_POSITION,
-    CMD_SETTLE
+    CMD_SETTLE,
+    CMD_POWER_ZERO
   }
 
   /** Creates a new HoodCommand. */
@@ -30,6 +32,8 @@ public class HoodCommand extends CommandBase {
   public void initialize() {
     if (m_operation == Operation.CMD_SET_POSITION) {
       HoodSubsystem.get().setPosition(m_hoodParam);
+    }else if(m_operation == Operation.CMD_POWER_ZERO){
+      HoodSubsystem.get().setPercentOutput(-0.05);
     }
   }
 
@@ -52,6 +56,8 @@ public class HoodCommand extends CommandBase {
     } else if (m_operation == Operation.CMD_SETTLE) {
       SmartDashboard.putBoolean("Hood at Setpoint", HoodSubsystem.get().atSetpoint());
       return HoodSubsystem.get().atSetpoint();
+    } else if(m_operation == Operation.CMD_POWER_ZERO){
+      return true;
     }
     return true;
   }

@@ -366,7 +366,7 @@ public class RobotContainer {
                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)),
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP));
         */
-        return new SequentialCommandGroup(
+        /*return new SequentialCommandGroup(
             new ParallelCommandGroup(new DriveDistanceCommand(45),CommandComposer.getLoadCommand()), 
             new IntakeCommand(IntakeCommand.Operation.CMD_STOP).withTimeout(1),
             new ParallelCommandGroup(
@@ -380,9 +380,9 @@ public class RobotContainer {
             new TurnCommand(DriveSubsystem.get(), 115).withTimeout(2),
             new ParallelCommandGroup(new DriveDistanceCommand(75),CommandComposer.getLoadCommand()), 
             new TurnCommand(DriveSubsystem.get(),-115));
-        
+        */
         // DriveDistanceCommand(80);
-        // return m_autoChooser.getSelected();
+        return m_autoChooser.getSelected();
     }
 
     public void generateAutonomousCommands() {

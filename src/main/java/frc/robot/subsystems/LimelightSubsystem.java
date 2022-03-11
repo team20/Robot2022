@@ -105,21 +105,21 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
      * @return Whether the LIME light is on
      */
     public boolean isLightOn() {
-        return m_limelightTable.getEntry("ledmode").getDouble(0) == 3; //check force on
+        return m_limelightTable.getEntry("ledMode").getDouble(0) == 3; //check force on
     }
 
     /**
      * Turn on the LIME light
      */
     public void turnOnLight() {
-        m_limelightTable.getEntry("ledmode").setNumber(3); //force on
+        m_limelightTable.getEntry("ledMode").setNumber(3); //force on
     }
 
     /**
      * Turn off the LIME light
      */
     public void turnOffLight() {
-        m_limelightTable.getEntry("ledmode").setNumber(1); //force off
+        m_limelightTable.getEntry("ledMode").setNumber(1); //force off
     }
 
     public void configureShuffleboard() {

@@ -189,8 +189,10 @@ public class CommandComposer {
 
     public static Command getFourToTwoAutoCommand(){
         return new SequentialCommandGroup(
-            new ParallelCommandGroup(new DriveDistanceCommand(45.0), getLoadCommand()), 
+            new TurnCommand(DriveSubsystem.get(), 32).withTimeout(1.5),
+            new ParallelCommandGroup(new DriveDistanceCommand(40), getLoadCommand()), 
             new IntakeCommand(IntakeCommand.Operation.CMD_STOP).withTimeout(1),
+            new TurnCommand(DriveSubsystem.get(), -25).withTimeout(1.5),
             new ParallelCommandGroup(
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 9.5), 
                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4250)),
@@ -199,12 +201,12 @@ public class CommandComposer {
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
-            new TurnCommand(DriveSubsystem.get(), 115).withTimeout(2),
-            new ParallelCommandGroup(new DriveDistanceCommand(75.0), getLoadCommand()), 
-            new TurnCommand(DriveSubsystem.get(),115),
+            new TurnCommand(DriveSubsystem.get(), 118).withTimeout(2),
+            new ParallelCommandGroup(new DriveDistanceCommand(35.0), getLoadCommand()), 
+            new TurnCommand(DriveSubsystem.get(),-65).withTimeout(2),
             new ParallelCommandGroup(
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 9.5), 
-                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4250)),
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4000)),
             getAutoShootCommand(),
             new ParallelCommandGroup(
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
@@ -226,7 +228,7 @@ public class CommandComposer {
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
             new TurnCommand(DriveSubsystem.get(), -120).withTimeout(2),
             new ParallelCommandGroup(new DriveDistanceCommand(109), getLoadCommand()), 
-            new TurnCommand(DriveSubsystem.get(),-120),
+            new TurnCommand(DriveSubsystem.get(),6),
             new ParallelCommandGroup(
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 9.5), 
                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4250)),

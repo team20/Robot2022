@@ -234,7 +234,7 @@ public final class Constants {
     public static final int kMotorPort = 15;
 		public static final boolean kInvert = true;
 		public static final int kSmartCurrentLimit = 60;
-		public static final double kP = .15; // TODO: tune PID
+		public static final double kP = .25; // TODO: tune PID
 		public static final double kI = 0.00001;
 		public static final double kD = 0;// 0.000_03;
 		public static final double kIz = 0.0;

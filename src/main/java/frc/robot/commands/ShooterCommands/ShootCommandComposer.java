@@ -69,6 +69,7 @@ public class ShootCommandComposer {
 
     return new ParallelCommandGroup(
         new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
-        new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0));
+        new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
+        new HoodCommand(HoodCommand.Operation.CMD_POWER_ZERO, 0));
   }
 }
