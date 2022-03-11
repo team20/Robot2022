@@ -7,38 +7,48 @@ import frc.robot.Constants.ArduinoConstants;
 import frc.robot.subsystems.ArduinoSubsystem;
 
 public class UpdateLEDsCommand extends CommandBase {
-    private ArduinoSubsystem m_arduinoSubsystem;
+    // private ArduinoSubsystem m_arduinoSubsystem;
     private Supplier<Byte> m_mainLEDMode;
-    private Supplier<Byte> m_mainLEDValue;
+    private Supplier<Byte> m_mainLEDColor;
     private Supplier<Byte> m_shooterLEDMode;
-    private Supplier<Byte> m_shooterLEDValue;
+    private Supplier<Byte> m_shooterLEDColor;
+    private Supplier<Byte> m_climberLEDMode;
+    private Supplier<Byte> m_climberLEDColor;
 
-    public UpdateLEDsCommand(ArduinoSubsystem arduinoSubsystem, Supplier<Byte> mainLEDMode,
-    Supplier<Byte> mainLEDValue, Supplier<Byte> shooterLEDMode, Supplier<Byte> shooterLEDValue) {
-        m_arduinoSubsystem = arduinoSubsystem;
+    public UpdateLEDsCommand(Supplier<Byte> mainLEDMode,
+    Supplier<Byte> mainLEDColor, Supplier<Byte> shooterLEDMode, Supplier<Byte> shooterLEDColor,
+    Supplier<Byte> climberLEDMode, Supplier<Byte> climberLEDColor) {
+        //m_arduinoSubsystem = arduinoSubsystem;
         m_mainLEDMode = mainLEDMode;
-        m_mainLEDValue = mainLEDValue;
+        m_mainLEDColor = mainLEDColor;
         m_shooterLEDMode = shooterLEDMode;
-        m_shooterLEDValue = shooterLEDValue;
-        addRequirements(m_arduinoSubsystem);
+        m_shooterLEDColor = shooterLEDColor;
+        m_climberLEDMode = climberLEDMode;
+        m_climberLEDColor = climberLEDColor;
+        addRequirements(ArduinoSubsystem.get());
     }
 
 	@Override
     public void execute() {
         
-        m_arduinoSubsystem.setMainLEDMode(m_mainLEDMode.get());
-        m_arduinoSubsystem.setMainLEDValue(m_mainLEDValue.get());
-        m_arduinoSubsystem.setShooterLEDMode(m_shooterLEDMode.get());
-        m_arduinoSubsystem.setShooterLEDValue(m_shooterLEDValue.get());
+        ArduinoSubsystem.get().setMainLEDMode(m_mainLEDMode.get());
+        ArduinoSubsystem.get().setMainLEDColor(m_mainLEDColor.get());
+        ArduinoSubsystem.get().setShooterLEDMode(m_shooterLEDMode.get());
+        ArduinoSubsystem.get().setShooterLEDColor(m_shooterLEDColor.get());
+        ArduinoSubsystem.get().setClimberLEDMode(m_climberLEDMode.get());
+        ArduinoSubsystem.get().setClimberLEDColor(m_climberLEDColor.get());
         // System.out.println("main led mode: " + m_mainLEDMode.get());
         // System.out.println("main led color: " + m_mainLEDValue.get());
         // System.out.println("shooter led mode: " + m_shooterLEDMode.get());
         // System.out.println("shooter led color: " + m_shooterLEDValue.get());
+        // System.out.println("climber led mode: " + m_climberLEDMode.get());
+        // System.out.println("climber led color: " + m_climberLEDValue.get());
     }
 
     @Override
-    public void end(boolean interrupted) {
-        m_arduinoSubsystem.setMainLEDMode(ArduinoConstants.LEDModes.kOff);
-        m_arduinoSubsystem.setShooterLEDMode(ArduinoConstants.LEDModes.kOff);
+    public void end(boolean interrupted) { //TODO could cause problems....
+        ArduinoSubsystem.get().setMainLEDMode(ArduinoConstants.LEDModes.kOff);
+        ArduinoSubsystem.get().setShooterLEDMode(ArduinoConstants.LEDModes.kOff);
+        ArduinoSubsystem.get().setClimberLEDMode(ArduinoConstants.LEDModes.kOff);
     }
 }

@@ -32,10 +32,13 @@ public class IntakeArmCommand extends CommandBase {
   public void execute() {
     if(m_operation == Operation.CMD_ARM_UP){
       IntakeArmSubsystem.get().setPosition(IntakeArmSubsystem.Position.UP_POSITION);
-      System.out.println("setting to up");
+      IntakeArmSubsystem.get().setBrakeMode();
+      //System.out.println("setting to up");
       // IntakeArmSubsystem.get().setPercentOutput(0);//TODO find speed
     } else if(m_operation == Operation.CMD_ARM_DOWN){
+      System.out.println("setting to down");
       IntakeArmSubsystem.get().setPosition(IntakeArmSubsystem.Position.DOWN_POSITION);
+      IntakeArmSubsystem.get().setCoastMode();
       // IntakeArmSubsystem.get().setPercentOutput(0);//TODO find speed
     } 
     else if(m_operation==Operation.CMD_RESET_ENCODER){

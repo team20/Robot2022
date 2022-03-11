@@ -1,37 +1,21 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.FieldLocation;
 import frc.robot.Constants.LoggingConstants;
 import frc.robot.Constants.TelescopeHookConstants;
-import frc.robot.Constants.ArduinoConstants.LEDModes;
-import frc.robot.Constants.ArduinoConstants.LEDColors;
 import frc.robot.Constants.ControllerConstants.Axis;
 import frc.robot.Constants.ControllerConstants.Button;
 import frc.robot.Constants.ControllerConstants.DPad;
 import frc.robot.commands.DeferredCommand;
-import frc.robot.commands.ArduinoCommands.UpdateLEDsCommand;
 import frc.robot.commands.AutoCommands.ComplexAutoSequence;
 import frc.robot.commands.AutoCommands.DriveDistanceCommand;
 import frc.robot.commands.AutoCommands.SitAndShootHigh;
@@ -42,19 +26,14 @@ import frc.robot.commands.ClimberCommands.TelescopeHookCommand;
 import frc.robot.commands.DriveCommands.ArcadeDriveCommand;
 import frc.robot.commands.DriveCommands.PixyTargetCommand;
 import frc.robot.commands.IndexerCommands.IndexerCommand;
-import frc.robot.commands.IntakeArmCommands.DriveArmCommand;
-import frc.robot.commands.IntakeArmCommands.ExtendArmCommand;
-import frc.robot.commands.IntakeArmCommands.RetractArmCommand;
 import frc.robot.commands.IntakeCommands.DriveIntakeArmCommand;
 import frc.robot.commands.IntakeCommands.IntakeArmCommand;
 import frc.robot.commands.IntakeCommands.IntakeCommand;
 import frc.robot.commands.IntakeCommands.IntakeArmCommand.Operation;
 import frc.robot.commands.LimelightCommands.LimelightTurnCommand;
-import frc.robot.commands.ShooterCommands.AutoIndexCommand;
 import frc.robot.commands.ShooterCommands.FlywheelCommand;
 import frc.robot.commands.ShooterCommands.HoodCommand;
 import frc.robot.commands.ShooterCommands.ShootCommandComposer;
-import frc.robot.commands.ShooterCommands.ShootSetupCommand;
 import frc.robot.subsystems.ArduinoSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
@@ -77,6 +56,7 @@ import frc.robot.subsystems.TelescopeHookSubsystem;
  */
 
 public class RobotContainer {
+
     // subsystems
     private final ArduinoSubsystem m_arduinoSubsystem = new ArduinoSubsystem();
     private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
@@ -96,8 +76,7 @@ public class RobotContainer {
     // auto selector
     private final SendableChooser<Command> m_autoChooser = new SendableChooser<>();
 
-    // shuffleboard logging (driver visuals) TODO actually configure this to be
-    // useful
+    // shuffleboard logging (driver visuals) TODO actually configure this to be useful
     private final ShuffleboardLogging[] m_subsystems = { m_driveSubsystem,
             m_flywheelSubsystem, m_hoodSubsystem, m_limelightSubsystem };
 
@@ -288,10 +267,17 @@ public class RobotContainer {
                 .whenInactive(new ParallelCommandGroup(new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
 
         //-----------------UP DPAD-----------------
+        new POVButton(m_operatorController, DPad.kUp)
+        .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP));
+
+        // new JoystickButton(m_driverController, DPad.kUp).whenInactive(new IntakeArmCommand(IntakeArmCommand.Operation.CM))
+
 
         //-----------------RIGHT DPAD-----------------
 
         //-----------------DOWN DPAD-----------------     
+        new POVButton(m_operatorController, DPad.kDown)
+        .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN));
 
         //-----------------LEFT DPAD-----------------
 
@@ -349,12 +335,6 @@ public void configureTestingBindings() {
 
         new POVButton(m_driverController, 270).whenPressed(new IntakeCommand(IntakeCommand.Operation.CMD_RUN_REV));
         new POVButton(m_driverController, 270).whenReleased(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
-
-        new JoystickButton(m_driverController, 3)
-                .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP));
-
-        new JoystickButton(m_driverController, 2)
-                .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN));
 
         new POVButton(m_operatorController, 0)
                 .whenPressed(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, 0.3));
@@ -416,7 +396,8 @@ public void configureTestingBindings() {
                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)),
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP));
         */
-        /*return new SequentialCommandGroup(
+
+      /*return new SequentialCommandGroup(
             new ParallelCommandGroup(new DriveDistanceCommand(45),CommandComposer.getLoadCommand()), 
             new IntakeCommand(IntakeCommand.Operation.CMD_STOP).withTimeout(1),
             new ParallelCommandGroup(
