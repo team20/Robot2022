@@ -265,10 +265,17 @@ public class RobotContainer {
                 .whenInactive(new ParallelCommandGroup(new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
 
         //-----------------UP DPAD-----------------
+        new POVButton(m_operatorController, DPad.kUp)
+        .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP));
+
+        // new JoystickButton(m_driverController, DPad.kUp).whenInactive(new IntakeArmCommand(IntakeArmCommand.Operation.CM))
+
 
         //-----------------RIGHT DPAD-----------------
 
         //-----------------DOWN DPAD-----------------     
+        new POVButton(m_operatorController, DPad.kDown)
+        .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN));
 
         //-----------------LEFT DPAD-----------------
 
@@ -326,12 +333,6 @@ public void configureTestingBindings() {
 
         new POVButton(m_driverController, 270).whenPressed(new IntakeCommand(IntakeCommand.Operation.CMD_RUN_REV));
         new POVButton(m_driverController, 270).whenReleased(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
-
-        new JoystickButton(m_driverController, 3)
-                .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP));
-
-        new JoystickButton(m_driverController, 2)
-                .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN));
 
         new POVButton(m_operatorController, 0)
                 .whenPressed(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, 0.3));
@@ -393,7 +394,9 @@ public void configureTestingBindings() {
                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)),
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP));
         */
+
         return new SequentialCommandGroup(
+            new TurnCommand(DriveSubsystem.get(), 45).withTimeout(2),
             new ParallelCommandGroup(new DriveDistanceCommand(45),CommandComposer.getLoadCommand()), 
             new IntakeCommand(IntakeCommand.Operation.CMD_STOP).withTimeout(1),
             new ParallelCommandGroup(
@@ -405,8 +408,18 @@ public void configureTestingBindings() {
                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)),
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
             new TurnCommand(DriveSubsystem.get(), 115).withTimeout(2),
-            new ParallelCommandGroup(new DriveDistanceCommand(75),CommandComposer.getLoadCommand()), 
-            new TurnCommand(DriveSubsystem.get(),-115));
+            new ParallelCommandGroup(new DriveDistanceCommand(75),CommandComposer.getLoadCommand()),
+            new IntakeCommand(IntakeCommand.Operation.CMD_STOP).withTimeout(1), 
+            new TurnCommand(DriveSubsystem.get(),-115),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 9.5), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4250)),
+            CommandComposer.getAutoShootCommand(),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)),
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP)
+            );
         
         // DriveDistanceCommand(80);
         // return m_autoChooser.getSelected();
