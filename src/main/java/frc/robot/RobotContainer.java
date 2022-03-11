@@ -110,11 +110,13 @@ public class RobotContainer {
 
         configureShuffleboard();
 
-        m_autoChooser.addOption("Sit and shoot high",
-                new SitAndShootHigh(m_flywheelSubsystem, m_hoodSubsystem, m_indexerSubsystem));
-        m_autoChooser.addOption("Sit and shoot low",
-                new SitAndShootLow(m_flywheelSubsystem, m_hoodSubsystem, m_indexerSubsystem));
-        // m_autoChooser.addOption("Taxi" , new Taxi(m_driveSubsystem));
+        m_autoChooser.addOption("Two Ball", CommandComposer.getTwoBallAutoCommand());
+        m_autoChooser.addOption("Four To Two", CommandComposer.getFourToTwoAutoCommand());
+        m_autoChooser.addOption("One To Two", CommandComposer.getOneToTwoAutoCommand());
+        m_autoChooser.addOption("Four To Three", CommandComposer.getFourToThreeAutoCommand());
+        m_autoChooser.addOption("Two To Three", CommandComposer.getTwoToThreeAutoCommand());
+        m_autoChooser.addOption("Two To Four", CommandComposer.getTwoToFourAutoCommand());
+        m_autoChooser.addOption("Four To Two To Three", CommandComposer.getFourToTwoToThreeAutoCommand());        // m_autoChooser.addOption("Taxi" , new Taxi(m_driveSubsystem));
         // m_autoChooser.addOption("Taxi, shoot high");
         // m_autoChooser.addOption("Shoot high, taxi");
         // m_autoChooser.addOption("Shoot low, taxi");
@@ -414,7 +416,7 @@ public void configureTestingBindings() {
                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)),
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP));
         */
-        return new SequentialCommandGroup(
+        /*return new SequentialCommandGroup(
             new ParallelCommandGroup(new DriveDistanceCommand(45),CommandComposer.getLoadCommand()), 
             new IntakeCommand(IntakeCommand.Operation.CMD_STOP).withTimeout(1),
             new ParallelCommandGroup(
@@ -428,9 +430,9 @@ public void configureTestingBindings() {
             new TurnCommand(DriveSubsystem.get(), 115).withTimeout(2),
             new ParallelCommandGroup(new DriveDistanceCommand(75),CommandComposer.getLoadCommand()), 
             new TurnCommand(DriveSubsystem.get(),-115));
-        
+        */
         // DriveDistanceCommand(80);
-        // return m_autoChooser.getSelected();
+        return m_autoChooser.getSelected();
     }
 
     public void generateAutonomousCommands() {

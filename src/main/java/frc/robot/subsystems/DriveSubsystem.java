@@ -48,11 +48,6 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
 
         private final DifferentialDriveOdometry m_odometry;
 
-        private final MotorControllerGroup m_leftMotors = new MotorControllerGroup(m_frontLeft, m_backLeft);
-        private final MotorControllerGroup m_rightMotors = new MotorControllerGroup(m_frontRight, m_backRight);
-
-        private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
-
         public DriveSubsystem() {
 
                 s_subsystem = this;
@@ -233,9 +228,6 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
                 m_odometry.resetPosition(pose, m_gyro.getRotation2d());
         }
 
-        public void arcadeDrive(double fwd, double rot) {
-                m_drive.arcadeDrive(fwd, rot);
-        }
 
         public void arcadeDrive(double straight, double left, double right) {
                 tankDrive(DriveConstants.kSpeedLimitFactor * (straight - left + right),
@@ -256,18 +248,7 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
                 
         }
 
-        /**
-         * Controls the left and right sides of the drive directly with voltages.
-         *
-         * @param leftVolts  the commanded left output
-         * @param rightVolts the commanded right output
-         */
-        public void tankDriveVolts(double leftVolts, double rightVolts) {
-                m_leftMotors.setVoltage(leftVolts);
-                m_rightMotors.setVoltage(rightVolts);
-                m_drive.feed();
-        }
-
+        
         public void tankDriveVelocity(DifferentialDriveWheelSpeeds wheelSpeeds) {
 
                 double leftNativeVelocity = wheelSpeeds.leftMetersPerSecond
@@ -285,15 +266,6 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
                 // DriveConstants.kFeedForward.calculate(wheelSpeeds.leftMetersPerSecond));
         }
 
-        /**
-         * Sets the max output of the drive. Useful for scaling the drive to drive more
-         * slowly.
-         *
-         * @param maxOutput the maximum output to which the drive will be constrained
-         */
-        public void setMaxOutput(double maxOutput) {
-                m_drive.setMaxOutput(maxOutput);
-        }
 
         public void configureShuffleboard() {
                 ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Drive");
