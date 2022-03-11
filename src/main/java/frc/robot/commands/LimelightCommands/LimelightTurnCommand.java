@@ -63,7 +63,7 @@ public class LimelightTurnCommand extends CommandBase {
      */
     public void initialize() {
         m_limelightSubsystem.turnOnLight();
-
+        
         m_turnController.setTolerance(LimelightConstants.kTurnTolerance);
         m_turnController.setSetpoint(m_setpointAngle);
 

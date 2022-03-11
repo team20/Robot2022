@@ -31,7 +31,7 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
 
     public LimelightSubsystem() {
         s_subsytem = this;
-        turnOffLight();
+        //turnOffLight();
     }
 
     /**
@@ -39,10 +39,12 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
      */
 
     public void periodic() {
-
+        isLightOn();
+        //turnOffLight();
         SmartDashboard.putNumber("Avg Distance", getAverageDistance());
         SmartDashboard.putNumber("Distance", getDistance());
         SmartDashboard.putBoolean("Target Visible", isTargetVisible());
+        System.out.println("is light on: " + isLightOn());
 
         //System.out.println("limelight y angle" + calculateRollingAverage(getYAngle()));
 
