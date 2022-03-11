@@ -346,8 +346,8 @@ public final class Constants {
 		public static final int kFollowerPort = 12;
 		public static final boolean kMasterInvert = false;
 		public static final boolean kFollowerOppose = true;
-		public static final int kSmartCurrentLimit = 60;// TODO: change
-		public static final double kP = .01; // TODO: tune PID
+		public static final int kSmartCurrentLimit = 600;// TODO: change
+		public static final double kP = .03; // TODO: tune PID
 		public static final double kI = 0;
 		public static final double kD = 0.00001249999968422344;// 0.000_03;
 		public static final double kIz = 0.0;
@@ -358,9 +358,9 @@ public final class Constants {
 		public static final double kMinVelocity = 0;
 		public static final double kMaxAcel = 20_000;
 		public static final double kMaxVelocity = 10_000;
-		public static final double kAllowedError = 7;
+		public static final double kAllowedError = .5;
 
-		public static final double kExtendedPosition = 40;// inches
+		public static final double kExtendedPosition = 170;// inches
 		public static final double kRetractedPosition = 0;// inches
 		public static final double kDisengageFromRetractedPosition = 5;// inches
 
