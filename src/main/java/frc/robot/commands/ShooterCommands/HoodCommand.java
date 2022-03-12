@@ -17,7 +17,8 @@ public class HoodCommand extends CommandBase {
   public enum Operation {
     CMD_SET_POSITION,
     CMD_SETTLE,
-    CMD_POWER_ZERO
+    CMD_POWER_ZERO,
+    CMD_STOP
   }
 
   /** Creates a new HoodCommand. */
@@ -33,8 +34,10 @@ public class HoodCommand extends CommandBase {
   public void initialize() {
     if (m_operation == Operation.CMD_SET_POSITION) {
       HoodSubsystem.get().setPosition(m_hoodParam);
-    }else if(m_operation == Operation.CMD_POWER_ZERO){
-      HoodSubsystem.get().setPercentOutput(-0.05);
+    } else if (m_operation == Operation.CMD_POWER_ZERO) {
+      HoodSubsystem.get().setPercentOutput(-10.0);
+    } else if (m_operation == Operation.CMD_STOP) {
+      HoodSubsystem.get().setPercentOutput(0.0);
     }
   }
 
@@ -59,6 +62,8 @@ public class HoodCommand extends CommandBase {
       SmartDashboard.putBoolean("Hood at Setpoint", HoodSubsystem.get().atSetpoint());
       return HoodSubsystem.get().atSetpoint();
     } else if(m_operation == Operation.CMD_POWER_ZERO){
+      return true;
+    } else if (m_operation == Operation.CMD_STOP) {
       return true;
     }
     return true;

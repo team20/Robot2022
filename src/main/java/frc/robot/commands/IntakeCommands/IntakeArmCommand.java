@@ -36,7 +36,7 @@ public class IntakeArmCommand extends CommandBase {
       //System.out.println("setting to up");
       // IntakeArmSubsystem.get().setPercentOutput(0);//TODO find speed
     } else if(m_operation == Operation.CMD_ARM_DOWN){
-      System.out.println("setting to down");
+      //System.out.println("setting to down");
       IntakeArmSubsystem.get().setPosition(IntakeArmSubsystem.Position.DOWN_POSITION);
       IntakeArmSubsystem.get().setCoastMode();
       // IntakeArmSubsystem.get().setPercentOutput(0);//TODO find speed

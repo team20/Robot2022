@@ -86,7 +86,7 @@ public class RobotContainer {
     public RobotContainer() {
         
         m_limelightSubsystem.turnOffLight();
-
+        //m_limelightSubsystem.turnOnLight();
         configureShuffleboard();
 
         m_autoChooser.addOption("Two Ball", CommandComposer.getTwoBallAutoCommand());
@@ -136,8 +136,12 @@ public class RobotContainer {
                 .whenReleased(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
 
         // --------------SQUARE BUTTON--------------
+        new JoystickButton(m_driverController, ControllerConstants.Button.kCircle)
+                .whenHeld(new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem));
 
         // --------------CIRCLE BUTTON--------------
+        new JoystickButton(m_driverController, ControllerConstants.Button.kCircle)
+        .whenPressed(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_ZERO_ENCODERS, 0));
 
         //-----------------UP DPAD-----------------
         //------Telescope To Top Position--------
@@ -146,8 +150,10 @@ public class RobotContainer {
 
         //-----------------RIGHT DPAD-----------------
         //---------Move Right Telescope Manual--------
+        // new POVButton(m_driverController, DPad.kRight)
+        //         .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE_FOLLOWER, .2));
         new POVButton(m_driverController, DPad.kRight)
-                .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE_FOLLOWER, .2));
+                .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, -.2));
 
         //-----------------DOWN DPAD-----------------
         //---------Telescope To Top Position----------
@@ -156,11 +162,10 @@ public class RobotContainer {
 
         //-----------------LEFT DPAD-----------------
         //-----------Limelight Line Up---------------
-        new POVButton(m_operatorController, ControllerConstants.DPad.kLeft)
+        new POVButton(m_driverController, DPad.kLeft)
                 .whenHeld(new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem));
 
         //---------------LEFT BUMPER---------------
-
         //-------------Fine Steer Left------------
         new JoystickButton(m_driverController, Button.kLeftBumper).whenHeld(new ArcadeDriveCommand(m_driveSubsystem,
                 () -> 0.0, () -> DriveConstants.kFineTurningSpeed, () -> -DriveConstants.kFineTurningSpeed));
@@ -189,12 +194,7 @@ public class RobotContainer {
         //---------------RIGHT BUTTON JOYSTICK---------------
 
         //------------------SHARE BUTTON--------------------
-        //--------------Indexer Manual Reverse--------------
-        new JoystickButton(m_driverController, ControllerConstants.Button.kShare)
-                .whenHeld(new ParallelCommandGroup(new IndexerCommand(IndexerCommand.Operation.CMD_REV_MAN), new IntakeCommand(IntakeCommand.Operation.CMD_RUN_REV)));
-        new JoystickButton(m_driverController, ControllerConstants.Button.kShare)
-                .whenReleased(new ParallelCommandGroup(new IndexerCommand(IndexerCommand.Operation.CMD_STOP), new IntakeCommand(IntakeCommand.Operation.CMD_STOP)));
-
+      
         //------------------OPTIONS BUTTON--------------------
 
         //------------------TRACKPAD BUTTON--------------------
@@ -274,6 +274,10 @@ public class RobotContainer {
 
 
         //-----------------RIGHT DPAD-----------------
+        new JoystickButton(m_operatorController, DPad.kRight)
+                .whenHeld(new HoodCommand(HoodCommand.Operation.CMD_POWER_ZERO, 0));
+        new JoystickButton(m_operatorController, DPad.kRight)
+                .whenReleased(new HoodCommand(HoodCommand.Operation.CMD_STOP, 0));
 
         //-----------------DOWN DPAD-----------------     
         new POVButton(m_operatorController, DPad.kDown)
@@ -282,11 +286,20 @@ public class RobotContainer {
         //-----------------LEFT DPAD-----------------
 
         //---------------LEFT BUMPER----------------
+        // new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kLeftBumper)
+        //         .whenHeld(CommandComposer.getLoadCommand());
+        new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kLeftBumper)
+                .whenHeld(new IndexerCommand(IndexerCommand.Operation.CMD_FWD_MAN));
+        new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kLeftBumper)
+                .whenReleased(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
+
 
         //---------------RIGHT BUMPER---------------
         //---------Intake and index one ball--------
+        // new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
+        //         .whenHeld(CommandComposer.getLoadCommand());
         new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
-                .whenHeld(CommandComposer.getLoadCommand());
+                .whenHeld(new IntakeCommand(IntakeCommand.Operation.CMD_RUN_FWD));
         new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
                 .whenReleased(new IntakeCommand(IntakeCommand.Operation.CMD_STOP));
 
@@ -303,8 +316,16 @@ public class RobotContainer {
         //---------------RIGHT BUTTON JOYSTICK---------------
 
         //------------------SHARE BUTTON--------------------
+        new JoystickButton(m_operatorController, ControllerConstants.Button.kShare)
+                .whenHeld(new IndexerCommand(IndexerCommand.Operation.CMD_REV_MAN));
+        new JoystickButton(m_operatorController, ControllerConstants.Button.kShare)
+                .whenReleased(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
 
         //------------------OPTIONS BUTTON--------------------
+        new JoystickButton(m_operatorController, ControllerConstants.Button.kOptions)
+                .whenHeld(new ParallelCommandGroup(new IndexerCommand(IndexerCommand.Operation.CMD_REV_MAN), new IntakeCommand(IntakeCommand.Operation.CMD_RUN_REV)));
+        new JoystickButton(m_operatorController, ControllerConstants.Button.kOptions)
+                .whenReleased(new ParallelCommandGroup(new IndexerCommand(IndexerCommand.Operation.CMD_STOP), new IntakeCommand(IntakeCommand.Operation.CMD_STOP)));
 
         //------------------TRACKPAD BUTTON--------------------
 
