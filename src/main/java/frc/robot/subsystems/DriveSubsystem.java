@@ -17,6 +17,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -128,6 +129,13 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
         public void periodic() {
                 m_odometry.update(m_gyro.getRotation2d(), getLeftEncoderPosition(),
                                 getRightEncoderPosition());
+                if(DriverStation.isDisabled()){
+                        m_backLeft.setIdleMode(IdleMode.kCoast);
+                        m_frontLeft.setIdleMode(IdleMode.kCoast);
+                        m_backRight.setIdleMode(IdleMode.kCoast);
+                        m_frontRight.setIdleMode(IdleMode.kCoast);
+
+                }
         }
 
         /**

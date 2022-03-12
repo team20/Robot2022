@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.SparkMaxPIDController.AccelStrategy;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.ControlType;
@@ -53,8 +54,9 @@ public class HoodSubsystem extends SubsystemBase implements ShuffleboardLogging 
     }
 
     public void periodic() {
-        SmartDashboard.putNumber("Hood position", getPosition());
-        if(m_motor.getOutputCurrent()  > 20){
+        SmartDashboard.putNumber("Hood position", m_motor.getOutputCurrent());
+        //System.out.println("output current is: " + m_motor.getOutputCurrent());
+        if(m_motor.getOutputCurrent()  > 40){
             m_motor.stopMotor();
             resetEncoder();
         }
@@ -93,7 +95,7 @@ public class HoodSubsystem extends SubsystemBase implements ShuffleboardLogging 
      * @param speed Percent output of the hood
      */
     public void setPercentOutput(Double speed) {
-        m_motor.set(speed);
+        m_pidController.setReference(speed, ControlType.kVelocity);
     }
 
     /**

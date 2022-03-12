@@ -1,5 +1,8 @@
 package frc.robot.commands.LimelightCommands;
 
+import java.time.Duration;
+import java.time.Instant;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.LimelightConstants;
@@ -21,6 +24,7 @@ public class LimelightTurnCommand extends CommandBase {
             LimelightConstants.kTurnP, LimelightConstants.kTurnI, LimelightConstants.kTurnD,
             LimelightConstants.kRefreshRate);
     private final double m_setpointAngle;
+    private Instant m_startTime;
 
     /**
      * Use the limelight to reach a desired angle to the powerport
@@ -64,6 +68,8 @@ public class LimelightTurnCommand extends CommandBase {
      * Set the tolerance and goal of the PIDs
      */
     public void initialize() {
+        m_startTime = Instant.now();
+
         m_limelightSubsystem.turnOnLight();
 
         m_turnController.setTolerance(LimelightConstants.kTurnTolerance);
@@ -75,6 +81,7 @@ public class LimelightTurnCommand extends CommandBase {
      * Update the motor outputs
      */
     public void execute() {
+        m_limelightSubsystem.turnOnLight();
         double measurementAngle = m_limelightSubsystem.getXAngle();
         double turnOutput = m_turnController.calculate(measurementAngle);
         // Apply max power limit
@@ -87,7 +94,7 @@ public class LimelightTurnCommand extends CommandBase {
             turnOutput = Math.signum(turnOutput) * 0.05;
         }
 
-        m_driveSubsystem.tankDrive(turnOutput, -1 * turnOutput); // Flip these if the bot turns the wrong direction
+        m_driveSubsystem.tankDrive(-turnOutput, turnOutput); // Flip these if the bot turns the wrong direction
     }
 
     /**
@@ -103,6 +110,10 @@ public class LimelightTurnCommand extends CommandBase {
     }
 
     public boolean isFinished() { // TODO: assumes you would only press the button once, no holding down
+        double elapsed = Duration.between(m_startTime, Instant.now()).toMillis();
+        if (elapsed < 250) {
+            return false;
+        }
         return m_turnController.atSetpoint();
     }
 

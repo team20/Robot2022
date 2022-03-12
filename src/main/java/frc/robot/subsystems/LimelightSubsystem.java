@@ -44,7 +44,7 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
         // SmartDashboard.putNumber("Avg Distance", getAverageDistance());
         // SmartDashboard.putNumber("Distance", getDistance());
         // SmartDashboard.putBoolean("Target Visible", isTargetVisible());
-        //System.out.println("is light on: " + isLightOn());
+        System.out.println("is light on: " + isLightOn());
         // System.out.println("the x angle is: " + getXAngle());
         // System.out.println("the y angle is: " + getYAngle());
 
@@ -64,7 +64,7 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
      * @return The x angle of the target center to the limelight crosshair
      */
     public double getXAngle() {
-        return xAngle = m_limelightTable.getEntry("tx").getDouble(0);
+        return xAngle = m_limelightTable.getEntry("tx").getDouble(-1);
     }
 
     /**
@@ -124,7 +124,7 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
      */
     public void turnOffLight() {
         m_limelightTable.getEntry("ledMode").setNumber(1); //force off
-        m_limelightTable.getEntry("ledMode").setNumber(1); //force off
+        //m_limelightTable.getEntry("ledMode").setNumber(1); //force off
 
     }
 
