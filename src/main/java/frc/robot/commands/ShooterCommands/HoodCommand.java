@@ -32,10 +32,12 @@ public class HoodCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    SmartDashboard.putBoolean("Run hood zero?", m_operation == Operation.CMD_POWER_ZERO);
     if (m_operation == Operation.CMD_SET_POSITION) {
       HoodSubsystem.get().setPosition(m_hoodParam);
     } else if (m_operation == Operation.CMD_POWER_ZERO) {
-      HoodSubsystem.get().setPercentOutput(-10.0);
+      SmartDashboard.putBoolean("running the power zero command", m_operation == Operation.CMD_POWER_ZERO);
+      HoodSubsystem.get().setPercentOutput(-0.1);
     } else if (m_operation == Operation.CMD_STOP) {
       HoodSubsystem.get().setPercentOutput(0.0);
     }

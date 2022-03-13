@@ -101,7 +101,7 @@ public final class Constants {
 
 		public static final int kFrontRightPort = 4;
 		public static final boolean kFrontRightInvert = false;
-		public static final int kBackRightPort = 12; //TODO CHANGE THIS BACK TO 5
+		public static final int kBackRightPort = 5; //TODO CHANGE THIS BACK TO 5
 		public static final boolean kBackRightOppose = false;
 
 		public static final int kSmartCurrentLimit = 60;
@@ -345,7 +345,7 @@ public final class Constants {
 
 	public static final class TelescopeHookConstants {
 		public static final int kMasterPort = 11;
-		public static final int kFollowerPort = 5; //TODO CHANGE BACK TO 12
+		public static final int kFollowerPort = 12; //TODO CHANGE BACK TO 12
 		public static final boolean kMasterInvert = false;
 		public static final boolean kFollowerOppose = true;
 		public static final int kSmartCurrentLimit = 600;// TODO: change

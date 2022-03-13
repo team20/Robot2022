@@ -3,6 +3,10 @@ package frc.robot.subsystems;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.SparkMaxPIDController.AccelStrategy;
+
+import java.time.Duration;
+import java.time.Instant;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -24,6 +28,8 @@ public class HoodSubsystem extends SubsystemBase implements ShuffleboardLogging 
     private final RelativeEncoder m_encoder = m_motor.getEncoder();
     private final SparkMaxPIDController m_pidController = m_motor.getPIDController();
     private double m_setPosition = 0;
+    private Instant m_startTime;
+    private double m_maxCurrent;
 
     /**
      * Initializes a new instance of the {@link HoodSubsystem} class.
@@ -54,9 +60,15 @@ public class HoodSubsystem extends SubsystemBase implements ShuffleboardLogging 
     }
 
     public void periodic() {
-        SmartDashboard.putNumber("Hood position", m_motor.getOutputCurrent());
+        SmartDashboard.putNumber("Hood current", m_motor.getOutputCurrent());
+        SmartDashboard.putNumber("Hood position", m_encoder.getPosition());
         //System.out.println("output current is: " + m_motor.getOutputCurrent());
-        if(m_motor.getOutputCurrent()  > 40){
+        if(m_motor.getOutputCurrent() > m_maxCurrent && Duration.between(m_startTime, Instant.now()).toMillis() > 100){
+            m_maxCurrent = m_motor.getOutputCurrent();
+            SmartDashboard.putNumber("max hood current", m_maxCurrent);
+        }
+        if(m_motor.getOutputCurrent()  > 10 && Duration.between(m_startTime, Instant.now()).toMillis() > 100){
+            System.out.println("STOPPING");
             m_motor.stopMotor();
             resetEncoder();
         }
@@ -91,17 +103,23 @@ public class HoodSubsystem extends SubsystemBase implements ShuffleboardLogging 
         return (Math.abs(m_setPosition - getPosition()) <= HoodConstants.kAllowedError);
     }
 
+
+
     /**
      * @param speed Percent output of the hood
      */
     public void setPercentOutput(Double speed) {
-        m_pidController.setReference(speed, ControlType.kVelocity);
+        m_startTime = Instant.now();
+
+        m_motor.set(speed);
+        SmartDashboard.putNumber("the speed of the hood", m_motor.get());
     }
 
     /**
      * @param position Setpoint (motor rotations)
      */
     public void setPosition(double position) {
+        m_startTime = Instant.now();
         m_setPosition = position;
         m_pidController.setReference(position, CANSparkMax.ControlType.kPosition, HoodConstants.kSlotID);
         System.out.println("reference position is: " + position);

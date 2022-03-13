@@ -134,6 +134,14 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
         m_pidController.setReference(m_setPosition, ControlType.kPosition, IntakeArmConstants.kSlotID);
     }
 
+    public boolean armDown() {
+        if (m_setPosition == downPositionEncoderPosition) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Zero the encoder position
      */

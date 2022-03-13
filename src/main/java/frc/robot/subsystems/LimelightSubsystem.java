@@ -44,7 +44,7 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
         // SmartDashboard.putNumber("Avg Distance", getAverageDistance());
         // SmartDashboard.putNumber("Distance", getDistance());
         // SmartDashboard.putBoolean("Target Visible", isTargetVisible());
-        System.out.println("is light on: " + isLightOn());
+        //System.out.println("is light on: " + isLightOn());
         // System.out.println("the x angle is: " + getXAngle());
         // System.out.println("the y angle is: " + getYAngle());
 
