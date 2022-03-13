@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.DeferredCommand;
+import frc.robot.commands.ZeroCommand;
 import frc.robot.commands.AutoCommands.*;
 import frc.robot.commands.ClimberCommands.*;
 import frc.robot.commands.IndexerCommands.*;

@@ -38,15 +38,11 @@ public class DriveDistanceCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double elapsed = Duration.between(m_startTime, Instant.now()).toMillis();
-        if (elapsed < 350) {
-            m_startDistanceLeft = DriveSubsystem.get().getLeftEncoderPosition();
-            m_startDistanceRight= DriveSubsystem.get().getRightEncoderPosition();
-            SmartDashboard.putNumber("encoder start left", DriveSubsystem.get().getLeftEncoderPosition());
-            SmartDashboard.putNumber("encoder start right", DriveSubsystem.get().getRightEncoderPosition());
-        }else{
+          m_startDistanceLeft = 0;
+          m_startDistanceRight= 0;
+          SmartDashboard.putNumber("encoder start left", DriveSubsystem.get().getLeftEncoderPosition());
+          SmartDashboard.putNumber("encoder start right", DriveSubsystem.get().getRightEncoderPosition());
           DriveSubsystem.get().tankDrive(.2 * Math.signum(m_distance), .2 * Math.signum(m_distance)); //TODO set speeds
-        }
   }
 
   // Called once the command ends or is interrupted.
@@ -65,13 +61,10 @@ public class DriveDistanceCommand extends CommandBase {
     SmartDashboard.putNumber("encoder current right", DriveSubsystem.get().getRightEncoderPosition());
     SmartDashboard.putBoolean("DriveDistance finished", (currDistanceLeft - m_startDistanceLeft) > m_distance && (currDistanceRight - m_startDistanceRight) > m_distance);
     double elapsed = Duration.between(m_startTime, Instant.now()).toMillis();
-        if (elapsed < 350) {
-            return false;
-        }
-    if(m_distance > 0){
-      return (currDistanceLeft - m_startDistanceLeft) > m_distance && (currDistanceRight - m_startDistanceRight) > m_distance;
-    } else{
-        return (currDistanceLeft - m_startDistanceLeft) < m_distance && (currDistanceRight - m_startDistanceRight) < m_distance;
+    if (elapsed < 350) {
+        return false;
     }
+    return Math.abs(currDistanceLeft - m_startDistanceLeft) > m_distance && Math.abs(currDistanceRight - m_startDistanceRight) > m_distance;
+
   }
 }
