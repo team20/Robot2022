@@ -177,6 +177,7 @@ new POVButton(m_driverController, DPad.kUp)
                                 .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, -.2));
                 // new POVButton(m_driverController, DPad.kRight)
                 //         .whenHeld(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, -0.2));
+                
                 // -----------------DOWN DPAD-----------------
                 // ---------Telescope To Top Position OR manual----------
                 // new POVButton(m_driverController, DPad.kDown)
@@ -192,10 +193,11 @@ new POVButton(m_driverController, DPad.kUp)
                                 .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, -.4));
                 new POVButton(m_driverController, DPad.kDown)
                                 .whenReleased(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
+               
                 // -----------------LEFT DPAD-----------------
                 // -----------Limelight Line Up---------------
-                new POVButton(m_driverController, DPad.kLeft)
-                                .whenHeld(new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem));
+                // new POVButton(m_driverController, DPad.kLeft)
+                //                 .whenHeld(new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem));
                 // new POVButton(m_driverController, DPad.kLeft)
                 //         .whenHeld(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, 0.2));
                
