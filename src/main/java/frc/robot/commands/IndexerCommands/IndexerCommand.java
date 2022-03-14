@@ -61,7 +61,7 @@ public class IndexerCommand extends CommandBase {
     } else if (m_operation == Operation.CMD_REV) {
       m_desiredIndexerState = indexerSubsystem.getReverseTargetState(m_keepBallRTF);
       indexerSubsystem.setPositionReverse();
-      System.out.println((byte)m_desiredIndexerState);
+      //System.out.println((byte)m_desiredIndexerState);
     } else if (m_operation == Operation.CMD_TO_EXPECTED_POSITION) {
       m_desiredIndexerState = indexerSubsystem.getCurrTargetState();
     }

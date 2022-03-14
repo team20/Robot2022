@@ -117,7 +117,7 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
      */
     public void setPosition(double position) {
         m_setPosition = position;
-        System.out.println("setPosition:" + position);
+        //System.out.println("setPosition:" + position);
         m_pidController.setReference(position, ControlType.kPosition, IntakeArmConstants.kSlotID);
     }
 
