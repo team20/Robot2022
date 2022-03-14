@@ -68,6 +68,7 @@ public class HoodSubsystem extends SubsystemBase implements ShuffleboardLogging 
             SmartDashboard.putNumber("max hood current", m_maxCurrent);
         }
         if(m_motor.getOutputCurrent()  > 10 && Duration.between(m_startTime, Instant.now()).toMillis() > 100){
+            
             System.out.println("STOPPING");
             m_motor.stopMotor();
             resetEncoder();
@@ -100,6 +101,7 @@ public class HoodSubsystem extends SubsystemBase implements ShuffleboardLogging 
      * @return Whether the hood is at the setpoint
      */
     public boolean atSetpoint() {
+        //System.out.println("AT SETPOINT");
         return (Math.abs(m_setPosition - getPosition()) <= HoodConstants.kAllowedError);
     }
 
@@ -121,8 +123,13 @@ public class HoodSubsystem extends SubsystemBase implements ShuffleboardLogging 
     public void setPosition(double position) {
         m_startTime = Instant.now();
         m_setPosition = position;
-        m_pidController.setReference(position, CANSparkMax.ControlType.kPosition, HoodConstants.kSlotID);
-        System.out.println("reference position is: " + position);
+        if(position <= 12.5){
+            m_pidController.setReference(position, CANSparkMax.ControlType.kPosition, HoodConstants.kSlotID);
+            //System.out.println("reference position is: " + position);
+        }else{
+            System.out.println("INVALID ANGLE");
+        }
+        
     }
 
     public void setSetpointDegrees(double degrees) {

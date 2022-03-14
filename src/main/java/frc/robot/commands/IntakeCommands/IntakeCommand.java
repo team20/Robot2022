@@ -12,21 +12,12 @@ public class IntakeCommand extends CommandBase {
   public enum Operation{
     CMD_RUN_FWD,
     CMD_RUN_REV,
-    CMD_STOP
+    CMD_STOP,
   }
   private Operation m_operation;
-  private boolean m_armDown;
 
   public IntakeCommand(Operation operation) {
     m_operation = operation;
-    m_armDown = true;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(IntakeSubsystem.get());
-  }
-
-  public IntakeCommand(Operation operation, boolean armDown) {
-    m_operation = operation;
-    m_armDown = armDown;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(IntakeSubsystem.get());
   }
@@ -40,22 +31,11 @@ public class IntakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // if(m_operation == Operation.CMD_RUN_FWD){
-    //   IntakeSubsystem.get().setSpeed(1);
-    // }else if(m_operation == Operation.CMD_RUN_REV){
-    //   IntakeSubsystem.get().setSpeed(-1);
-    // }else if(m_operation == Operation.CMD_STOP){
-    //   IntakeSubsystem.get().setSpeed(0);
-    // }
-    if (m_armDown) {
-      if(m_operation == Operation.CMD_RUN_FWD){
-        IntakeSubsystem.get().setSpeed(1);
-      }else if(m_operation == Operation.CMD_RUN_REV){
-        IntakeSubsystem.get().setSpeed(-1);
-      }else if(m_operation == Operation.CMD_STOP){
-        IntakeSubsystem.get().setSpeed(0);
-      }
-    } else {
+    if(m_operation == Operation.CMD_RUN_FWD){
+      IntakeSubsystem.get().setSpeed(1);
+    }else if(m_operation == Operation.CMD_RUN_REV){
+      IntakeSubsystem.get().setSpeed(-1);
+    }else if(m_operation == Operation.CMD_STOP){
       IntakeSubsystem.get().setSpeed(0);
     }
 

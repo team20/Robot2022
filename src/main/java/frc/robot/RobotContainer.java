@@ -91,7 +91,9 @@ public class RobotContainer {
                 // m_limelightSubsystem.turnOnLight();
                 configureShuffleboard();
 
-                m_autoChooser.addOption("Two Ball", CommandComposer.getTwoBallAutoCommand());
+                m_autoChooser.addOption("Two Ball 4 Red", CommandComposer.getTwoBallStarting4Red());
+                m_autoChooser.addOption("Two Ball 4 Blue", CommandComposer.getTwoBallStarting4Blue());
+                m_autoChooser.addOption("Two Ball 2 Blue", CommandComposer.getTwoBallStarting2Blue()); //good
                 m_autoChooser.addOption("Four To Two", CommandComposer.getFourToTwoAutoCommand());
                 m_autoChooser.addOption("One To Two", CommandComposer.getOneToTwoAutoCommand());
                 m_autoChooser.addOption("Four To Three", CommandComposer.getFourToThreeAutoCommand());
@@ -142,7 +144,7 @@ public class RobotContainer {
                                 .whenReleased(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
 
                 // --------------SQUARE BUTTON--------------
-                new JoystickButton(m_driverController, ControllerConstants.Button.kCircle)
+                new JoystickButton(m_driverController, ControllerConstants.Button.kSquare)
                                 .whenHeld(new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem));
 
                 // --------------CIRCLE BUTTON--------------
@@ -295,7 +297,7 @@ public class RobotContainer {
                                                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
 
                 // --------------CIRCLE BUTTON--------------
-                // ----------Ramp up for fender high shot-------
+                // -------Ramp up for fender high shot-------
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kCircle)
                                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
                                                 .negate())
@@ -332,11 +334,18 @@ public class RobotContainer {
                 // new JoystickButton(m_operatorController,
                 // Constants.ControllerConstants.Button.kLeftBumper)
                 // .whenHeld(CommandComposer.getLoadCommand());
-                new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kLeftBumper)
-                                .whenHeld(new IndexerCommand(IndexerCommand.Operation.CMD_FWD_MAN));
-                new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kLeftBumper)
-                                .whenReleased(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
-
+                // new JoystickButton(m_operatorController,
+                // Constants.ControllerConstants.Button.kLeftBumper)
+                // .whenReleased(new IntakeCommand(IntakeCommand.Operation.CMD_STOP));
+                // new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kLeftBumper)
+                //                 .whenHeld(new IndexerCommand(IndexerCommand.Operation.CMD_FWD_MAN));
+                // new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kLeftBumper)
+                //                 .whenReleased(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
+                new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                                 .whenHeld(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_MANUAL));
+                new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                                 .whenReleased(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_STOP));
+                                                  
                 // ---------------RIGHT BUMPER---------------
                 // ---------Run the intake fowards-----------
                 // new JoystickButton(m_operatorController,
@@ -349,9 +358,9 @@ public class RobotContainer {
                 // Constants.ControllerConstants.Button.kRightBumper)
                 // .whenReleased(new IntakeCommand(IntakeCommand.Operation.CMD_STOP));
                 new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
-                                .whenHeld(new IntakeCommand(IntakeCommand.Operation.CMD_RUN_FWD, IntakeArmSubsystem.get().armDown()));
+                                .whenHeld(CommandComposer.getLoadCommand());
                 new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
-                                .whenReleased(new IntakeCommand(IntakeCommand.Operation.CMD_STOP, true));
+                                .whenReleased(new IntakeCommand(IntakeCommand.Operation.CMD_STOP));
 
                 // ---------------LEFT AXIS JOYSTICK---------------
 
@@ -389,9 +398,9 @@ public class RobotContainer {
                 new JoystickButton(m_operatorController, Constants.ControllerConstants.Axis.kRightTrigger)
                                 .whenHeld(CommandComposer.getSpitCommand());
 
-                new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftStick)
-                                .whenHeld(new DriveIntakeArmCommand(
-                                                () -> m_operatorController.getRawAxis(Axis.kLeftY) * 0.1));
+                // new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftStick)
+                //                 .whenHeld(new DriveIntakeArmCommand(
+                //                                 () -> m_operatorController.getRawAxis(Axis.kLeftY) * 0.5));
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kTrackpad)
                                 .whenPressed(new IntakeArmCommand(Operation.CMD_RESET_ENCODER));
         }

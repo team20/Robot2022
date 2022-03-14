@@ -25,6 +25,7 @@ public class DriveIntakeArmCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println("setting speed to: " + m_speed.get());
     IntakeArmSubsystem.get().setPercentOutput(m_speed.get());
   }
 
