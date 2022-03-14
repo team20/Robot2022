@@ -143,12 +143,12 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     
     public void setPositionAdvance(){
         System.out.println("SETTING FORWARD");
-        m_setPosition += 35;
+        m_setPosition = m_neoEncoder.getPosition() + 30;
         m_neoController.setReference(m_setPosition, ControlType.kPosition, 0);
     }
     public void setPositionReverse(){
         System.out.println("SETTING REVERSE");
-        m_setPosition -= 35;
+        m_setPosition = m_neoEncoder.getPosition() + 30;
         m_neoController.setReference(m_setPosition, ControlType.kPosition, 0);
     }
 

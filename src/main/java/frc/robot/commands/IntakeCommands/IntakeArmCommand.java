@@ -14,6 +14,8 @@ public class IntakeArmCommand extends CommandBase {
     CMD_ARM_DOWN,
     CMD_ARM_SETTLE,
     CMD_RESET_ENCODER,
+    CMD_ARM_MANUAL,
+    CMD_ARM_STOP,
   }
 
   private Operation m_operation;
@@ -43,6 +45,10 @@ public class IntakeArmCommand extends CommandBase {
     } 
     else if(m_operation==Operation.CMD_RESET_ENCODER){
       IntakeArmSubsystem.get().resetEncoder();
+    }else if(m_operation==Operation.CMD_ARM_MANUAL){
+      IntakeArmSubsystem.get().setPercentOutput(-.1);
+    }else if(m_operation==Operation.CMD_ARM_STOP){
+      IntakeArmSubsystem.get().setPercentOutput(0);
     }
   }
 

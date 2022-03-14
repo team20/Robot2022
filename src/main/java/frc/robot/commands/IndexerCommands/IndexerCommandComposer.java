@@ -18,12 +18,8 @@ public class IndexerCommandComposer {
      * @return command or command group to load a ball into the indexer
      */
     public static Command getLoadCommand() {
-        if (IndexerSubsystem.get().gamePieceRTS()) {
-            return new SequentialCommandGroup(new IndexerCommand(IndexerCommand.Operation.CMD_REV),
-                    new IndexerCommand(IndexerCommand.Operation.CMD_ADV));
-        } else {
+        
             return new IndexerCommand(IndexerCommand.Operation.CMD_ADV);
-        }
     }
 
     /**

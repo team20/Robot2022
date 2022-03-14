@@ -111,7 +111,7 @@ public class LimelightTurnCommand extends CommandBase {
 
     public boolean isFinished() { // TODO: assumes you would only press the button once, no holding down
         double elapsed = Duration.between(m_startTime, Instant.now()).toMillis();
-        if (elapsed < 250) {
+        if (elapsed < 10000000) {
             return false;
         }
         return m_turnController.atSetpoint();

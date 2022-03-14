@@ -42,7 +42,7 @@ public class DriveDistanceCommand extends CommandBase {
           m_startDistanceRight= 0;
           SmartDashboard.putNumber("encoder start left", DriveSubsystem.get().getLeftEncoderPosition());
           SmartDashboard.putNumber("encoder start right", DriveSubsystem.get().getRightEncoderPosition());
-          DriveSubsystem.get().tankDrive(.2 * Math.signum(m_distance), .2 * Math.signum(m_distance)); //TODO set speeds
+          DriveSubsystem.get().tankDrive(.4 * Math.signum(m_distance), .4 * Math.signum(m_distance)); //TODO set speeds
   }
 
   // Called once the command ends or is interrupted.
