@@ -354,7 +354,7 @@ new POVButton(m_driverController, DPad.kUp)
                 // -----------------LEFT DPAD-----------------
 
                 // ---------------LEFT BUMPER----------------
-                // --------------Run the indexer-------------
+                // --------------Intake arm manual-------------
                 // new JoystickButton(m_operatorController,
                 // Constants.ControllerConstants.Button.kLeftBumper)
                 // .whenHeld(CommandComposer.getLoadCommand());
