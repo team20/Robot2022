@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController.AccelStrategy;
@@ -17,6 +16,8 @@ import frc.robot.Constants.TelescopeHookConstants;
 import frc.robot.ShuffleboardLogging;
 
 public class TelescopeHookSubsystem extends SubsystemBase implements ShuffleboardLogging {
+    private static TelescopeHookSubsystem s_system;
+    public static TelescopeHookSubsystem get() { return s_system; }
 
     private final CANSparkMax m_masterMotor = new CANSparkMax(TelescopeHookConstants.kMasterPort, MotorType.kBrushless);
     private final CANSparkMax m_followerMotor = new CANSparkMax(TelescopeHookConstants.kFollowerPort, MotorType.kBrushless);
@@ -29,6 +30,8 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
      * Initializes a new instance of the {@link TelescopeHookSubsystem} class.
      */
     public TelescopeHookSubsystem() {
+        s_system = this;
+
         m_masterMotor.restoreFactoryDefaults();
         m_masterMotor.setInverted(TelescopeHookConstants.kMasterInvert);
         m_masterMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
@@ -60,6 +63,7 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
 
     public void periodic() {
         SmartDashboard.putNumber("Telescope Hook Position", getPosition());
+        // System.out.println("Telescope Hook Position: "+getPosition());
     }
 
     /**
@@ -82,7 +86,6 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
     public boolean atSetpoint() {
         return (Math.abs(m_setPosition - getPosition()) <= TelescopeHookConstants.kAllowedError);
     }
-
     /**
      * @param speed Percent output of the hook
      */
@@ -98,7 +101,7 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
      */
     public void setPosition(double position) {
         m_setPosition = position;
-        m_pidController.setReference(position, ControlType.kSmartMotion, TelescopeHookConstants.kSlotID);
+        m_pidController.setReference(position, ControlType.kPosition, TelescopeHookConstants.kSlotID);
     }
 
     /**
@@ -108,7 +111,9 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
         m_encoder.setPosition(0);
         setPosition(0);
     }
-
+    public void setFollowerSpeed(double speed){
+        m_followerMotor.set(speed);
+    }
     /**
      * 
      * @param speed Percentage output of telescope hook motor
