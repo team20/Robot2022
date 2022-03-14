@@ -59,8 +59,8 @@ public class LinearRangeFinder extends RangeFinder {
          double r = m_bestRPM[0];
  
         expectEqual(d, 1.0);
-        System.out.println("expect d= " + d + " angle=" + a + " rpm=" + r);
-        System.out.println("got d= " + d + " angle=" + aim1[0] + " rpm=" + aim1[1]);
+        //System.out.println("expect d= " + d + " angle=" + a + " rpm=" + r);
+        //System.out.println("got d= " + d + " angle=" + aim1[0] + " rpm=" + aim1[1]);
 
          expectEqual(a, aim1[0]);
          expectEqual(r, aim1[1]);

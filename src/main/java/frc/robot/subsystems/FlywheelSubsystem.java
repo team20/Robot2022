@@ -102,7 +102,7 @@ public class FlywheelSubsystem extends SubsystemBase implements ShuffleboardLogg
      * @param velocity Target velocity (rpm).
      */
     public void setVelocity(double velocity) {
-        System.out.println("VELOCITY:" + velocity);
+        //System.out.println("VELOCITY:" + velocity);
         m_setVelocity = velocity;
     }
 

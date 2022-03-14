@@ -63,7 +63,7 @@ public class IntakeSubsystem extends SubsystemBase implements ShuffleboardLoggin
 	 * @param speed Percent output.
 	 */
 	public void setSpeed(double speed) {
-		System.out.println("Setting % output: " + speed);
+		//System.out.println("Setting % output: " + speed);
 		m_motor.set(speed);
 	}
 	public void configureShuffleboard() {

@@ -142,12 +142,12 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     }
     
     public void setPositionAdvance(){
-        System.out.println("SETTING FORWARD");
+        //System.out.println("SETTING FORWARD");
         m_setPosition = m_neoEncoder.getPosition() + 30;
         m_neoController.setReference(m_setPosition, ControlType.kPosition, 0);
     }
     public void setPositionReverse(){
-        System.out.println("SETTING REVERSE");
+        //System.out.println("SETTING REVERSE");
         m_setPosition = m_neoEncoder.getPosition() + 30;
         m_neoController.setReference(m_setPosition, ControlType.kPosition, 0);
     }
@@ -175,7 +175,7 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     }
 
     public boolean atTargetPosition() {
-        System.out.println("PERCENT ERROR: " + Math.abs(m_neoEncoder.getPosition() - getSetpoint() / getSetpoint()));
+        //System.out.println("PERCENT ERROR: " + Math.abs(m_neoEncoder.getPosition() - getSetpoint() / getSetpoint()));
         return Math.abs(m_neoEncoder.getPosition() - getSetpoint()) < IndexerConstants.kAllowedErrorPercent;
     }
     /**
