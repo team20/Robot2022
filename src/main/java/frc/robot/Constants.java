@@ -280,10 +280,10 @@ public final class Constants {
 		public static final double kMinPosition = 0;
 		public static final double kInPosition = 0;
 		public static final double kOutPosition = 0;
-		// public static final int kBumpSwitchPort = 0;
-		// public static final double kBounceDownPosition = 0;
-		// public static final double kBounceUpPosition = 0;
-		// public static final double kBounceTime = 0;
+		public static final int kBumpSwitchPort = 0;
+		public static final double kBounceDownPosition = 0;
+		public static final double kBounceUpPosition = 0;
+		public static final double kBounceTime = 0;
 	}
 
 	public static final class IntakeConstants {
