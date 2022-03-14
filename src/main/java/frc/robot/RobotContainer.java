@@ -157,6 +157,12 @@ public class RobotContainer {
                 // new POVButton(m_driverController, DPad.kUp)
                 //                 .whenPressed(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION,
                 //                                 TelescopeHookConstants.kExtendedPosition));
+                
+                // new POVButton(m_driverController, DPad.kUp)
+                //                 .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION,
+                //                                 TelescopeHookConstants.kExtendedPosition));
+                // new POVButton(m_driverController, DPad.kUp)
+                //                 .whenReleased(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
                 new POVButton(m_driverController, DPad.kUp)
                 .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, .4));
 new POVButton(m_driverController, DPad.kUp)
@@ -176,6 +182,12 @@ new POVButton(m_driverController, DPad.kUp)
                 // new POVButton(m_driverController, DPad.kDown)
                 //                 .whenPressed(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION,
                 //                                 TelescopeHookConstants.kRetractedPosition));
+
+                // new POVButton(m_driverController, DPad.kDown)
+                //                 .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION,
+                //                                 TelescopeHookConstants.kRetractedPosition));
+                // new POVButton(m_driverController, DPad.kDown)
+                //                 .whenReleased(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
                 new POVButton(m_driverController, DPad.kDown)
                                 .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, -.4));
                 new POVButton(m_driverController, DPad.kDown)
