@@ -165,7 +165,8 @@ public class RobotContainer {
                 // TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE_FOLLOWER, .2));
                 new POVButton(m_driverController, DPad.kRight)
                                 .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, -.2));
-
+                // new POVButton(m_driverController, DPad.kRight)
+                //         .whenHeld(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, -0.2));
                 // -----------------DOWN DPAD-----------------
                 // ---------Telescope To Top Position----------
                 new POVButton(m_driverController, DPad.kDown)
@@ -176,7 +177,9 @@ public class RobotContainer {
                 // -----------Limelight Line Up---------------
                 new POVButton(m_driverController, DPad.kLeft)
                                 .whenHeld(new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem));
-
+                // new POVButton(m_driverController, DPad.kLeft)
+                //         .whenHeld(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, 0.2));
+               
                 // ---------------LEFT BUMPER---------------
                 // -------------Fine Steer Left------------
                 new JoystickButton(m_driverController, Button.kLeftBumper)

@@ -48,10 +48,12 @@ public class SlideHookCommand extends CommandBase {
             return SlideHookSubsystem.get().atSetpoint();
         }else if(m_operation == Operation.CMD_TO_ANGLE){
             return SlideHookSubsystem.get().getHeading()>= m_param;//TODO: see if it is yaw
+        }else if(m_operation == Operation.CMD_MOVE){
+            return false;
         }
         return true;
     }
     public void end(boolean interrupted){
-        SlideHookSubsystem.get().setSpeed(0.0);
+        SlideHookSubsystem.get().setSpeed(0.0);        
     }
 }
