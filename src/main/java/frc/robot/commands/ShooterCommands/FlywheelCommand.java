@@ -29,9 +29,9 @@ public class FlywheelCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("STARTING FLYWHEEL");
-    System.out.println("VELOCITY: " + m_flywheelParam);
-    System.out.println("OPERATION: " + m_operation);
+    // System.out.println("STARTING FLYWHEEL");
+    // System.out.println("VELOCITY: " + m_flywheelParam);
+    // System.out.println("OPERATION: " + m_operation);
     if (m_operation == Operation.CMD_SET_VELOCITY) {
       FlywheelSubsystem.get().setVelocity(m_flywheelParam);
     }

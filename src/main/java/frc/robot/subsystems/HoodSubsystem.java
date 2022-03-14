@@ -69,7 +69,7 @@ public class HoodSubsystem extends SubsystemBase implements ShuffleboardLogging 
         }
         if(m_motor.getOutputCurrent()  > 10 && Duration.between(m_startTime, Instant.now()).toMillis() > 100){
             
-            System.out.println("STOPPING");
+            //System.out.println("STOPPING");
             m_motor.stopMotor();
             resetEncoder();
         }
@@ -127,7 +127,7 @@ public class HoodSubsystem extends SubsystemBase implements ShuffleboardLogging 
             m_pidController.setReference(position, CANSparkMax.ControlType.kPosition, HoodConstants.kSlotID);
             //System.out.println("reference position is: " + position);
         }else{
-            System.out.println("INVALID ANGLE");
+            //System.out.println("INVALID ANGLE");
         }
         
     }
