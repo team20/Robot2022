@@ -54,15 +54,15 @@ public class IndexerCommand extends CommandBase {
   @Override
   public void initialize() {
     IndexerSubsystem indexerSubsystem = IndexerSubsystem.get();
-    if(m_operation == Operation.CMD_ADV){
+    if (m_operation == Operation.CMD_ADV) {
       m_desiredIndexerState = indexerSubsystem.getAdvanceTargetState();
       // System.out.println("Desired state: " + (byte)m_desiredIndexerState);
       indexerSubsystem.setPositionAdvance();
-    } else if(m_operation == Operation.CMD_REV){
+    } else if (m_operation == Operation.CMD_REV) {
       m_desiredIndexerState = indexerSubsystem.getReverseTargetState(m_keepBallRTF);
       indexerSubsystem.setPositionReverse();
-      System.out.println((byte)m_desiredIndexerState);
-    } else if(m_operation == Operation.CMD_TO_EXPECTED_POSITION){
+      //System.out.println((byte)m_desiredIndexerState);
+    } else if (m_operation == Operation.CMD_TO_EXPECTED_POSITION) {
       m_desiredIndexerState = indexerSubsystem.getCurrTargetState();
     }
     m_startTime = Instant.now();

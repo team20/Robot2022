@@ -29,15 +29,15 @@ public class PixyTargetCommand extends CommandBase {
         // read and write Arduino data
         m_arduinoSubsystem.update();
         // if target is in the camera's view
-        System.out.println("BALL BOOLEAN: "+m_arduinoSubsystem.getTargetInView() );
+        //System.out.println("BALL BOOLEAN: "+m_arduinoSubsystem.getTargetInView() );
         if (m_arduinoSubsystem.getTargetInView()){
             // drive based on Arduino data
-            System.out.println("SEEN A BALL");
+            //System.out.println("SEEN A BALL");
             //m_driveSubsystem.arcadeDrive(((m_arduinoSubsystem.getDistance()-10)/10)*Math.max(m_speed.get(), 0.4), m_arduinoSubsystem.getTurnSpeed());
         }
         else{
             //m_driveSubsystem.tankDriveVolts(0, 0);
-            System.out.println("NO BALL SEEN");
+            //System.out.println("NO BALL SEEN");
         }
         m_arduinoSubsystem.setMainLEDMode((byte)1);
     }

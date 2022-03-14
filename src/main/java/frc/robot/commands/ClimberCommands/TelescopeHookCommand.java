@@ -11,6 +11,7 @@ public class TelescopeHookCommand extends CommandBase {
         CMD_POSITION,
         CMD_MOVE,
         CMD_MOVE_FOLLOWER,
+        CMD_ZERO_ENCODERS
     }
     private final Operation m_operation;
     
@@ -33,6 +34,8 @@ public class TelescopeHookCommand extends CommandBase {
             subsystem.setSpeed(m_param);
         }else if(m_operation == Operation.CMD_MOVE_FOLLOWER){
             subsystem.setFollowerSpeed(m_param);
+        } else if (m_operation == Operation.CMD_ZERO_ENCODERS) {
+            subsystem.resetEncoder();
         }
         
     }

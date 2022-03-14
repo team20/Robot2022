@@ -29,7 +29,7 @@ public class DriveArmCommand extends CommandBase {
     public void execute() {
         double speed = .3 * Math.abs(m_speed.get()) > ControllerConstants.kTriggerDeadzone ? m_speed.get() : 0;
         m_intakeArmSubsystem.setPercentOutput(speed);
-        System.out.println("Arm encoder position: " + m_intakeArmSubsystem.getPosition());
+        //System.out.println("Arm encoder position: " + m_intakeArmSubsystem.getPosition());
     }
 
     /**

@@ -16,6 +16,10 @@ import frc.robot.Constants.ArduinoConstants.LEDModes;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ArduinoSubsystem extends SubsystemBase {
+
+	private static ArduinoSubsystem s_subsystem;
+	public static ArduinoSubsystem get(){return s_subsystem;}
+
 	// PIDs
 	private final PIDController m_anglePid = new PIDController(ArduinoConstants.kAngleP, ArduinoConstants.kAngleI,
 			ArduinoConstants.kAngleD);
@@ -32,17 +36,19 @@ public class ArduinoSubsystem extends SubsystemBase {
 	// PID outputs
 	private double m_turnSpeed;
 	private double m_driveSpeed;
-	private byte m_mainLEDMode = 0;
-	private byte m_mainLEDValue = 0;
-	private byte m_shooterLEDMode = 0;
-	private byte m_shooterLEDValue = 0;
-	private byte m_climberLEDMode = 0;
-	private byte m_climberLEDValue = 0;
 
+	// setting up LED strips
+	private byte m_mainLEDMode = 0;
+	private byte m_mainLEDColor = 0;
+	private byte m_shooterLEDMode = 0;
+	private byte m_shooterLEDColor = 0;
+	private byte m_climberLEDMode = 0;
+	private byte m_climberLEDColor = 0;
 	/**
 	 * Initializes a new instance of the {@link ArduinoSubsystem} class.
 	 */
 	public ArduinoSubsystem() {
+		s_subsystem = this;
 		m_anglePid.setSetpoint(ArduinoConstants.kAngleSetpoint);
 		//m_anglePid.setTolerance(ArduinoConstants.kAngleTolerance);
 		m_distancePid.setSetpoint(ArduinoConstants.kDistanceSetpoint);
@@ -56,21 +62,23 @@ public class ArduinoSubsystem extends SubsystemBase {
 
 	public void write() {
 		m_writeData[0] = m_mainLEDMode;
-		m_writeData[1] = m_mainLEDValue;
+		m_writeData[1] = m_mainLEDColor;
 		m_writeData[2] = m_shooterLEDMode;
-		m_writeData[3] = m_shooterLEDValue;
+		m_writeData[3] = m_shooterLEDColor;
 		m_writeData[4] = m_climberLEDMode;
-		m_writeData[5] = m_climberLEDValue;
+		m_writeData[5] = m_climberLEDColor;
 
 		// System.out.println("the main led MODE: " + m_mainLEDMode);
-		// System.out.println("the main led COLOR: " + m_mainLEDValue);
+		// System.out.println("the main led COLOR: " + m_mainLEDColor);
 		// System.out.println("the shooter led MODE: " + m_shooterLEDMode);
-		// System.out.println("the shooter led COLOR: " + m_shooterLEDValue);
+		// System.out.println("the shooter led COLOR: " + m_shooterLEDColor);
+		// System.out.println("the climber led MODE: " + m_climberLEDMode);
+		// System.out.println("the climber led COLOR: " + m_climberLEDColor);
 
 		//m_wire.writeBulk(m_writeData);
 		m_wire.writeBulk(m_writeData, m_writeData.length);
-		
-		// System.out.println("aborted?: " + m_wire.writeBulk(m_writeData, m_writeData.length));
+
+		//System.out.println("aborted?: " + m_wire.writeBulk(m_writeData, m_writeData.length));
 	}
 
 	public void setMainLED() {
@@ -98,7 +106,18 @@ public class ArduinoSubsystem extends SubsystemBase {
 			}
 		}
 		m_shooterLEDMode = mode;
-		m_shooterLEDValue = value;
+	}
+
+	public void setClimberLEDMode(byte mode) {
+		m_climberLEDMode = mode;
+	}
+
+	public void setMainLEDColor(byte color) {
+		m_mainLEDColor = color;
+	}
+	
+	public void setShooterLEDColor(byte color) {
+		m_shooterLEDColor = color;
 	}
 	public void setClimberLED(){
 		byte mode = LEDModes.kOff;
@@ -115,25 +134,17 @@ public class ArduinoSubsystem extends SubsystemBase {
 		m_climberLEDValue = value;
 	}
 
-	/**
-	 * @return Speed to turn to face target.
-	 */
-	public double getTurnSpeed() {
-		return m_turnSpeed;
+	public void setClimberLEDColor(byte color) {
+		m_climberLEDColor = color;
 	}
 
-	/**
-	 * @return Speed to turn to drive towards target.
-	 */
-	public double getDriveSpeed() {
-		return m_driveSpeed;
-	}
-
-	// /**
-	// * @return Whether both PIDs are at their setpoints.
-	// */
-	public boolean atSetpoint() {
-		return m_anglePid.atSetpoint() && m_distancePid.atSetpoint();
+	public void resetLEDs() {
+		setMainLEDMode(LEDModes.kReset);
+		setMainLEDColor(LEDColors.kOff);
+		setShooterLEDMode(LEDModes.kReset);
+		setShooterLEDColor(LEDColors.kOff);
+		setClimberLEDMode(LEDModes.kReset);
+		setClimberLEDColor(LEDColors.kOff);
 	}
 
 	/**
@@ -142,15 +153,19 @@ public class ArduinoSubsystem extends SubsystemBase {
 
 	public void update() {
 		if (DriverStation.isDisabled()) {
-			setMainLED();
-			setShooterLED();
+			setMainLEDMode(LEDModes.kOff);
+			setMainLEDColor(LEDColors.kOff);
+			setShooterLEDMode(LEDModes.kOff);
+			setShooterLEDColor(LEDColors.kOff);
+			setClimberLEDMode(LEDModes.kOff);
+			setClimberLEDColor(LEDColors.kOff);
+
 		}
 
+		//This is used to tell the climber LEDS to go into countdown mode in the last 30 seconds of the match
 		// if (Timer.getFPGATimestamp() >= 120) {
-		// 	setMainLEDMode(LEDModes.kBackForthTimer);
-		// 	setMainLEDValue(LEDColors.kBlue);
-		// 	setShooterLEDMode(LEDModes.kBackForthTimer);
-		// 	setShooterLEDMode(LEDColors.kBlue);
+		// 	setClimberLEDMode(LEDModes.kBackForthTimer);
+		// 	setClimberLEDColor(LEDColors.kBlue);
 		// }
 
 		read();
@@ -158,6 +173,10 @@ public class ArduinoSubsystem extends SubsystemBase {
 		m_driveSpeed = -m_distancePid.calculate(m_distance);
 		write();
 	}
+
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//+++++++++++++++++++++ PIXY STUFF +++++++++++++++++++++
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 	/**
 	 * Reads data sent from Arduino.
@@ -195,12 +214,26 @@ public class ArduinoSubsystem extends SubsystemBase {
 	public int getDistance() {
 		return m_distance;
 	}
+	
+	/**
+	 * @return Speed to turn to face target.
+	 */
+	public double getTurnSpeed() {
+		return m_turnSpeed;
+	}
 
-	public void resetLEDs() {
-		setMainLEDMode(LEDModes.kReset);
-		setMainLEDValue(LEDColors.kOff);
-		setShooterLEDMode(LEDModes.kReset);
-		setShooterLEDValue(LEDColors.kOff);
+	/**
+	 * @return Speed to turn to drive towards target.
+	 */
+	public double getDriveSpeed() {
+		return m_driveSpeed;
+	}
+
+	// /**
+	// * @return Whether both PIDs are at their setpoints.
+	// */
+	public boolean atSetpoint() {
+		return m_anglePid.atSetpoint() && m_distancePid.atSetpoint();
 	}
 
 }

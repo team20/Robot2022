@@ -29,6 +29,8 @@ public final class Constants {
 		public static final int kWriteMainLEDValue = 1;
 		public static final int kWriteShooterLEDMode = 2;
 		public static final int kWriteShooterLEDValue = 3;
+		public static final int kWriteClimberLEDMode = 2;
+		public static final int kWriteClimberLEDValue = 3;
 
 		public static final class LEDModes {
 			public static final byte kReset = 0;
@@ -99,7 +101,7 @@ public final class Constants {
 
 		public static final int kFrontRightPort = 4;
 		public static final boolean kFrontRightInvert = false;
-		public static final int kBackRightPort = 5;
+		public static final int kBackRightPort = 5; //TODO CHANGE THIS BACK TO 5
 		public static final boolean kBackRightOppose = false;
 
 		public static final int kSmartCurrentLimit = 60;
@@ -119,10 +121,10 @@ public final class Constants {
 		// navX stuff
 		public static final SPI.Port kGyroPort = SPI.Port.kMXP;
 		public static final boolean kGyroReversed = true;
-		public static final double kTurnP = 0.005;
-		public static final double kTurnI = 0.0001;
-		public static final double kTurnD = 0.0;
-		public static final double kTurnTolerance = 1;
+		public static final double kTurnP = 0.005; //was 0.005
+		public static final double kTurnI = 0.003; //was 0.003
+		public static final double kTurnD = 0.0000; //0.0
+		public static final double kTurnTolerance = 2;
 
 		// TODO these need to be updated to reflect this year's robot
 		public static final double ksVolts = 0.196;
@@ -211,8 +213,8 @@ public final class Constants {
 		public static final int kMotorPort = 7;
 		public static final boolean kInvert = false;
 		public static final int kSmartCurrentLimit = 60;
-		public static final double kP = 0.02;
-		public static final double kI = 0.0;
+		public static final double kP = 0.06;
+		public static final double kI = 0.0001;
 		public static final double kD = 0.0;
 		public static final double kIz = 0;
 		public static final double kFF = 0;
@@ -222,7 +224,7 @@ public final class Constants {
 		public static final double kMinVelocity = 0;
 		public static final double kMaxAcel = 20_000;
 		public static final double kMaxVelocity = 10_000;
-		public static final double kAllowedError = 0.05;
+		public static final double kAllowedError = 0.01;
 
 		public static final double kMinEncoderValue = 0.0;
 		public static final double kMaxEncoderValue = 42.0;
@@ -235,7 +237,7 @@ public final class Constants {
 		public static final boolean kInvert = true;
 		public static final int kSmartCurrentLimit = 60;
 		public static final double kP = .25; // TODO: tune PID
-		public static final double kI = 0.00001;
+		public static final double kI = 0;
 		public static final double kD = 0;// 0.000_03;
 		public static final double kIz = 0.0;
 		public static final double kFF = 0;// 0.000_193;
@@ -259,11 +261,11 @@ public final class Constants {
 		public static final double kAllowedError = 2;
 		public static final double kMinEncoderValue = 0.0;
 		public static final double kMaxEncoderValue = 42.0;
-		public static final double kMinAngle = 24.36;
-		public static final double kMaxAngle = 77.64;
+		// public static final double kMinAngle = 24.36;
+		// public static final double kMaxAngle = 77.64;
 		public static final int kMotorPort = 14;
 		public static final boolean kInvert = true;
-		public static final int kSmartCurrentLimit = 0;
+		public static final int kSmartCurrentLimit = 20;
 		public static final double kP = .02; // TODO: tune PID
 		public static final double kI = 0;
 		public static final double kD = 0;// 0.000_03;
@@ -324,7 +326,7 @@ public final class Constants {
 		public static final double kMinVelocity = 0;
 		public static final double kMaxAcel = 20_000;
 		public static final double kMaxVelocity = 10_000;
-		public static final double kAllowedError = 7;
+		public static final double kAllowedError = .5;
 
 		public static final double kInchesPerQuarterTurn = .125; // .125 inches of travel per quarter turn (unit
 																	// position)
@@ -343,7 +345,7 @@ public final class Constants {
 
 	public static final class TelescopeHookConstants {
 		public static final int kMasterPort = 11;
-		public static final int kFollowerPort = 12;
+		public static final int kFollowerPort = 12; //TODO CHANGE BACK TO 12
 		public static final boolean kMasterInvert = false;
 		public static final boolean kFollowerOppose = true;
 		public static final int kSmartCurrentLimit = 600;// TODO: change

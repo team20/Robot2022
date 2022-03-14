@@ -48,7 +48,7 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
         s_system = this;
         m_motor.restoreFactoryDefaults();
         m_motor.setInverted(IntakeArmConstants.kInvert);
-        m_motor.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        m_motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         m_motor.enableVoltageCompensation(12);
         m_motor.setSmartCurrentLimit(IntakeArmConstants.kSmartCurrentLimit);
 
@@ -71,15 +71,18 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
 
     public void periodic() {
         //SmartDashboard.putNumber("Arm Position", getPosition());
-        double currCurrent = m_motor.getOutputCurrent();
-        if (currCurrent > 40){
-            m_pidController.setReference(m_encoder.getPosition(), ControlType.kPosition, 0);
-            m_motor.stopMotor();
-        }else if (atSetpoint()) {
-            m_pidController.setReference(m_encoder.getPosition(), ControlType.kPosition, 0);
+        // double currCurrent = m_motor.getOutputCurrent();
+        // if (currCurrent > 40){
+        //     m_pidController.setReference(m_encoder.getPosition(), ControlType.kPosition, 0);
+        //     m_motor.stopMotor();
+        // }else 
+        // if (atSetpoint()) {
+        //     m_pidController.setReference(m_encoder.getPosition(), ControlType.kPosition, 0);
+        //     m_motor.stopMotor();
+        // } 
+        if(atSetpoint()){
             m_motor.stopMotor();
         }
-        
     }
 
     /**
@@ -117,6 +120,7 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
      */
     public void setPosition(double position) {
         m_setPosition = position;
+        //System.out.println("setPosition:" + position);
         m_pidController.setReference(position, ControlType.kPosition, IntakeArmConstants.kSlotID);
     }
 
@@ -131,6 +135,14 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
             //System.out.println("JJJJJJJJJ subsystem - val is "+m_setPosition);
         }
         m_pidController.setReference(m_setPosition, ControlType.kPosition, IntakeArmConstants.kSlotID);
+    }
+
+    public boolean armDown() {
+        if (m_setPosition == downPositionEncoderPosition) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

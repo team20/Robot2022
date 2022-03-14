@@ -51,6 +51,7 @@ public class IntakeSubsystem extends SubsystemBase implements ShuffleboardLoggin
 	 */
 	public IntakeSubsystem() {
 		s_intakeSubsystem = this;
+		m_motor.restoreFactoryDefaults();
 		m_motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 		m_motor.enableVoltageCompensation(12);
 		m_motor.setInverted(IntakeArmConstants.kInvert);
@@ -63,7 +64,7 @@ public class IntakeSubsystem extends SubsystemBase implements ShuffleboardLoggin
 	 * @param speed Percent output.
 	 */
 	public void setSpeed(double speed) {
-		System.out.println("Setting % output: " + speed);
+		//System.out.println("Setting % output: " + speed);
 		m_motor.set(speed);
 	}
 	public void configureShuffleboard() {
