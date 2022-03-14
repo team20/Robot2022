@@ -92,7 +92,7 @@ public class ArduinoSubsystem extends SubsystemBase {
 			}
 		}
 		m_mainLEDMode = mode;
-		m_mainLEDValue = value;
+		//m_mainLEDValue = value;
 	}
 
 	public void setShooterLED() {
@@ -131,7 +131,7 @@ public class ArduinoSubsystem extends SubsystemBase {
 		}
 		
 		m_climberLEDMode = mode;
-		m_climberLEDValue = value;
+		//m_climberLEDValue = value;
 	}
 
 	public void setClimberLEDColor(byte color) {
@@ -139,9 +139,9 @@ public class ArduinoSubsystem extends SubsystemBase {
 	}
 
 	public void resetLEDs() {
-		setMainLEDMode(LEDModes.kReset);
+		//setMainLEDMode(LEDModes.kReset);
 		setMainLEDColor(LEDColors.kOff);
-		setShooterLEDMode(LEDModes.kReset);
+		//setShooterLEDMode(LEDModes.kReset);
 		setShooterLEDColor(LEDColors.kOff);
 		setClimberLEDMode(LEDModes.kReset);
 		setClimberLEDColor(LEDColors.kOff);
@@ -153,9 +153,9 @@ public class ArduinoSubsystem extends SubsystemBase {
 
 	public void update() {
 		if (DriverStation.isDisabled()) {
-			setMainLEDMode(LEDModes.kOff);
+			//setMainLEDMode(LEDModes.kOff);
 			setMainLEDColor(LEDColors.kOff);
-			setShooterLEDMode(LEDModes.kOff);
+			//setShooterLEDMode(LEDModes.kOff);
 			setShooterLEDColor(LEDColors.kOff);
 			setClimberLEDMode(LEDModes.kOff);
 			setClimberLEDColor(LEDColors.kOff);
