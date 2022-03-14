@@ -326,7 +326,7 @@ public final class Constants {
 		public static final double kMinVelocity = 0;
 		public static final double kMaxAcel = 20_000;
 		public static final double kMaxVelocity = 10_000;
-		public static final double kAllowedError = 7;
+		public static final double kAllowedError = .5;
 
 		public static final double kInchesPerQuarterTurn = .125; // .125 inches of travel per quarter turn (unit
 																	// position)
