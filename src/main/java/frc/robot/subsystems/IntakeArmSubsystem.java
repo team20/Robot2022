@@ -71,15 +71,18 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
 
     public void periodic() {
         //SmartDashboard.putNumber("Arm Position", getPosition());
-        double currCurrent = m_motor.getOutputCurrent();
-        if (currCurrent > 40){
-            m_pidController.setReference(m_encoder.getPosition(), ControlType.kPosition, 0);
-            m_motor.stopMotor();
-        }else if (atSetpoint()) {
-            m_pidController.setReference(m_encoder.getPosition(), ControlType.kPosition, 0);
+        // double currCurrent = m_motor.getOutputCurrent();
+        // if (currCurrent > 40){
+        //     m_pidController.setReference(m_encoder.getPosition(), ControlType.kPosition, 0);
+        //     m_motor.stopMotor();
+        // }else 
+        // if (atSetpoint()) {
+        //     m_pidController.setReference(m_encoder.getPosition(), ControlType.kPosition, 0);
+        //     m_motor.stopMotor();
+        // } 
+        if(atSetpoint()){
             m_motor.stopMotor();
         }
-        
     }
 
     /**

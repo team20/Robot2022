@@ -261,11 +261,11 @@ public final class Constants {
 		public static final double kAllowedError = 2;
 		public static final double kMinEncoderValue = 0.0;
 		public static final double kMaxEncoderValue = 42.0;
-		public static final double kMinAngle = 24.36;
-		public static final double kMaxAngle = 77.64;
+		// public static final double kMinAngle = 24.36;
+		// public static final double kMaxAngle = 77.64;
 		public static final int kMotorPort = 14;
 		public static final boolean kInvert = true;
-		public static final int kSmartCurrentLimit = 0;
+		public static final int kSmartCurrentLimit = 20;
 		public static final double kP = .02; // TODO: tune PID
 		public static final double kI = 0;
 		public static final double kD = 0;// 0.000_03;
