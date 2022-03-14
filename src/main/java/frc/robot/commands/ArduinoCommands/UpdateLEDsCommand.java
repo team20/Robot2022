@@ -31,9 +31,9 @@ public class UpdateLEDsCommand extends CommandBase {
 	@Override
     public void execute() {
         
-        ArduinoSubsystem.get().setMainLEDMode(m_mainLEDMode.get());
+        //ArduinoSubsystem.get().setMainLEDMode(m_mainLEDMode.get());
         ArduinoSubsystem.get().setMainLEDColor(m_mainLEDColor.get());
-        ArduinoSubsystem.get().setShooterLEDMode(m_shooterLEDMode.get());
+        //ArduinoSubsystem.get().setShooterLEDMode(m_shooterLEDMode.get());
         ArduinoSubsystem.get().setShooterLEDColor(m_shooterLEDColor.get());
         ArduinoSubsystem.get().setClimberLEDMode(m_climberLEDMode.get());
         ArduinoSubsystem.get().setClimberLEDColor(m_climberLEDColor.get());
@@ -47,8 +47,8 @@ public class UpdateLEDsCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) { //TODO could cause problems....
-        ArduinoSubsystem.get().setMainLEDMode(ArduinoConstants.LEDModes.kOff);
-        ArduinoSubsystem.get().setShooterLEDMode(ArduinoConstants.LEDModes.kOff);
+        //ArduinoSubsystem.get().setMainLEDMode(ArduinoConstants.LEDModes.kOff);
+        //ArduinoSubsystem.get().setShooterLEDMode(ArduinoConstants.LEDModes.kOff);
         ArduinoSubsystem.get().setClimberLEDMode(ArduinoConstants.LEDModes.kOff);
     }
 }
