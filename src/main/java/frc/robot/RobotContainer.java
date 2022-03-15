@@ -228,7 +228,7 @@ public class RobotContainer {
 
                 // ---------------RIGHT AXIS JOYSTICK---------------
                 m_slideHookSubsystem.setDefaultCommand(
-                new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, m_driverController.getRawAxis(Axis.kLeftY)));
+                new SlideHookCommand(SlideHookCommand.Operation.CMD_JOYSTICK, () -> m_driverController.getRawAxis(Axis.kRightY)));
 
                 // ---------------LEFT BUTTON JOYSTICK---------------
 

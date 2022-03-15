@@ -56,7 +56,7 @@ public class ArduinoSubsystem extends SubsystemBase {
 	}
 
 	public void periodic() {
-		update();
+		//update();
 
 	}
 
