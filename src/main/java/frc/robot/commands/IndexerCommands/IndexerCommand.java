@@ -25,7 +25,6 @@ public class IndexerCommand extends CommandBase {
     //wait until a ball is ready to feed, then end
     CMD_WAIT_RTF,
     //try to move to the target position
-    CMD_TO_EXPECTED_POSITION,
     CMD_STOP
   };
 
@@ -55,15 +54,11 @@ public class IndexerCommand extends CommandBase {
   public void initialize() {
     IndexerSubsystem indexerSubsystem = IndexerSubsystem.get();
     if (m_operation == Operation.CMD_ADV) {
-      m_desiredIndexerState = indexerSubsystem.getAdvanceTargetState();
       // System.out.println("Desired state: " + (byte)m_desiredIndexerState);
       indexerSubsystem.setPositionAdvance();
     } else if (m_operation == Operation.CMD_REV) {
-      m_desiredIndexerState = indexerSubsystem.getReverseTargetState(m_keepBallRTF);
       indexerSubsystem.setPositionReverse();
       //System.out.println((byte)m_desiredIndexerState);
-    } else if (m_operation == Operation.CMD_TO_EXPECTED_POSITION) {
-      m_desiredIndexerState = indexerSubsystem.getCurrTargetState();
     }
     m_startTime = Instant.now();
     
@@ -81,8 +76,6 @@ public class IndexerCommand extends CommandBase {
         indexerSubsystem.setSpeed(.5);
       }else if(m_operation == Operation.CMD_REV_MAN){
         indexerSubsystem.setSpeed(-.5);
-      }else if(m_operation == Operation.CMD_TO_EXPECTED_POSITION){
-        indexerSubsystem.setSpeed(indexerSubsystem.getLastSpeed());
       }else if(m_operation == Operation.CMD_STOP){
         indexerSubsystem.setSpeed(0);
       }
@@ -100,7 +93,7 @@ public class IndexerCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_operation == Operation.CMD_ADV || m_operation == Operation.CMD_REV || m_operation == Operation.CMD_TO_EXPECTED_POSITION){
+    if(m_operation == Operation.CMD_ADV || m_operation == Operation.CMD_REV){
       //amount of time elapsed since we started the command
       double elapsed = Duration.between(m_startTime, Instant.now()).toMillis();
           

@@ -41,6 +41,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    System.out.println("Starting autonoumous");
     DriveSubsystem.get().resetEncoders();
     DriveSubsystem.get().zeroHeading();
     HoodSubsystem.get().resetEncoder();
