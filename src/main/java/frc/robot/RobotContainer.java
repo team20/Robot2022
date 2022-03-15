@@ -93,8 +93,8 @@ public class RobotContainer {
                 
                 m_autoChooser.addOption("Two Ball Straight", CommandComposer.getTwoBallStraight());
                 m_autoChooser.addOption("Two Ball 4 Red", CommandComposer.getTwoBallStarting4Red());
-                m_autoChooser.addOption("Two Ball 4 Blue", CommandComposer.getTwoBallStarting4Blue());
-                m_autoChooser.addOption("Two Ball 2 Blue", CommandComposer.getTwoBallStarting2Blue()); //good
+                m_autoChooser.addOption("Two Ball 4 Blue", CommandComposer.getTwoBallStarting4Blue()); //using this one 3/14
+                m_autoChooser.addOption("Two Ball 2 Blue", CommandComposer.getTwoBallStarting2Blue()); //good **start with this one
                 m_autoChooser.addOption("Four To Two", CommandComposer.getFourToTwoAutoCommand());
                 m_autoChooser.addOption("One To Two", CommandComposer.getOneToTwoAutoCommand());
                 m_autoChooser.addOption("Four To Three", CommandComposer.getFourToThreeAutoCommand());
@@ -178,6 +178,7 @@ public class RobotContainer {
                                 .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, -.2));
                 // new POVButton(m_driverController, DPad.kRight)
                 //         .whenHeld(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, -0.2));
+                
                 // -----------------DOWN DPAD-----------------
                 // ---------Telescope To Top Position OR manual----------
                 // new POVButton(m_driverController, DPad.kDown)
@@ -189,14 +190,16 @@ public class RobotContainer {
                                                 TelescopeHookConstants.kRetractedPosition));
                 new POVButton(m_driverController, DPad.kDown)
                                 .whenReleased(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
+
                 // new POVButton(m_driverController, DPad.kDown)
                 //                 .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, -.4));
                 // new POVButton(m_driverController, DPad.kDown)
                 //                 .whenReleased(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
+
                 // -----------------LEFT DPAD-----------------
                 // -----------Limelight Line Up---------------
-                new POVButton(m_driverController, DPad.kLeft)
-                                .whenHeld(new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem));
+                // new POVButton(m_driverController, DPad.kLeft)
+                //                 .whenHeld(new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem));
                 // new POVButton(m_driverController, DPad.kLeft)
                 //         .whenHeld(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, 0.2));
                

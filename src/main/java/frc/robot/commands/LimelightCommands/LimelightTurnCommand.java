@@ -70,7 +70,7 @@ public class LimelightTurnCommand extends CommandBase {
     public void initialize() {
         m_startTime = Instant.now();
 
-        m_limelightSubsystem.turnOnLight();
+        //m_limelightSubsystem.turnOnLight();
 
         m_turnController.setTolerance(LimelightConstants.kTurnTolerance);
         m_turnController.setSetpoint(m_setpointAngle);
@@ -81,7 +81,7 @@ public class LimelightTurnCommand extends CommandBase {
      * Update the motor outputs
      */
     public void execute() {
-        m_limelightSubsystem.turnOnLight();
+        //m_limelightSubsystem.turnOnLight();
         double measurementAngle = m_limelightSubsystem.getXAngle();
         double turnOutput = m_turnController.calculate(measurementAngle);
         // Apply max power limit
