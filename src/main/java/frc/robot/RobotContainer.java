@@ -92,8 +92,8 @@ public class RobotContainer {
                 configureShuffleboard();
 
                 m_autoChooser.addOption("Two Ball 4 Red", CommandComposer.getTwoBallStarting4Red());
-                m_autoChooser.addOption("Two Ball 4 Blue", CommandComposer.getTwoBallStarting4Blue());
-                m_autoChooser.addOption("Two Ball 2 Blue", CommandComposer.getTwoBallStarting2Blue()); //good
+                m_autoChooser.addOption("Two Ball 4 Blue", CommandComposer.getTwoBallStarting4Blue()); //using this one 3/14
+                m_autoChooser.addOption("Two Ball 2 Blue", CommandComposer.getTwoBallStarting2Blue()); //good **start with this one
                 m_autoChooser.addOption("Four To Two", CommandComposer.getFourToTwoAutoCommand());
                 m_autoChooser.addOption("One To Two", CommandComposer.getOneToTwoAutoCommand());
                 m_autoChooser.addOption("Four To Three", CommandComposer.getFourToThreeAutoCommand());
