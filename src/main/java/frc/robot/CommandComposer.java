@@ -359,16 +359,16 @@ public class CommandComposer {
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
-            new TurnCommand(DriveSubsystem.get(), -28.5).withTimeout(1),
+            new TurnCommand(DriveSubsystem.get(), -29.5).withTimeout(1),
             new ParallelCommandGroup(new DriveDistanceCommand(157), getAutoLoadCommand().withTimeout(4)),
             getAutoLoadCommand().withTimeout(1),
             new IntakeCommand(IntakeCommand.Operation.CMD_STOP), 
             //new TurnCommand(DriveSubsystem.get(), -30).withTimeout(1),
             new DriveDistanceCommand(-157, 0.9),
-            new TurnCommand(DriveSubsystem.get(), 28.5).withTimeout(1), //was 28 now moving to -28
+            new TurnCommand(DriveSubsystem.get(), 29.5).withTimeout(1), //was 28 now moving to -28
             new ParallelCommandGroup(
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
-                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4150)).withTimeout(1.5),
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4150)).withTimeout(1),
             getAutoShootCommand(),
             new ParallelCommandGroup(
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
