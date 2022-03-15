@@ -51,6 +51,7 @@ public class IntakeSubsystem extends SubsystemBase implements ShuffleboardLoggin
 	 */
 	public IntakeSubsystem() {
 		s_intakeSubsystem = this;
+		m_motor.restoreFactoryDefaults();
 		m_motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 		m_motor.enableVoltageCompensation(12);
 		m_motor.setInverted(IntakeArmConstants.kInvert);

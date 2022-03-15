@@ -21,7 +21,7 @@ public class UpdateShooterLEDsCommand extends CommandBase {
 	@Override
     public void execute() {
         
-        ArduinoSubsystem.get().setShooterLEDMode(m_shooterLEDMode.get());
+        //ArduinoSubsystem.get().setShooterLEDMode(m_shooterLEDMode.get());
         ArduinoSubsystem.get().setShooterLEDColor(m_shooterLEDColor.get());
         // System.out.println("shooter led mode: " + m_shooterLEDMode.get());
         // System.out.println("shooter led color: " + m_shooterLEDValue.get());
@@ -29,6 +29,6 @@ public class UpdateShooterLEDsCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) { //TODO could cause problems....
-        ArduinoSubsystem.get().setShooterLEDMode(ArduinoConstants.LEDModes.kOff);
+        //ArduinoSubsystem.get().setShooterLEDMode(ArduinoConstants.LEDModes.kOff);
     }
 }
