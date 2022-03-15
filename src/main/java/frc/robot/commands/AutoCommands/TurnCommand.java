@@ -25,6 +25,7 @@ public class TurnCommand extends CommandBase {
 
     public void initialize() {
         //m_driveSubsystem.zeroHeading();
+        System.out.println("starting turn");
         m_startTime = Instant.now();
         m_driveSubsystem.zeroHeading();
         m_turnController.setSetpoint(m_angle);

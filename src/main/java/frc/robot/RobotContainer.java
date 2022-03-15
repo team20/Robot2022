@@ -91,6 +91,7 @@ public class RobotContainer {
                 // m_limelightSubsystem.turnOnLight();
                 configureShuffleboard();
                 
+                //m_autoChooser.addOption("Test auto", CommandComposer.testAutoIndexer());
                 m_autoChooser.addOption("Two Ball Straight", CommandComposer.getTwoBallStraight());
                 m_autoChooser.addOption("Two Ball 4 Red", CommandComposer.getTwoBallStarting4Red());
                 m_autoChooser.addOption("Two Ball 4 Blue", CommandComposer.getTwoBallStarting4Blue()); //using this one 3/14
@@ -230,6 +231,10 @@ public class RobotContainer {
                                                 () -> m_driverController.getRawAxis(Axis.kRightTrigger)));
 
                 // ---------------RIGHT AXIS JOYSTICK---------------
+                //slide hook manual position
+                // m_slideHookSubsystem.setDefaultCommand(
+                // new SlideHookCommand(SlideHookCommand.Operation.CMD_JOYSTICK_POSITION, () -> m_driverController.getRawAxis(Axis.kRightY)));
+
                 m_slideHookSubsystem.setDefaultCommand(
                 new SlideHookCommand(SlideHookCommand.Operation.CMD_JOYSTICK, () -> m_driverController.getRawAxis(Axis.kRightY)));
 
