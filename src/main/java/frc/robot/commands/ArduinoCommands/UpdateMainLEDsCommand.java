@@ -21,7 +21,7 @@ public class UpdateMainLEDsCommand extends CommandBase {
 	@Override
     public void execute() {
         
-        ArduinoSubsystem.get().setMainLEDMode(m_mainLEDMode.get());
+        //ArduinoSubsystem.get().setMainLEDMode(m_mainLEDMode.get());
         ArduinoSubsystem.get().setMainLEDColor(m_mainLEDColor.get());
         // System.out.println("main led mode: " + m_mainLEDMode.get());
         // System.out.println("main led color: " + m_mainLEDValue.get());
@@ -29,6 +29,6 @@ public class UpdateMainLEDsCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) { //TODO could cause problems....
-        ArduinoSubsystem.get().setMainLEDMode(ArduinoConstants.LEDModes.kOff);
+        //ArduinoSubsystem.get().setMainLEDMode(ArduinoConstants.LEDModes.kOff);
     }
 }

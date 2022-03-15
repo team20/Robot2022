@@ -39,6 +39,6 @@ public class PixyTargetCommand extends CommandBase {
             //m_driveSubsystem.tankDriveVolts(0, 0);
             //System.out.println("NO BALL SEEN");
         }
-        m_arduinoSubsystem.setMainLEDMode((byte)1);
+        //m_arduinoSubsystem.setMainLEDMode((byte)1);
     }
 }

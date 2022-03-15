@@ -1,5 +1,7 @@
 package frc.robot.commands.ClimberCommands;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.SlideHookConstants;
@@ -7,19 +9,26 @@ import frc.robot.subsystems.SlideHookSubsystem;
 
 public class SlideHookCommand extends CommandBase {
 
-    private final double m_param;
+    private double m_param;
     public enum Operation{
         CMD_MOVE,
         CMD_POSITION,
         CMD_TO_ANGLE,
-        CMD_POSITION_SETTLE
+        CMD_POSITION_SETTLE,
+        CMD_JOYSTICK
     }
 
     private Operation m_operation;
+    private Supplier<Double> m_paramSup;
 
     public SlideHookCommand(Operation operation, double param) {
         m_operation = operation;
         m_param = param;
+        addRequirements(SlideHookSubsystem.get());
+    }
+    public SlideHookCommand(Operation operation, Supplier<Double> param) {
+        m_operation = operation;
+        m_paramSup = param;
         addRequirements(SlideHookSubsystem.get());
     }
 
@@ -39,6 +48,10 @@ public class SlideHookCommand extends CommandBase {
             // System.out.println("NAVX ANGLE IS "+subsystem.getHeading());//TODO: might not be yaw depending on orientation of navx
             subsystem.setSpeed(m_param);
         }
+        else if(m_operation == Operation.CMD_JOYSTICK){
+            // System.out.println("NAVX ANGLE IS "+subsystem.getHeading());//TODO: might not be yaw depending on orientation of navx
+            subsystem.setSpeed(Math.abs(m_paramSup.get()) > 0.05 ? m_paramSup.get() : 0);
+        }
         
     }
 
@@ -49,11 +62,15 @@ public class SlideHookCommand extends CommandBase {
         }else if(m_operation == Operation.CMD_TO_ANGLE){
             return SlideHookSubsystem.get().getHeading()>= m_param;//TODO: see if it is yaw
         }else if(m_operation == Operation.CMD_MOVE){
+            return true;
+        }else if(m_operation == Operation.CMD_JOYSTICK){
             return false;
         }
         return true;
     }
     public void end(boolean interrupted){
-        SlideHookSubsystem.get().setSpeed(0.0);        
+        if(m_operation != Operation.CMD_MOVE){
+            SlideHookSubsystem.get().setSpeed(0.0);        
+        }
     }
 }

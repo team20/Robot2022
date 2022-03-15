@@ -44,7 +44,6 @@ public class ArduinoSubsystem extends SubsystemBase {
 	private byte m_shooterLEDColor = 0;
 	private byte m_climberLEDMode = 0;
 	private byte m_climberLEDColor = 0;
-
 	/**
 	 * Initializes a new instance of the {@link ArduinoSubsystem} class.
 	 */
@@ -57,7 +56,7 @@ public class ArduinoSubsystem extends SubsystemBase {
 	}
 
 	public void periodic() {
-		update();
+		//update();
 
 	}
 
@@ -82,11 +81,30 @@ public class ArduinoSubsystem extends SubsystemBase {
 		//System.out.println("aborted?: " + m_wire.writeBulk(m_writeData, m_writeData.length));
 	}
 
-	public void setMainLEDMode(byte mode) {
+	public void setMainLED() {
+		byte mode = LEDModes.kOff;
+		byte value = LEDColors.kOff;
+		boolean SAMPLE = SmartDashboard.getEntry("SAMPLE").getBoolean(false); //TODO SAMPLE
+		if(!DriverStation.isDisabled()){
+			if(SAMPLE){
+				mode = LEDModes.kTheaterLights;
+				value = LEDColors.kGreen;
+			}
+		}
 		m_mainLEDMode = mode;
+		//m_mainLEDValue = value;
 	}
 
-	public void setShooterLEDMode(byte mode) {
+	public void setShooterLED() {
+		byte mode = LEDModes.kOff;
+		byte value = LEDColors.kOff;
+		boolean SAMPLE = SmartDashboard.getEntry("SAMPLE").getBoolean(false); //TODO SAMPLE
+		if(!DriverStation.isDisabled()){
+			if(SAMPLE){
+				mode = LEDModes.kTheaterLights;
+				value = LEDColors.kGreen;
+			}
+		}
 		m_shooterLEDMode = mode;
 	}
 
@@ -101,15 +119,29 @@ public class ArduinoSubsystem extends SubsystemBase {
 	public void setShooterLEDColor(byte color) {
 		m_shooterLEDColor = color;
 	}
+	public void setClimberLED(){
+		byte mode = LEDModes.kOff;
+		byte value = LEDColors.kOff;
+		boolean SAMPLE = SmartDashboard.getEntry("SAMPLE").getBoolean(false); //TODO SAMPLE
+		if(!DriverStation.isDisabled()){
+			if(SAMPLE){
+				mode = LEDModes.kTheaterLights;
+				value = LEDColors.kGreen;
+			}
+		}
+		
+		m_climberLEDMode = mode;
+		//m_climberLEDValue = value;
+	}
 
 	public void setClimberLEDColor(byte color) {
 		m_climberLEDColor = color;
 	}
 
 	public void resetLEDs() {
-		setMainLEDMode(LEDModes.kReset);
+		//setMainLEDMode(LEDModes.kReset);
 		setMainLEDColor(LEDColors.kOff);
-		setShooterLEDMode(LEDModes.kReset);
+		//setShooterLEDMode(LEDModes.kReset);
 		setShooterLEDColor(LEDColors.kOff);
 		setClimberLEDMode(LEDModes.kReset);
 		setClimberLEDColor(LEDColors.kOff);
@@ -121,12 +153,13 @@ public class ArduinoSubsystem extends SubsystemBase {
 
 	public void update() {
 		if (DriverStation.isDisabled()) {
-			setMainLEDMode(LEDModes.kOff);
+			//setMainLEDMode(LEDModes.kOff);
 			setMainLEDColor(LEDColors.kOff);
-			setShooterLEDMode(LEDModes.kOff);
+			//setShooterLEDMode(LEDModes.kOff);
 			setShooterLEDColor(LEDColors.kOff);
 			setClimberLEDMode(LEDModes.kOff);
 			setClimberLEDColor(LEDColors.kOff);
+
 		}
 
 		//This is used to tell the climber LEDS to go into countdown mode in the last 30 seconds of the match
