@@ -51,7 +51,9 @@ public class HoodCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+    if(m_operation == Operation.CMD_POWER_ZERO){
+      HoodSubsystem.get().resetEncoder();
+    }
   }
 
   // Returns true when the command should end.
@@ -64,7 +66,7 @@ public class HoodCommand extends CommandBase {
       SmartDashboard.putBoolean("Hood at Setpoint", HoodSubsystem.get().atSetpoint());
       return HoodSubsystem.get().atSetpoint();
     } else if(m_operation == Operation.CMD_POWER_ZERO){
-      return true;
+      return false;
     } else if (m_operation == Operation.CMD_STOP) {
       return true;
     }

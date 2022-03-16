@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
@@ -127,6 +128,7 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
         }
 
         public void periodic() {
+                //SmartDashboard.putNumber("the angle", getHeading());
                 // System.out.println("the angle is: " + getHeading());
                 m_odometry.update(m_gyro.getRotation2d(), getLeftEncoderPosition(),
                                 getRightEncoderPosition());
@@ -222,7 +224,7 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
          * Resets gyro position to 0
          */
         public void zeroHeading() {
-                m_gyro.reset();
+                m_gyro.zeroYaw();
         }
 
         /**

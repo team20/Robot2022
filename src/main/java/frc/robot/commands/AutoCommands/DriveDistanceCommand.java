@@ -17,9 +17,17 @@ public class DriveDistanceCommand extends CommandBase {
   private double m_startDistanceLeft;
   private double m_startDistanceRight;
   private Instant m_startTime;
+  private double m_speed;
   /** Creates a new DriveDistanceCommand. */
   public DriveDistanceCommand(double distance) {
     m_distance = distance;
+    m_speed = 0.4;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(DriveSubsystem.get());
+  }
+  public DriveDistanceCommand(double distance, double speed) {
+    m_distance = distance;
+    m_speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(DriveSubsystem.get());
   }
@@ -42,7 +50,7 @@ public class DriveDistanceCommand extends CommandBase {
           m_startDistanceRight= 0;
           SmartDashboard.putNumber("encoder start left", DriveSubsystem.get().getLeftEncoderPosition());
           SmartDashboard.putNumber("encoder start right", DriveSubsystem.get().getRightEncoderPosition());
-          DriveSubsystem.get().tankDrive(.4 * Math.signum(m_distance), .4 * Math.signum(m_distance)); //TODO set speeds
+          DriveSubsystem.get().tankDrive(m_speed * Math.signum(m_distance), m_speed * Math.signum(m_distance)); //TODO set speeds
   }
 
   // Called once the command ends or is interrupted.
@@ -64,7 +72,7 @@ public class DriveDistanceCommand extends CommandBase {
     if (elapsed < 350) {
         return false;
     }
-    return Math.abs(currDistanceLeft - m_startDistanceLeft) > m_distance && Math.abs(currDistanceRight - m_startDistanceRight) > m_distance;
+    return Math.abs(currDistanceLeft - m_startDistanceLeft) > Math.abs(m_distance) && Math.abs(currDistanceRight - m_startDistanceRight) > Math.abs(m_distance);
 
   }
 }

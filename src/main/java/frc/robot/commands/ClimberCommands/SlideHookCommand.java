@@ -15,7 +15,8 @@ public class SlideHookCommand extends CommandBase {
         CMD_POSITION,
         CMD_TO_ANGLE,
         CMD_POSITION_SETTLE,
-        CMD_JOYSTICK
+        CMD_JOYSTICK,
+        CMD_JOYSTICK_POSITION,
     }
 
     private Operation m_operation;
@@ -30,6 +31,7 @@ public class SlideHookCommand extends CommandBase {
         m_operation = operation;
         m_paramSup = param;
         addRequirements(SlideHookSubsystem.get());
+
     }
 
     /**
@@ -51,6 +53,17 @@ public class SlideHookCommand extends CommandBase {
         else if(m_operation == Operation.CMD_JOYSTICK){
             // System.out.println("NAVX ANGLE IS "+subsystem.getHeading());//TODO: might not be yaw depending on orientation of navx
             subsystem.setSpeed(Math.abs(m_paramSup.get()) > 0.05 ? m_paramSup.get() : 0);
+        }else if(m_operation == Operation.CMD_JOYSTICK_POSITION){
+            // System.out.println("NAVX ANGLE IS "+subsystem.getHeading());//TODO: might not be yaw depending on orientation of navx
+            if(m_paramSup.get()>.1){
+                subsystem.setPosition(0);
+            }
+            else if(m_paramSup.get()<-.1){
+                subsystem.setPosition(85);
+            }
+            else{
+                subsystem.setPercentOutput(0);
+            }
         }
         
     }
@@ -64,6 +77,8 @@ public class SlideHookCommand extends CommandBase {
         }else if(m_operation == Operation.CMD_MOVE){
             return true;
         }else if(m_operation == Operation.CMD_JOYSTICK){
+            return false;
+        }else if(m_operation == Operation.CMD_JOYSTICK_POSITION){
             return false;
         }
         return true;
