@@ -54,12 +54,15 @@ public class SlideHookCommand extends CommandBase {
             // System.out.println("NAVX ANGLE IS "+subsystem.getHeading());//TODO: might not be yaw depending on orientation of navx
             subsystem.setSpeed(Math.abs(m_paramSup.get()) > 0.05 ? m_paramSup.get() : 0);
         }else if(m_operation == Operation.CMD_JOYSTICK_POSITION){
+           // System.out.println("RUNNING THE SLIDE HOOK POSITION COMMAND");
             // System.out.println("NAVX ANGLE IS "+subsystem.getHeading());//TODO: might not be yaw depending on orientation of navx
             if(m_paramSup.get()>.1){
-                subsystem.setPosition(0);
+                subsystem.setPosition(0);//85
+            //    System.out.println("Running forwards");
             }
             else if(m_paramSup.get()<-.1){
-                subsystem.setPosition(85);
+                subsystem.setPosition(-85);
+            //    System.out.println("Running to start position");
             }
             else{
                 subsystem.setPercentOutput(0);
