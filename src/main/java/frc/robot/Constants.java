@@ -198,7 +198,7 @@ public final class Constants {
 		public static final int kSmartCurrentLimit = 50;
 		public static final double kPeakCurrentLimit = 60;
 		public static final int kPeakCurrentDurationMillis = 100;
-		public static final double kP = 0.000_08; // 0.000_375; then .0004
+		public static final double kP = 0.000_08; // 0.000_375; then .0004, was 0.00008
 		public static final double kI = 0;
 		public static final double kD = 0.000_0125;// 0.000_03;
 		public static final double kIz = 0.0;
@@ -206,7 +206,7 @@ public final class Constants {
 		public static final double kMaxOutput = 1;
 		public static final double kMinOutput = -1;
 		public static final double kGearRatio = 1 / 2.4;
-		public static final double kAllowedErrorPercent = 5;
+		public static final double kAllowedErrorPercent = 8; //was 5
 	}
 
 	public static final class HoodConstants {
@@ -315,9 +315,9 @@ public final class Constants {
 		public static final boolean kMasterInvert = false;
 		public static final boolean kFollowerOppose = false;
 		public static final int kSmartCurrentLimit = 60;// TODO: change
-		public static final double kP = .01; // TODO: tune PID
-		public static final double kI = 0;
-		public static final double kD = 0.00001249999968422344;// 0.000_03;
+		public static final double kP = .012; // TODO: tune PID
+		public static final double kI = 0.00000001249999968422344;
+		public static final double kD = 0.000001249999968422344;// 0.00001249999968422344;
 		public static final double kIz = 0.0;
 		public static final double kFF = 0.00008040000102482736;// 0.000_193;
 		public static final double kMaxOutput = 1;
@@ -326,7 +326,7 @@ public final class Constants {
 		public static final double kMinVelocity = 0;
 		public static final double kMaxAcel = 20_000;
 		public static final double kMaxVelocity = 10_000;
-		public static final double kAllowedError = .5;
+		public static final double kAllowedError = .25;
 
 		public static final double kInchesPerQuarterTurn = .125; // .125 inches of travel per quarter turn (unit
 																	// position)
@@ -344,14 +344,18 @@ public final class Constants {
 	}
 
 	public static final class TelescopeHookConstants {
-		public static final int kMasterPort = 11;
-		public static final int kFollowerPort = 12; //TODO CHANGE BACK TO 12
-		public static final boolean kMasterInvert = false;
+		// public static final int kMasterPort = 11;
+		// public static final int kFollowerPort = 12; //TODO CHANGE BACK TO 12
+		// public static final boolean kMasterInvert = false;
+		// public static final boolean kFollowerOppose = true;
+		public static final int kMasterPort = 12;
+		public static final int kFollowerPort = 11; //TODO CHANGE BACK TO 12
+		public static final boolean kMasterInvert = true;
 		public static final boolean kFollowerOppose = true;
 		public static final int kSmartCurrentLimit = 600;// TODO: change
 		public static final double kP = .03; // TODO: tune PID
 		public static final double kI = 0;
-		public static final double kD = 0.00001249999968422344;// 0.000_03;
+		public static final double kD = 0.000001249999968422344;// 0.000_03;
 		public static final double kIz = 0.0;
 		public static final double kFF = 0.00008040000102482736;// 0.000_193;
 		public static final double kMaxOutput = 1;
