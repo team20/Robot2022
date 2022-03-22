@@ -362,6 +362,10 @@ public class RobotContainer {
 
                 // -----------------LEFT DPAD-----------------
 
+                new JoystickButton(m_operatorController, DPad.kLeft) 
+                .whenHeld(new IndexerCommand(IndexerCommand.Operation.CMD_FWD_MAN));
+
+
                 // ---------------LEFT BUMPER----------------
                 // --------------Intake arm manual-------------
                 // new JoystickButton(m_operatorController,
