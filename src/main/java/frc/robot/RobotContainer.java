@@ -99,7 +99,8 @@ public class RobotContainer {
                 m_autoChooser.addOption("Four To Two", CommandComposer.getFourToTwoAutoCommand());
                 m_autoChooser.addOption("One To Two", CommandComposer.getOneToTwoAutoCommand());
                 m_autoChooser.addOption("Four To Three", CommandComposer.getFourToThreeAutoCommand());
-                m_autoChooser.addOption("Two To Three", CommandComposer.getTwoToThreeAutoCommand());
+                m_autoChooser.addOption("Two To Three Blue", CommandComposer.getTwoToThreeAutoCommandBlue());
+                m_autoChooser.addOption("Two To Three Red", CommandComposer.getTwoToThreeAutoCommandRed());
                 m_autoChooser.addOption("Two To Four", CommandComposer.getTwoToFourAutoCommand());
                 m_autoChooser.addOption("Four To Two To Three", CommandComposer.getFourToTwoToThreeAutoCommand()); // m_autoChooser.addOption("Taxi"
                                                                                                                    // ,
@@ -160,16 +161,32 @@ public class RobotContainer {
                 //                 .whenPressed(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION,
                 //                                 TelescopeHookConstants.kExtendedPosition));
                 
-                new POVButton(m_driverController, DPad.kUp)
-                                .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION,
+                new POVButton(m_driverController, DPad.kUp).or(new POVButton(m_driverController, 45)).or(new POVButton(m_driverController, 315)).whileActiveOnce(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION,
                                                 TelescopeHookConstants.kExtendedPosition));
-                new POVButton(m_driverController, DPad.kUp)
-                                .whenReleased(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
+                                                new POVButton(m_driverController, DPad.kUp).or(new POVButton(m_driverController, 45)).or(new POVButton(m_driverController, 315)).whenInactive(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
 //                 new POVButton(m_driverController, DPad.kUp)
-//                 .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, .4));
-// new POVButton(m_driverController, DPad.kUp)
-//                 .whenReleased(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
+//                                 .whenReleased(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
 
+//                 new POVButton(m_driverController, DPad.kUp)
+//                                 .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION,
+//                                                 TelescopeHookConstants.kExtendedPosition));
+//                 new POVButton(m_driverController, DPad.kUp)
+//                                 .whenReleased(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
+// //                 new POVButton(m_driverController, DPad.kUp)
+// //                 .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, .4));
+// // new POVButton(m_driverController, DPad.kUp)
+// //                 .whenReleased(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
+//                 new POVButton(m_driverController, 45)
+//                                 .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION,
+//                                                 TelescopeHookConstants.kExtendedPosition));
+//                 new POVButton(m_driverController, 45)
+//                                 .whenReleased(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
+
+//                                 new POVButton(m_driverController, 315)
+//                                 .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION,
+//                                                 TelescopeHookConstants.kExtendedPosition));
+//                 new POVButton(m_driverController, 315)
+//                                 .whenReleased(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
                 // -----------------RIGHT DPAD-----------------
                 // ---------Move Right Telescope Manual--------
                 // new POVButton(m_driverController, DPad.kRight)
@@ -186,12 +203,29 @@ public class RobotContainer {
                 //                 .whenPressed(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION,
                 //                                 TelescopeHookConstants.kRetractedPosition));
 
-                new POVButton(m_driverController, DPad.kDown)
-                                .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION,
+                new POVButton(m_driverController, DPad.kDown).or(new POVButton(m_driverController, 135)).or(new POVButton(m_driverController, 225)).whileActiveOnce(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION,
                                                 TelescopeHookConstants.kRetractedPosition));
-                new POVButton(m_driverController, DPad.kDown)
-                                .whenReleased(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
+                                                new POVButton(m_driverController, DPad.kDown).or(new POVButton(m_driverController, 135)).or(new POVButton(m_driverController, 225)).whenInactive(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
 
+
+
+                // new POVButton(m_driverController, DPad.kDown)
+                //                 .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION,
+                //                                 TelescopeHookConstants.kRetractedPosition));
+                // new POVButton(m_driverController, DPad.kDown)
+                //                 .whenReleased(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
+
+                //                 new POVButton(m_driverController, 135)
+                //                 .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION,
+                //                                 TelescopeHookConstants.kRetractedPosition));
+                // new POVButton(m_driverController, 135)
+                //                 .whenReleased(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
+
+                //                 new POVButton(m_driverController, 225)
+                //                 .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION,
+                //                                 TelescopeHookConstants.kRetractedPosition));
+                // new POVButton(m_driverController, 225)
+                //                 .whenReleased(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
                 // new POVButton(m_driverController, DPad.kDown)
                 //                 .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, -.4));
                 // new POVButton(m_driverController, DPad.kDown)
@@ -203,7 +237,11 @@ public class RobotContainer {
                 //                 .whenHeld(new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem));
                 // new POVButton(m_driverController, DPad.kLeft)
                 //         .whenHeld(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, 0.2));
-               
+               //MAKE THIS MANUAL DRIVE LEFT
+               new POVButton(m_driverController, DPad.kLeft)
+                                .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE_FOLLOWER, -.2));
+                                new POVButton(m_driverController, DPad.kLeft)
+                                .whenReleased(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE_FOLLOWER, 0));
                 // ---------------LEFT BUMPER---------------
                 // -------------Fine Steer Left------------
                 new JoystickButton(m_driverController, Button.kLeftBumper)
@@ -232,11 +270,11 @@ public class RobotContainer {
 
                 // ---------------RIGHT AXIS JOYSTICK---------------
                 //slide hook manual position
-                // m_slideHookSubsystem.setDefaultCommand(
-                // new SlideHookCommand(SlideHookCommand.Operation.CMD_JOYSTICK_POSITION, () -> m_driverController.getRawAxis(Axis.kRightY)));
-
                 m_slideHookSubsystem.setDefaultCommand(
-                new SlideHookCommand(SlideHookCommand.Operation.CMD_JOYSTICK, () -> m_driverController.getRawAxis(Axis.kRightY)));
+                new SlideHookCommand(SlideHookCommand.Operation.CMD_JOYSTICK_POSITION, () -> m_driverController.getRawAxis(Axis.kRightY)));
+
+                // m_slideHookSubsystem.setDefaultCommand(
+                // new SlideHookCommand(SlideHookCommand.Operation.CMD_JOYSTICK, () -> m_driverController.getRawAxis(Axis.kRightY)));
 
                 // ---------------LEFT BUTTON JOYSTICK---------------
 
@@ -361,6 +399,12 @@ public class RobotContainer {
                                 .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN));
 
                 // -----------------LEFT DPAD-----------------
+                //Manual index
+                new POVButton(m_operatorController, DPad.kLeft)
+                .whenHeld(new IndexerCommand(IndexerCommand.Operation.CMD_FWD_MAN));
+
+                new POVButton(m_operatorController, DPad.kLeft)
+                .whenReleased(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
 
                 new JoystickButton(m_operatorController, DPad.kLeft) 
                 .whenHeld(new IndexerCommand(IndexerCommand.Operation.CMD_FWD_MAN));
