@@ -49,7 +49,7 @@ public class ComplexAutoSequence extends SequentialCommandGroup {
                 new SitAndShootHigh(flywheelSubsystem,hoodSubsystem,indexerSubsystem),
                 // Wait
                 new SitAndShootHigh(flywheelSubsystem,hoodSubsystem,indexerSubsystem),
-                new TurnCommand(driveSubsystem, 300),
+                //new TurnCommand(driveSubsystem, 300),
                 new Taxi(driveSubsystem, 3),
                 //new IntakeCommand(),
                 new SitAndShootHigh(flywheelSubsystem,hoodSubsystem,indexerSubsystem)

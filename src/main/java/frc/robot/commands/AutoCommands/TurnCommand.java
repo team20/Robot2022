@@ -1,9 +1,9 @@
 package frc.robot.commands.AutoCommands;
 
-import java.time.Duration;
-import java.time.Instant;
-
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
@@ -11,46 +11,41 @@ import frc.robot.subsystems.DriveSubsystem;
 
 public class TurnCommand extends CommandBase {
 
-    private final DriveSubsystem m_driveSubsystem;
     private final double m_angle;
-    private final PIDController m_turnController = new PIDController(DriveConstants.kTurnP, DriveConstants.kTurnI,
-            DriveConstants.kTurnD);
-    private Instant m_startTime;
+    private final ProfiledPIDController m_turnController = new ProfiledPIDController(DriveConstants.kTurnP, DriveConstants.kTurnI,
+            DriveConstants.kTurnD, new TrapezoidProfile.Constraints(360, 720));
 
-    public TurnCommand(DriveSubsystem driveSubsystem, double turnAngle) {
-        m_driveSubsystem = driveSubsystem;
+    public TurnCommand(double turnAngle) {
         m_angle = turnAngle;
-        addRequirements(m_driveSubsystem);
+        addRequirements(DriveSubsystem.get());
     }
 
     public void initialize() {
-        //m_driveSubsystem.zeroHeading();
         System.out.println("starting turn");
-        m_startTime = Instant.now();
-        m_driveSubsystem.zeroHeading();
-        m_turnController.setSetpoint(m_angle);
+        double goalAngle = m_angle + DriveSubsystem.get().getHeading();
+        if(goalAngle > 180){
+            goalAngle -= 360;
+        }else if(goalAngle < -180){
+            goalAngle += 360;
+        }
+        m_turnController.setGoal(goalAngle);
+        m_turnController.enableContinuousInput(-180, 180);
         m_turnController.setTolerance(DriveConstants.kTurnTolerance);
     }
 
     public void execute() {
-        double measurementAngle = m_driveSubsystem.getHeading();
-        //System.out.println("Angle: " + measurementAngle);
+        double measurementAngle = DriveSubsystem.get().getHeading();
         SmartDashboard.putNumber("Angle ", measurementAngle);
-        if(Duration.between(m_startTime, Instant.now()).toMillis() > 250){
-            double turnOutput = m_turnController.calculate(measurementAngle);
-            m_driveSubsystem.arcadeDrive(0, turnOutput, -turnOutput);
-        }
+        double turnOutput = MathUtil.clamp(m_turnController.calculate(measurementAngle), -1, 1);
+        DriveSubsystem.get().tankDrive(turnOutput, -turnOutput);
         
     }
 
     public void end(boolean interupted) {
-        m_driveSubsystem.tankDrive(0, 0);
+        DriveSubsystem.get().tankDrive(0, 0);
     }
 
     public boolean isFinished() {
-        if(Duration.between(m_startTime, Instant.now()).toMillis() < 250){
-            return false;
-        }
         return m_turnController.atSetpoint();
     }
 }
