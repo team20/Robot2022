@@ -194,6 +194,14 @@ public class CommandComposer {
     //     return getAutoShootCommand();
     // }
 
+    public static Command testingTurn(double angle) {
+        return new TurnCommand(DriveSubsystem.get(), angle).withTimeout(1);
+    }
+
+    public static Command testingDistance(double distance) {
+        return new DriveDistanceCommand(distance);
+    }
+
     public static Command getTwoBallStraight(){//go back straight and shoot
         return new SequentialCommandGroup(
             new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
@@ -417,6 +425,49 @@ public class CommandComposer {
 
             new ParallelCommandGroup(
                 new DriveDistanceCommand(-150, 0.9),//was -157
+                new SequentialCommandGroup(
+                getAutoLoadCommand().withTimeout(0.5),
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP)            
+                ),
+                new ParallelCommandGroup(
+                    new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
+                    new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4050)).withTimeout(1)
+               ),
+            new TurnCommand(DriveSubsystem.get(), 24).withTimeout(1), //was 28 now moving to -28
+            //new ParallelCommandGroup(
+            //    new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
+            //    new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4150)).withTimeout(1),
+            getAutoShootCommandNoWait(),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP))
+        );
+    }
+    public static Command getTwoToThreeAutoCommandTest(){//2,3
+        return new SequentialCommandGroup(
+            //new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
+            new TurnCommand(DriveSubsystem.get(), -28).withTimeout(1), //was 1.5
+            new ParallelCommandGroup(new DriveDistanceCommand(60.0), getAutoLoadCommand()).withTimeout(4),
+            new TurnCommand(DriveSubsystem.get(), 20).withTimeout(1), //was 1.5
+            new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4150)),
+            getAutoShootCommand(),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
+            new TurnCommand(DriveSubsystem.get(), -29).withTimeout(1),//29 for red
+            new ParallelCommandGroup(new DriveDistanceCommand(175), getAutoLoadCommand().withTimeout(4)),
+            //getAutoLoadCommand().withTimeout(1),
+            //new IntakeCommand(IntakeCommand.Operation.CMD_STOP), 
+            //new TurnCommand(DriveSubsystem.get(), -30).withTimeout(1),
+            //new DriveDistanceCommand(-157, 0.9),
+
+            new ParallelCommandGroup(
+                new DriveDistanceCommand(-175, 0.9),//was -157
                 new SequentialCommandGroup(
                 getAutoLoadCommand().withTimeout(0.5),
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP)            
