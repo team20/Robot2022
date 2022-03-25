@@ -12,23 +12,28 @@ import frc.robot.subsystems.DriveSubsystem;
 public class TurnCommand extends CommandBase {
 
     private final DriveSubsystem m_driveSubsystem;
-    private final double m_angle;
+    private final double m_turnAngle;
+    private double m_setpointAngle;
     private final PIDController m_turnController = new PIDController(DriveConstants.kTurnP, DriveConstants.kTurnI,
             DriveConstants.kTurnD);
-    private Instant m_startTime;
+    private double m_startAngle;
+    //private Instant m_startTime;
 
     public TurnCommand(DriveSubsystem driveSubsystem, double turnAngle) {
         m_driveSubsystem = driveSubsystem;
-        m_angle = turnAngle;
+        m_turnAngle = turnAngle;
         addRequirements(m_driveSubsystem);
     }
 
     public void initialize() {
-        //m_driveSubsystem.zeroHeading();
-        System.out.println("starting turn");
-        m_startTime = Instant.now();
+
         m_driveSubsystem.zeroHeading();
-        m_turnController.setSetpoint(m_angle);
+        System.out.println("starting turn");
+        m_setpointAngle = m_driveSubsystem.getHeading() + m_turnAngle;
+        //m_startTime = Instant.now();
+        //m_driveSubsystem.zeroHeading();
+        m_turnController.setSetpoint(m_turnAngle);
+        //m_turnController.setSetpoint(0);
         m_turnController.setTolerance(DriveConstants.kTurnTolerance);
     }
 
@@ -36,21 +41,27 @@ public class TurnCommand extends CommandBase {
         double measurementAngle = m_driveSubsystem.getHeading();
         //System.out.println("Angle: " + measurementAngle);
         SmartDashboard.putNumber("Angle ", measurementAngle);
-        if(Duration.between(m_startTime, Instant.now()).toMillis() > 250){
-            double turnOutput = m_turnController.calculate(measurementAngle);
-            m_driveSubsystem.arcadeDrive(0, turnOutput, -turnOutput);
-        }
+        
+        double turnOutput = m_turnController.calculate(measurementAngle);
+        //double turnOutput = m_turnController.calculate(getError(measurementAngle));
+        m_driveSubsystem.arcadeDrive(0, turnOutput, -turnOutput);
         
     }
 
+    private double getError(double measurementAngle){
+        double error = m_setpointAngle - measurementAngle;
+        if(error > 180){
+            error -= 360;
+        }else if(error < -180){
+            error += 360;
+        }
+        return error;
+    }
     public void end(boolean interupted) {
         m_driveSubsystem.tankDrive(0, 0);
     }
 
     public boolean isFinished() {
-        if(Duration.between(m_startTime, Instant.now()).toMillis() < 250){
-            return false;
-        }
         return m_turnController.atSetpoint();
     }
 }

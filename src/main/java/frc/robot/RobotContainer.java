@@ -90,8 +90,9 @@ public class RobotContainer {
                 m_limelightSubsystem.turnOffLight();
                 // m_limelightSubsystem.turnOnLight();
                 configureShuffleboard();
-                
-                //m_autoChooser.addOption("Test auto", CommandComposer.testAutoIndexer());
+                m_autoChooser.addOption("Test two to three", CommandComposer.getTwoToThreeAutoCommandTest());
+                m_autoChooser.addOption("Test distance", CommandComposer.testingDistance(180));
+                m_autoChooser.addOption("Test turning", CommandComposer.testingTurn(30));
                 m_autoChooser.addOption("Two Ball Straight", CommandComposer.getTwoBallStraight());
                 m_autoChooser.addOption("Two Ball 4 Red", CommandComposer.getTwoBallStarting4Red());
                 m_autoChooser.addOption("Two Ball 4 Blue", CommandComposer.getTwoBallStarting4Blue()); //using this one 3/14
@@ -187,7 +188,8 @@ public class RobotContainer {
 //                                                 TelescopeHookConstants.kExtendedPosition));
 //                 new POVButton(m_driverController, 315)
 //                                 .whenReleased(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
-                // -----------------RIGHT DPAD-----------------
+               
+// -----------------RIGHT DPAD-----------------
                 // ---------Move Right Telescope Manual--------
                 // new POVButton(m_driverController, DPad.kRight)
                 // .whenHeld(new
@@ -405,6 +407,10 @@ public class RobotContainer {
 
                 new POVButton(m_operatorController, DPad.kLeft)
                 .whenReleased(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
+
+                new JoystickButton(m_operatorController, DPad.kLeft) 
+                .whenHeld(new IndexerCommand(IndexerCommand.Operation.CMD_FWD_MAN));
+
 
                 // ---------------LEFT BUMPER----------------
                 // --------------Intake arm manual-------------
