@@ -121,10 +121,10 @@ public final class Constants {
 		// navX stuff
 		public static final SPI.Port kGyroPort = SPI.Port.kMXP;
 		public static final boolean kGyroReversed = true;
-		public static final double kTurnP = 0.005; //was 0.005
-		public static final double kTurnI = 0.003; //was 0.003
-		public static final double kTurnD = 0.0000; //0.0
-		public static final double kTurnTolerance = 2;
+		public static final double kTurnP = 0.0125; //was 0.005
+		public static final double kTurnI = 0; //was 0.003
+		public static final double kTurnD = 0; //0.0
+		public static final double kTurnTolerance = 0.5;
 
 		// TODO these need to be updated to reflect this year's robot
 		public static final double ksVolts = 0.196;

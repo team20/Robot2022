@@ -1,5 +1,8 @@
 package frc.robot.commands.AutoCommands;
 
+import java.time.Duration;
+import java.time.Instant;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -13,7 +16,8 @@ public class TurnCommand extends CommandBase {
 
     private final double m_angle;
     private final ProfiledPIDController m_turnController = new ProfiledPIDController(DriveConstants.kTurnP, DriveConstants.kTurnI,
-            DriveConstants.kTurnD, new TrapezoidProfile.Constraints(360, 720));
+            DriveConstants.kTurnD, new TrapezoidProfile.Constraints(720, 720));
+    private Instant m_startTime;
 
     public TurnCommand(double turnAngle) {
         m_angle = turnAngle;
@@ -21,14 +25,17 @@ public class TurnCommand extends CommandBase {
     }
 
     public void initialize() {
+      m_startTime = Instant.now();
         System.out.println("starting turn");
-        double goalAngle = m_angle + DriveSubsystem.get().getHeading();
-        if(goalAngle > 180){
-            goalAngle -= 360;
-        }else if(goalAngle < -180){
-            goalAngle += 360;
-        }
-        m_turnController.setGoal(goalAngle);
+        // double goalAngle = m_angle + DriveSubsystem.get().getHeading();
+        // if(goalAngle > 180){
+        //     goalAngle -= 360;
+        // }else if(goalAngle < -180){
+        //     goalAngle += 360;
+        // }
+        DriveSubsystem.get().zeroHeading();
+        double goalAngle = m_angle;
+        m_turnController.setGoal(m_angle);
         m_turnController.enableContinuousInput(-180, 180);
         m_turnController.setTolerance(DriveConstants.kTurnTolerance);
     }
@@ -36,16 +43,21 @@ public class TurnCommand extends CommandBase {
     public void execute() {
         double measurementAngle = DriveSubsystem.get().getHeading();
         SmartDashboard.putNumber("Angle ", measurementAngle);
-        double turnOutput = MathUtil.clamp(m_turnController.calculate(measurementAngle), -1, 1);
+        double turnOutput = m_turnController.calculate(measurementAngle);
         DriveSubsystem.get().tankDrive(turnOutput, -turnOutput);
         
     }
 
     public void end(boolean interupted) {
-        DriveSubsystem.get().tankDrive(0, 0);
+      System.out.println("ending turn: " + Duration.between(m_startTime, Instant.now()).toMillis());
+      DriveSubsystem.get().tankDrive(0, 0);
     }
 
     public boolean isFinished() {
-        return m_turnController.atSetpoint();
+      if(DriveSubsystem.get().getHeading() < m_angle + DriveConstants.kTurnTolerance && DriveSubsystem.get().getHeading() > m_angle - DriveConstants.kTurnTolerance){
+        return true;
+      }else{
+        return false;
+      }
     }
 }
