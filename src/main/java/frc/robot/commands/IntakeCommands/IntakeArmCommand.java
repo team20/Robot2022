@@ -13,6 +13,9 @@ public class IntakeArmCommand extends CommandBase {
     CMD_ARM_UP,
     CMD_ARM_DOWN,
     CMD_ARM_SETTLE,
+    CMD_RESET_ENCODER,
+    CMD_ARM_MANUAL,
+    CMD_ARM_STOP,
   }
 
   private Operation m_operation;
@@ -24,17 +27,30 @@ public class IntakeArmCommand extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    System.out.println("starting arm");
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if(m_operation == Operation.CMD_ARM_UP){
       IntakeArmSubsystem.get().setPosition(IntakeArmSubsystem.Position.UP_POSITION);
-      IntakeArmSubsystem.get().setPercentOutput(0);//TODO find speed
+      IntakeArmSubsystem.get().setBrakeMode();
+      //System.out.println("setting to up");
+      // IntakeArmSubsystem.get().setPercentOutput(0);//TODO find speed
     } else if(m_operation == Operation.CMD_ARM_DOWN){
+      //System.out.println("setting to down");
       IntakeArmSubsystem.get().setPosition(IntakeArmSubsystem.Position.DOWN_POSITION);
-      IntakeArmSubsystem.get().setPercentOutput(0);//TODO find speed
+      IntakeArmSubsystem.get().setCoastMode();
+      // IntakeArmSubsystem.get().setPercentOutput(0);//TODO find speed
+    } 
+    else if(m_operation==Operation.CMD_RESET_ENCODER){
+      IntakeArmSubsystem.get().resetEncoder();
+    }else if(m_operation==Operation.CMD_ARM_MANUAL){
+      IntakeArmSubsystem.get().setPercentOutput(-.6);
+    }else if(m_operation==Operation.CMD_ARM_STOP){
+      IntakeArmSubsystem.get().setPercentOutput(0);
     }
   }
 

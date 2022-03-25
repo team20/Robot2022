@@ -63,7 +63,7 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
 
     public void periodic() {
         SmartDashboard.putNumber("Telescope Hook Position", getPosition());
-        System.out.println("Telescope Hook Position: "+getPosition());
+        // System.out.println("Telescope Hook Position: "+getPosition());
     }
 
     /**
@@ -86,7 +86,6 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
     public boolean atSetpoint() {
         return (Math.abs(m_setPosition - getPosition()) <= TelescopeHookConstants.kAllowedError);
     }
-
     /**
      * @param speed Percent output of the hook
      */
@@ -112,7 +111,9 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
         m_encoder.setPosition(0);
         setPosition(0);
     }
-
+    public void setFollowerSpeed(double speed){
+        m_followerMotor.set(speed);
+    }
     /**
      * 
      * @param speed Percentage output of telescope hook motor

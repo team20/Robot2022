@@ -4,7 +4,10 @@
 
 package frc.robot.commands.ShooterCommands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.commands.IntakeCommands.IntakeArmCommand.Operation;
+
 import frc.robot.subsystems.HoodSubsystem;
 
 public class HoodCommand extends CommandBase {
@@ -13,7 +16,9 @@ public class HoodCommand extends CommandBase {
 
   public enum Operation {
     CMD_SET_POSITION,
-    CMD_SETTLE
+    CMD_SETTLE,
+    CMD_POWER_ZERO,
+    CMD_STOP
   }
 
   /** Creates a new HoodCommand. */
@@ -27,8 +32,14 @@ public class HoodCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    SmartDashboard.putBoolean("Run hood zero?", m_operation == Operation.CMD_POWER_ZERO);
     if (m_operation == Operation.CMD_SET_POSITION) {
       HoodSubsystem.get().setPosition(m_hoodParam);
+    } else if (m_operation == Operation.CMD_POWER_ZERO) {
+      SmartDashboard.putBoolean("running the power zero command", m_operation == Operation.CMD_POWER_ZERO);
+      HoodSubsystem.get().setPercentOutput(-0.1);
+    } else if (m_operation == Operation.CMD_STOP) {
+      HoodSubsystem.get().setPercentOutput(0.0);
     }
   }
 
@@ -40,16 +51,24 @@ public class HoodCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+    if(m_operation == Operation.CMD_POWER_ZERO){
+      HoodSubsystem.get().resetEncoder();
+    }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+
     if (m_operation == Operation.CMD_SET_POSITION) {
       return true;
     } else if (m_operation == Operation.CMD_SETTLE) {
+      SmartDashboard.putBoolean("Hood at Setpoint", HoodSubsystem.get().atSetpoint());
       return HoodSubsystem.get().atSetpoint();
+    } else if(m_operation == Operation.CMD_POWER_ZERO){
+      return false;
+    } else if (m_operation == Operation.CMD_STOP) {
+      return true;
     }
     return true;
   }

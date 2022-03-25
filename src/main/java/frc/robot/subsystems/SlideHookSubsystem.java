@@ -66,7 +66,7 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
 
     public void periodic() {
         SmartDashboard.putNumber("Slide Hook Position", getPosition());
-        System.out.println("Slide Hook Position is "+getPosition());
+        // System.out.println("Slide Hook Position is "+getPosition());
     }
 
     /**
@@ -114,7 +114,9 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
         m_setPosition = position;
         m_pidController.setReference(position, ControlType.kPosition, SlideHookConstants.kSlotID);
     }
-
+    public void incrementPosition(){
+        m_pidController.setReference(m_encoder.getPosition()+.5, ControlType.kPosition, SlideHookConstants.kSlotID);
+    }
     /**
      * Zero the encoder position
      */

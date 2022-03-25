@@ -19,7 +19,7 @@ public class IntakeSubsystem extends SubsystemBase implements ShuffleboardLoggin
 	private static IntakeSubsystem s_intakeSubsystem;
 	public static IntakeSubsystem get(){return s_intakeSubsystem;} 
 
-    //private final CANSparkMax m_motor = new CANSparkMax(IntakeConstants.kMotorPort, MotorType.kBrushless);
+    private final CANSparkMax m_motor = new CANSparkMax(IntakeConstants.kMotorPort, MotorType.kBrushless);
 	
 	/**
 	 * Initializes a new instance of the {@link IntakeSubsystem} class.
@@ -45,16 +45,17 @@ public class IntakeSubsystem extends SubsystemBase implements ShuffleboardLoggin
 		m_motor.set(speed);
 	}
 	*/
-	private final TalonSRX m_motor = new TalonSRX(IntakeConstants.kMotorPort);
 
 	/**
 	 * Initializes a new instance of the {@link IntakeSubsystem} class.
 	 */
 	public IntakeSubsystem() {
 		s_intakeSubsystem = this;
-		m_motor.setNeutralMode(NeutralMode.Coast);
-		m_motor.enableVoltageCompensation(true);
-		m_motor.setInverted(true);
+		m_motor.restoreFactoryDefaults();
+		m_motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+		m_motor.enableVoltageCompensation(12);
+		m_motor.setInverted(IntakeArmConstants.kInvert);
+		m_motor.setSmartCurrentLimit(IntakeArmConstants.kSmartCurrentLimit);
 	}
 
 	/**
@@ -63,8 +64,8 @@ public class IntakeSubsystem extends SubsystemBase implements ShuffleboardLoggin
 	 * @param speed Percent output.
 	 */
 	public void setSpeed(double speed) {
-		System.out.println("Setting % output: " + speed);
-		m_motor.set(ControlMode.PercentOutput, speed);
+		//System.out.println("Setting % output: " + speed);
+		m_motor.set(speed);
 	}
 	public void configureShuffleboard() {
 		ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Intake");

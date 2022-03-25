@@ -25,7 +25,6 @@ public class IndexerCommand extends CommandBase {
     //wait until a ball is ready to feed, then end
     CMD_WAIT_RTF,
     //try to move to the target position
-    CMD_TO_EXPECTED_POSITION,
     CMD_STOP
   };
 
@@ -54,14 +53,12 @@ public class IndexerCommand extends CommandBase {
   @Override
   public void initialize() {
     IndexerSubsystem indexerSubsystem = IndexerSubsystem.get();
-    if(m_operation == Operation.CMD_ADV){
-      m_desiredIndexerState = indexerSubsystem.getAdvanceTargetState();
-      System.out.println("Desired state: " + (byte)m_desiredIndexerState);
-    } else if(m_operation == Operation.CMD_REV){
-      m_desiredIndexerState = indexerSubsystem.getReverseTargetState(m_keepBallRTF);
-      System.out.println((byte)m_desiredIndexerState);
-    } else if(m_operation == Operation.CMD_TO_EXPECTED_POSITION){
-      m_desiredIndexerState = indexerSubsystem.getCurrTargetState();
+    if (m_operation == Operation.CMD_ADV) {
+      // System.out.println("Desired state: " + (byte)m_desiredIndexerState);
+      indexerSubsystem.setPositionAdvance();
+    } else if (m_operation == Operation.CMD_REV) {
+      indexerSubsystem.setPositionReverse();
+      //System.out.println((byte)m_desiredIndexerState);
     }
     m_startTime = Instant.now();
     
@@ -74,19 +71,13 @@ public class IndexerCommand extends CommandBase {
       IndexerSubsystem indexerSubsystem = IndexerSubsystem.get();
       //set speeds and/or target states depending on desired operations
       if(m_operation == Operation.CMD_ADV){
-        indexerSubsystem.setTargetState(m_desiredIndexerState);
-        indexerSubsystem.setSpeed(50); //TODO find speed
-      }else if(m_operation == Operation.CMD_REV){
-        indexerSubsystem.setTargetState(m_desiredIndexerState);
-        indexerSubsystem.setSpeed(-50); //TODO find speed
+        }else if(m_operation == Operation.CMD_REV){
       } else if(m_operation == Operation.CMD_FWD_MAN){
-        indexerSubsystem.setSpeed(50); //TODO find speed
+        indexerSubsystem.setSpeed(.5);
       }else if(m_operation == Operation.CMD_REV_MAN){
-        indexerSubsystem.setSpeed(-50); //TODO find speed
-      }else if(m_operation == Operation.CMD_TO_EXPECTED_POSITION){
-        indexerSubsystem.setSpeed(indexerSubsystem.getLastSpeed());
+        indexerSubsystem.setSpeed(-.5);
       }else if(m_operation == Operation.CMD_STOP){
-        indexerSubsystem.setSpeed(50);
+        indexerSubsystem.setSpeed(0);
       }
   }
 
@@ -102,18 +93,18 @@ public class IndexerCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_operation == Operation.CMD_ADV || m_operation == Operation.CMD_REV || m_operation == Operation.CMD_TO_EXPECTED_POSITION){
+    if(m_operation == Operation.CMD_ADV || m_operation == Operation.CMD_REV){
       //amount of time elapsed since we started the command
       double elapsed = Duration.between(m_startTime, Instant.now()).toMillis();
           
       //max time to run to get to a state(will be ignored if controlled manually)
-      double max_duration = 100000;
+      double max_duration = 2000;
 
       //finish when we reach our target state or timeout
       if(elapsed > max_duration){
         return true;
       }
-      return IndexerSubsystem.get().atTargetState();
+      return IndexerSubsystem.get().atTargetPosition();
     } else if(m_operation == Operation.CMD_FWD_MAN || m_operation == Operation.CMD_REV_MAN){
       return true;
     } else if(m_operation == Operation.CMD_WAIT_RTF){

@@ -12,7 +12,7 @@ public class IntakeCommand extends CommandBase {
   public enum Operation{
     CMD_RUN_FWD,
     CMD_RUN_REV,
-    CMD_STOP
+    CMD_STOP,
   }
   private Operation m_operation;
 
@@ -25,19 +25,20 @@ public class IntakeCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("starting intake command");
+    //System.out.println("GGGGGGGGGGGGGGGGGGGG starting intake command");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if(m_operation == Operation.CMD_RUN_FWD){
-      IntakeSubsystem.get().setSpeed(.5);
+      IntakeSubsystem.get().setSpeed(1);
     }else if(m_operation == Operation.CMD_RUN_REV){
-      IntakeSubsystem.get().setSpeed(-.5);
+      IntakeSubsystem.get().setSpeed(-1);
     }else if(m_operation == Operation.CMD_STOP){
       IntakeSubsystem.get().setSpeed(0);
     }
+
   }
 
   // Called once the command ends or is interrupted.
