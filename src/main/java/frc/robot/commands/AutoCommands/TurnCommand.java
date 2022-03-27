@@ -45,6 +45,15 @@ public class TurnCommand extends CommandBase {
         
     }
 
+    private double getError(double measurementAngle){
+        double error = m_setpointAngle - measurementAngle;
+        if(error > 180){
+            error -= 360;
+        }else if(error < -180){
+            error += 360;
+        }
+        return error;
+    }
     public void end(boolean interupted) {
       //System.out.println("ending turn: " + Duration.between(m_startTime, Instant.now()).toMillis());
       DriveSubsystem.get().tankDrive(0, 0);
@@ -56,5 +65,6 @@ public class TurnCommand extends CommandBase {
       }else{
         return false;
       }
+
     }
 }

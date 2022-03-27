@@ -76,7 +76,7 @@ public class RobotContainer {
                 m_autoChooser.addOption("Test turn", new TurnCommand(30));
                 m_autoChooser.addOption("Test shots", CommandComposer.testShots());
                 m_autoChooser.addOption("Test drive", new DriveDistanceCommand(157));
-                m_autoChooser.addOption("Two Ball Straight", CommandComposer.getTwoBallStraight());
+              m_autoChooser.addOption("Two Ball Straight", CommandComposer.getTwoBallStraight());
                 m_autoChooser.addOption("Two Ball 4 Red", CommandComposer.getTwoBallStarting4Red());
                 m_autoChooser.addOption("Two Ball 4 Blue", CommandComposer.getTwoBallStarting4Blue()); //using this one 3/14
                 m_autoChooser.addOption("Two Ball 2 Blue", CommandComposer.getTwoBallStarting2Blue()); //good **start with this one
@@ -171,7 +171,8 @@ public class RobotContainer {
 //                                                 TelescopeHookConstants.kExtendedPosition));
 //                 new POVButton(m_driverController, 315)
 //                                 .whenReleased(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
-                // -----------------RIGHT DPAD-----------------
+               
+// -----------------RIGHT DPAD-----------------
                 // ---------Move Right Telescope Manual--------
                 // new POVButton(m_driverController, DPad.kRight)
                 // .whenHeld(new
@@ -394,6 +395,10 @@ public class RobotContainer {
 
                 new POVButton(m_operatorController, DPad.kLeft)
                 .whenReleased(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
+
+                new JoystickButton(m_operatorController, DPad.kLeft) 
+                .whenHeld(new IndexerCommand(IndexerCommand.Operation.CMD_FWD_MAN));
+
 
                 // ---------------LEFT BUMPER----------------
                 // --------------Intake arm manual-------------
