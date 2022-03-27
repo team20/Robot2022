@@ -1,9 +1,10 @@
 package frc.robot.commands.AutoCommands;
 
-import java.time.Duration;
-import java.time.Instant;
+// import java.time.Duration;
+// import java.time.Instant;
 
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
@@ -11,40 +12,36 @@ import frc.robot.subsystems.DriveSubsystem;
 
 public class TurnCommand extends CommandBase {
 
-    private final DriveSubsystem m_driveSubsystem;
-    private final double m_turnAngle;
-    private double m_setpointAngle;
-    private final PIDController m_turnController = new PIDController(DriveConstants.kTurnP, DriveConstants.kTurnI,
-            DriveConstants.kTurnD);
-    private double m_startAngle;
-    //private Instant m_startTime;
+    private final double m_angle;
+    private final ProfiledPIDController m_turnController = new ProfiledPIDController(DriveConstants.kTurnP, DriveConstants.kTurnI,
+            DriveConstants.kTurnD, new TrapezoidProfile.Constraints(720, 720));
+    // private Instant m_startTime;
 
-    public TurnCommand(DriveSubsystem driveSubsystem, double turnAngle) {
-        m_driveSubsystem = driveSubsystem;
-        m_turnAngle = turnAngle;
-        addRequirements(m_driveSubsystem);
+    public TurnCommand(double turnAngle) {
+        m_angle = turnAngle;
+        addRequirements(DriveSubsystem.get());
     }
 
     public void initialize() {
-
-        m_driveSubsystem.zeroHeading();
-        System.out.println("starting turn");
-        m_setpointAngle = m_driveSubsystem.getHeading() + m_turnAngle;
         //m_startTime = Instant.now();
-        //m_driveSubsystem.zeroHeading();
-        m_turnController.setSetpoint(m_turnAngle);
-        //m_turnController.setSetpoint(0);
+        System.out.println("starting turn");
+        // double goalAngle = m_angle + DriveSubsystem.get().getHeading();
+        // if(goalAngle > 180){
+        //     goalAngle -= 360;
+        // }else if(goalAngle < -180){
+        //     goalAngle += 360;
+        // }
+        //DriveSubsystem.get().zeroHeading();
+        m_turnController.setGoal(m_angle);
+        m_turnController.enableContinuousInput(-180, 180);
         m_turnController.setTolerance(DriveConstants.kTurnTolerance);
     }
 
     public void execute() {
-        double measurementAngle = m_driveSubsystem.getHeading();
-        //System.out.println("Angle: " + measurementAngle);
+        double measurementAngle = DriveSubsystem.get().getHeading();
         SmartDashboard.putNumber("Angle ", measurementAngle);
-        
         double turnOutput = m_turnController.calculate(measurementAngle);
-        //double turnOutput = m_turnController.calculate(getError(measurementAngle));
-        m_driveSubsystem.arcadeDrive(0, turnOutput, -turnOutput);
+        DriveSubsystem.get().arcadeDrive(0, turnOutput, -turnOutput);
         
     }
 
@@ -58,10 +55,16 @@ public class TurnCommand extends CommandBase {
         return error;
     }
     public void end(boolean interupted) {
-        m_driveSubsystem.tankDrive(0, 0);
+      //System.out.println("ending turn: " + Duration.between(m_startTime, Instant.now()).toMillis());
+      DriveSubsystem.get().tankDrive(0, 0);
     }
 
     public boolean isFinished() {
-        return m_turnController.atSetpoint();
+      if(DriveSubsystem.get().getHeading() < m_angle + DriveConstants.kTurnTolerance && DriveSubsystem.get().getHeading() > m_angle - DriveConstants.kTurnTolerance){
+        return true;
+      }else{
+        return false;
+      }
+
     }
 }

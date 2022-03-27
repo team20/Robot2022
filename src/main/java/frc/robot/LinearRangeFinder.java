@@ -42,7 +42,7 @@ public class LinearRangeFinder extends RangeFinder {
        y2 = m_bestRPM[indexX2];
        // interpolate distance
        double power = interpolate(distance, x1, y1, x2, y2);
-       double[] ret = {angle-12,power};
+       double[] ret = {angle,power};
        return ret;
     }
  

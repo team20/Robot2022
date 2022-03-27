@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IndexerSubsystem;
 
 public class IndexerCommand extends CommandBase {
-  private byte m_desiredIndexerState;
+  // private byte m_desiredIndexerState;
   private Operation m_operation;
   public enum Operation{
     //advance ball(s) one pos forward
@@ -29,7 +29,7 @@ public class IndexerCommand extends CommandBase {
   };
 
   
-  private boolean m_keepBallRTF = true;
+  // private boolean m_keepBallRTF = true;
 
   private Instant m_startTime;
 
@@ -45,7 +45,7 @@ public class IndexerCommand extends CommandBase {
   public IndexerCommand(IndexerSubsystem indexerSubsystem, boolean keepBallRTF, Operation operation) {
     //save desired operation, the indexer subsystem, and whether or not we want the sensors to reflect that if we move backwards, the RTF ball will stay in the same position
     m_operation = operation;
-    m_keepBallRTF = keepBallRTF;
+    // m_keepBallRTF = keepBallRTF;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(IndexerSubsystem.get());
   }
@@ -70,9 +70,7 @@ public class IndexerCommand extends CommandBase {
   public void execute() {
       IndexerSubsystem indexerSubsystem = IndexerSubsystem.get();
       //set speeds and/or target states depending on desired operations
-      if(m_operation == Operation.CMD_ADV){
-        }else if(m_operation == Operation.CMD_REV){
-      } else if(m_operation == Operation.CMD_FWD_MAN){
+      if(m_operation == Operation.CMD_FWD_MAN){
         indexerSubsystem.setSpeed(.5);
       }else if(m_operation == Operation.CMD_REV_MAN){
         indexerSubsystem.setSpeed(-.5);

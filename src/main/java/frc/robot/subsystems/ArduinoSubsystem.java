@@ -2,13 +2,8 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArduinoConstants;
 import frc.robot.Constants.ArduinoConstants.LEDColors;
@@ -83,12 +78,12 @@ public class ArduinoSubsystem extends SubsystemBase {
 
 	public void setMainLED() {
 		byte mode = LEDModes.kOff;
-		byte value = LEDColors.kOff;
+		//byte value = LEDColors.kOff;
 		boolean SAMPLE = SmartDashboard.getEntry("SAMPLE").getBoolean(false); //TODO SAMPLE
 		if(!DriverStation.isDisabled()){
 			if(SAMPLE){
 				mode = LEDModes.kTheaterLights;
-				value = LEDColors.kGreen;
+				//value = LEDColors.kGreen;
 			}
 		}
 		m_mainLEDMode = mode;
@@ -97,12 +92,12 @@ public class ArduinoSubsystem extends SubsystemBase {
 
 	public void setShooterLED() {
 		byte mode = LEDModes.kOff;
-		byte value = LEDColors.kOff;
+		//byte value = LEDColors.kOff;
 		boolean SAMPLE = SmartDashboard.getEntry("SAMPLE").getBoolean(false); //TODO SAMPLE
 		if(!DriverStation.isDisabled()){
 			if(SAMPLE){
 				mode = LEDModes.kTheaterLights;
-				value = LEDColors.kGreen;
+				//value = LEDColors.kGreen;
 			}
 		}
 		m_shooterLEDMode = mode;
@@ -121,12 +116,12 @@ public class ArduinoSubsystem extends SubsystemBase {
 	}
 	public void setClimberLED(){
 		byte mode = LEDModes.kOff;
-		byte value = LEDColors.kOff;
+		//byte value = LEDColors.kOff;
 		boolean SAMPLE = SmartDashboard.getEntry("SAMPLE").getBoolean(false); //TODO SAMPLE
 		if(!DriverStation.isDisabled()){
 			if(SAMPLE){
 				mode = LEDModes.kTheaterLights;
-				value = LEDColors.kGreen;
+				//value = LEDColors.kGreen;
 			}
 		}
 		

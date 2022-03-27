@@ -8,7 +8,6 @@ import java.time.Duration;
 import java.time.Instant;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.commands.ShooterCommands.HoodCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;

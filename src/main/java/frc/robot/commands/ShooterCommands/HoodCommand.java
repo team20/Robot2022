@@ -6,7 +6,6 @@ package frc.robot.commands.ShooterCommands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.commands.IntakeCommands.IntakeArmCommand.Operation;
 
 import frc.robot.subsystems.HoodSubsystem;
 
