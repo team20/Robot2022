@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.ControllerConstants;
@@ -15,36 +14,19 @@ import frc.robot.Constants.TelescopeHookConstants;
 import frc.robot.Constants.ControllerConstants.Axis;
 import frc.robot.Constants.ControllerConstants.Button;
 import frc.robot.Constants.ControllerConstants.DPad;
-import frc.robot.commands.DeferredCommand;
-import frc.robot.commands.ZeroCommand;
+import frc.robot.commands.*;
 import frc.robot.commands.AutoCommands.ComplexAutoSequence;
-import frc.robot.commands.AutoCommands.DriveDistanceCommand;
-import frc.robot.commands.AutoCommands.SitAndShootHigh;
-import frc.robot.commands.AutoCommands.SitAndShootLow;
-import frc.robot.commands.AutoCommands.TurnCommand;
+import frc.robot.commands.AutoCommands.*;
 import frc.robot.commands.ClimberCommands.SlideHookCommand;
 import frc.robot.commands.ClimberCommands.TelescopeHookCommand;
 import frc.robot.commands.DriveCommands.ArcadeDriveCommand;
 import frc.robot.commands.DriveCommands.PixyTargetCommand;
 import frc.robot.commands.IndexerCommands.IndexerCommand;
-import frc.robot.commands.IntakeCommands.DriveIntakeArmCommand;
-import frc.robot.commands.IntakeCommands.IntakeArmCommand;
-import frc.robot.commands.IntakeCommands.IntakeCommand;
-import frc.robot.commands.IntakeCommands.IntakeArmCommand.Operation;
+import frc.robot.commands.IntakeCommands.*;
 import frc.robot.commands.LimelightCommands.LimelightTurnCommand;
-import frc.robot.commands.ShooterCommands.FlywheelCommand;
-import frc.robot.commands.ShooterCommands.HoodCommand;
-import frc.robot.commands.ShooterCommands.ShootCommandComposer;
-import frc.robot.subsystems.ArduinoSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.FlywheelSubsystem;
-import frc.robot.subsystems.HoodSubsystem;
-import frc.robot.subsystems.IndexerSubsystem;
-import frc.robot.subsystems.IntakeArmSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LimelightSubsystem;
-import frc.robot.subsystems.SlideHookSubsystem;
-import frc.robot.subsystems.TelescopeHookSubsystem;
+import frc.robot.commands.ShooterCommands.*;
+import frc.robot.subsystems.*;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -87,11 +69,13 @@ public class RobotContainer {
          */
         public RobotContainer() {
 
-                m_limelightSubsystem.turnOffLight();
-                // m_limelightSubsystem.turnOnLight();
+                //m_limelightSubsystem.turnOffLight();
+                 m_limelightSubsystem.turnOnLight();
                 configureShuffleboard();
                 
-                //m_autoChooser.addOption("Test auto", CommandComposer.testAutoIndexer());
+                m_autoChooser.addOption("Test turn", new TurnCommand(30));
+                m_autoChooser.addOption("Test shots", CommandComposer.testShots());
+                m_autoChooser.addOption("Test drive", new DriveDistanceCommand(157));
                 m_autoChooser.addOption("Two Ball Straight", CommandComposer.getTwoBallStraight());
                 m_autoChooser.addOption("Two Ball 4 Red", CommandComposer.getTwoBallStarting4Red());
                 m_autoChooser.addOption("Two Ball 4 Blue", CommandComposer.getTwoBallStarting4Blue()); //using this one 3/14
@@ -374,6 +358,11 @@ public class RobotContainer {
                                                 .negate())
                                 .whileActiveOnce(CommandComposer.getPresetShootCommand(
                                                 ShootCommandComposer.Operation.PRESET_FENDER_HIGH));
+                // new JoystickButton(m_operatorController, ControllerConstants.Button.kCircle)
+                //                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                //                                 .negate())
+                //                 .whileActiveOnce(CommandComposer.getPresetShootCommand(
+                //                                 ShootCommandComposer.Operation.LIMELIGHT_LINEAR));
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kCircle)
                                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
                                                 .negate())
@@ -479,14 +468,14 @@ public class RobotContainer {
                 //                 .whenHeld(new DriveIntakeArmCommand(
                 //                                 () -> m_operatorController.getRawAxis(Axis.kLeftY) * 0.5));
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kTrackpad)
-                                .whenPressed(new IntakeArmCommand(Operation.CMD_RESET_ENCODER));
+                                .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_RESET_ENCODER));
         }
 
         public void configureTestingBindings() {
                 new JoystickButton(m_driverController, 1)
-                                .whenPressed(new DeferredCommand(CommandComposer::getManualFlywheelCommand));
-                new JoystickButton(m_driverController, 1)
-                                .whenReleased(new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0));
+                                .whenPressed((new TurnCommand(30)));
+                // new JoystickButton(m_driverController, 1)
+                //                 .whenReleased(new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0));
 
                 new POVButton(m_driverController, 0)
                                 .whenPressed(new IndexerCommand(IndexerCommand.Operation.CMD_FWD_MAN));

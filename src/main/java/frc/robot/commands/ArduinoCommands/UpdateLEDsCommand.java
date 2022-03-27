@@ -8,9 +8,9 @@ import frc.robot.subsystems.ArduinoSubsystem;
 
 public class UpdateLEDsCommand extends CommandBase {
     // private ArduinoSubsystem m_arduinoSubsystem;
-    private Supplier<Byte> m_mainLEDMode;
+    //private Supplier<Byte> m_mainLEDMode;
     private Supplier<Byte> m_mainLEDColor;
-    private Supplier<Byte> m_shooterLEDMode;
+    //private Supplier<Byte> m_shooterLEDMode;
     private Supplier<Byte> m_shooterLEDColor;
     private Supplier<Byte> m_climberLEDMode;
     private Supplier<Byte> m_climberLEDColor;
@@ -19,9 +19,9 @@ public class UpdateLEDsCommand extends CommandBase {
     Supplier<Byte> mainLEDColor, Supplier<Byte> shooterLEDMode, Supplier<Byte> shooterLEDColor,
     Supplier<Byte> climberLEDMode, Supplier<Byte> climberLEDColor) {
         //m_arduinoSubsystem = arduinoSubsystem;
-        m_mainLEDMode = mainLEDMode;
+        //m_mainLEDMode = mainLEDMode;
         m_mainLEDColor = mainLEDColor;
-        m_shooterLEDMode = shooterLEDMode;
+        //m_shooterLEDMode = shooterLEDMode;
         m_shooterLEDColor = shooterLEDColor;
         m_climberLEDMode = climberLEDMode;
         m_climberLEDColor = climberLEDColor;

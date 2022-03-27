@@ -1,10 +1,8 @@
 package frc.robot.commands.AutoCommands;
 
-import java.time.Duration;
-import java.time.Instant;
+// import java.time.Duration;
+// import java.time.Instant;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,7 +15,7 @@ public class TurnCommand extends CommandBase {
     private final double m_angle;
     private final ProfiledPIDController m_turnController = new ProfiledPIDController(DriveConstants.kTurnP, DriveConstants.kTurnI,
             DriveConstants.kTurnD, new TrapezoidProfile.Constraints(720, 720));
-    private Instant m_startTime;
+    // private Instant m_startTime;
 
     public TurnCommand(double turnAngle) {
         m_angle = turnAngle;
@@ -25,7 +23,7 @@ public class TurnCommand extends CommandBase {
     }
 
     public void initialize() {
-      m_startTime = Instant.now();
+        //m_startTime = Instant.now();
         System.out.println("starting turn");
         // double goalAngle = m_angle + DriveSubsystem.get().getHeading();
         // if(goalAngle > 180){
@@ -33,8 +31,7 @@ public class TurnCommand extends CommandBase {
         // }else if(goalAngle < -180){
         //     goalAngle += 360;
         // }
-        DriveSubsystem.get().zeroHeading();
-        double goalAngle = m_angle;
+        //DriveSubsystem.get().zeroHeading();
         m_turnController.setGoal(m_angle);
         m_turnController.enableContinuousInput(-180, 180);
         m_turnController.setTolerance(DriveConstants.kTurnTolerance);
@@ -44,12 +41,12 @@ public class TurnCommand extends CommandBase {
         double measurementAngle = DriveSubsystem.get().getHeading();
         SmartDashboard.putNumber("Angle ", measurementAngle);
         double turnOutput = m_turnController.calculate(measurementAngle);
-        DriveSubsystem.get().tankDrive(turnOutput, -turnOutput);
+        DriveSubsystem.get().arcadeDrive(0, turnOutput, -turnOutput);
         
     }
 
     public void end(boolean interupted) {
-      System.out.println("ending turn: " + Duration.between(m_startTime, Instant.now()).toMillis());
+      //System.out.println("ending turn: " + Duration.between(m_startTime, Instant.now()).toMillis());
       DriveSubsystem.get().tankDrive(0, 0);
     }
 

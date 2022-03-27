@@ -4,14 +4,11 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.SparkMaxPIDController.AccelStrategy;
 
-import java.time.Duration;
-import java.time.Instant;
+// import java.time.Duration;
+// import java.time.Instant;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.CANSparkMax.ControlType;
-
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -28,8 +25,7 @@ public class HoodSubsystem extends SubsystemBase implements ShuffleboardLogging 
     private final RelativeEncoder m_encoder = m_motor.getEncoder();
     private final SparkMaxPIDController m_pidController = m_motor.getPIDController();
     private double m_setPosition = 0;
-    private Instant m_startTime;
-    private double m_maxCurrent;
+    //private Instant m_startTime;
 
     /**
      * Initializes a new instance of the {@link HoodSubsystem} class.
@@ -110,7 +106,7 @@ public class HoodSubsystem extends SubsystemBase implements ShuffleboardLogging 
      * @param speed Percent output of the hood
      */
     public void setPercentOutput(Double speed) {
-        m_startTime = Instant.now();
+        //m_startTime = Instant.now();
 
         m_motor.set(speed);
         SmartDashboard.putNumber("the speed of the hood", m_motor.get());
@@ -120,9 +116,9 @@ public class HoodSubsystem extends SubsystemBase implements ShuffleboardLogging 
      * @param position Setpoint (motor rotations)
      */
     public void setPosition(double position) {
-        m_startTime = Instant.now();
+        //m_startTime = Instant.now();
         m_setPosition = position;
-        if(position <= 12.5){
+        if(position <= 15.4){
             m_pidController.setReference(position, CANSparkMax.ControlType.kPosition, HoodConstants.kSlotID);
             //System.out.println("reference position is: " + position);
         }else{
