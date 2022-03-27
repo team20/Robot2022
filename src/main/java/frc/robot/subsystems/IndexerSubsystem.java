@@ -1,9 +1,9 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ColorMatch;
-import com.revrobotics.ColorMatchResult;
-import com.revrobotics.ColorSensorV3;
+// import com.revrobotics.ColorMatch;
+// import com.revrobotics.ColorMatchResult;
+// import com.revrobotics.ColorSensorV3;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -13,13 +13,11 @@ import com.revrobotics.SparkMaxPIDController;
 import frc.robot.ShuffleboardLogging;
 import frc.robot.Constants.IndexerConstants;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.I2C.Port;
+
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLogging{
@@ -48,13 +46,13 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     //private byte m_targetState;
     
     //used to mask out all but the last three bits when calculating sensor states
-    private byte andState = 0x07;
+    // private byte andState = 0x07;
     
     //used to add a bit back in at the RTF position if that is required
-    private byte orState = 0x04;
+    // private byte orState = 0x04;
     
 
-    private double lastSpeed = 0;
+    // private double lastSpeed = 0;
     private static IndexerSubsystem s_indexerSubsystem;
     public static IndexerSubsystem get(){return s_indexerSubsystem;}
     public IndexerSubsystem() {
@@ -135,10 +133,10 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     public void setSpeed(double speed){
         // m_neoController.setReference(speed, ControlType.kVelocity, 0);
         m_motor.set(speed);
-        if(speed !=0){
-            lastSpeed = speed;
-        }
-        else{}
+        // if(speed !=0){
+        //     lastSpeed = speed;
+        // }
+        // else{}
     }
     
     public void setPositionAdvance(){

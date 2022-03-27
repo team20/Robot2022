@@ -6,7 +6,6 @@ package frc.robot.commands.IndexerCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.subsystems.IndexerSubsystem;
 
 /** Add your docs here. */
 public class IndexerCommandComposer {
@@ -42,9 +41,7 @@ public class IndexerCommandComposer {
         //     return new SequentialCommandGroup(new IndexerCommand(IndexerCommand.Operation.CMD_ADV),
         //             new IndexerCommand(IndexerCommand.Operation.CMD_ADV));
         // } else {
-            return new SequentialCommandGroup(new IndexerCommand(IndexerCommand.Operation.CMD_ADV),
-                    new IndexerCommand(IndexerCommand.Operation.CMD_ADV),
-                    new IndexerCommand(IndexerCommand.Operation.CMD_ADV));
+            return new SequentialCommandGroup(new IndexerCommand(IndexerCommand.Operation.CMD_ADV));
         //}
     }
     //public static Command prep(IndexerSubsystem indexerSubsystem){

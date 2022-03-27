@@ -4,9 +4,9 @@
 
 package frc.robot.commands.AutoCommands;
 
-import java.time.Instant;
+// import java.time.Instant;
 
-import java.time.Duration;
+// import java.time.Duration;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -18,22 +18,22 @@ public class DriveDistanceCommand extends CommandBase {
   private double m_distance;
   private double m_startDistanceLeft;
   private double m_startDistanceRight;
-  private Instant m_startTime;
-  private double m_speed;
+  // private Instant m_startTime;
+  // private double m_speed;
 
   private ProfiledPIDController m_controller;
 
   /** Creates a new DriveDistanceCommand. */
   public DriveDistanceCommand(double distance) {
     m_distance = distance;
-    m_speed = 0.4;
+    //m_speed = 0.4;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(DriveSubsystem.get());
   }
 
   public DriveDistanceCommand(double distance, double speed) {
     m_distance = distance;
-    m_speed = speed;
+    //m_speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(DriveSubsystem.get());
   }
@@ -44,7 +44,7 @@ public class DriveDistanceCommand extends CommandBase {
     DriveSubsystem.get().resetEncoders();
     SmartDashboard.putNumber("encoder start left", DriveSubsystem.get().getLeftEncoderPosition());
     SmartDashboard.putNumber("encoder start right", DriveSubsystem.get().getRightEncoderPosition());
-    m_startTime = Instant.now();
+    //m_startTime = Instant.now();
 
     // Creates a ProfiledPIDController
     // Max velocity is 5 meters per second
@@ -55,7 +55,7 @@ public class DriveDistanceCommand extends CommandBase {
 
     m_controller = new ProfiledPIDController(
         kP, kI, kD,
-        new TrapezoidProfile.Constraints(196, 35)); //was 
+        new TrapezoidProfile.Constraints(125, 150)); //was 196 35 
     // m_startDistanceLeft = DriveSubsystem.get().getLeftEncoderPosition();
     // m_startDistanceRight= DriveSubsystem.get().getRightEncoderPosition();
   }
@@ -93,12 +93,10 @@ public class DriveDistanceCommand extends CommandBase {
     SmartDashboard.putNumber("encoder current right", DriveSubsystem.get().getRightEncoderPosition());
     SmartDashboard.putBoolean("DriveDistance finished", (currDistanceLeft - m_startDistanceLeft) > m_distance
         && (currDistanceRight - m_startDistanceRight) > m_distance);
-    double elapsed = Duration.between(m_startTime, Instant.now()).toMillis();
-    if (elapsed < 350) {
-      return false;
-    }
-    return Math.abs(currDistanceLeft - m_startDistanceLeft) > Math.abs(m_distance)
-        && Math.abs(currDistanceRight - m_startDistanceRight) > Math.abs(m_distance);
-
+    
+    // return Math.abs(currDistanceLeft - m_startDistanceLeft) > Math.abs(m_distance)
+    //     && Math.abs(currDistanceRight - m_startDistanceRight) > Math.abs(m_distance);
+    //return m_controller.atGoal();
+    return Math.abs(DriveSubsystem.get().getAverageEncoderDistance()) > Math.abs(m_distance);
   }
 }

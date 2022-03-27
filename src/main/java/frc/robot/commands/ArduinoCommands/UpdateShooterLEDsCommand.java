@@ -3,17 +3,17 @@ package frc.robot.commands.ArduinoCommands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.ArduinoConstants;
+//import frc.robot.Constants.ArduinoConstants;
 import frc.robot.subsystems.ArduinoSubsystem;
 
 public class UpdateShooterLEDsCommand extends CommandBase {
     // private ArduinoSubsystem m_arduinoSubsystem;
-    private Supplier<Byte> m_shooterLEDMode;
+    //private Supplier<Byte> m_shooterLEDMode;
     private Supplier<Byte> m_shooterLEDColor;
 
     public UpdateShooterLEDsCommand(Supplier<Byte> shooterLEDMode, Supplier<Byte> shooterLEDColor) {
         //m_arduinoSubsystem = arduinoSubsystem;
-        m_shooterLEDMode = shooterLEDMode;
+        //m_shooterLEDMode = shooterLEDMode;
         m_shooterLEDColor = shooterLEDColor;
         addRequirements(ArduinoSubsystem.get());
     }

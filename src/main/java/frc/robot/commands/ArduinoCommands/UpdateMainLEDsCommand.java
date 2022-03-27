@@ -3,17 +3,17 @@ package frc.robot.commands.ArduinoCommands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.ArduinoConstants;
+//import frc.robot.Constants.ArduinoConstants;
 import frc.robot.subsystems.ArduinoSubsystem;
 
 public class UpdateMainLEDsCommand extends CommandBase {
     // private ArduinoSubsystem m_arduinoSubsystem;
-    private Supplier<Byte> m_mainLEDMode;
+    //private Supplier<Byte> m_mainLEDMode;
     private Supplier<Byte> m_mainLEDColor;
 
     public UpdateMainLEDsCommand(Supplier<Byte> mainLEDMode, Supplier<Byte> mainLEDColor) {
         //m_arduinoSubsystem = arduinoSubsystem;
-        m_mainLEDMode = mainLEDMode;
+        //m_mainLEDMode = mainLEDMode;
         m_mainLEDColor = mainLEDColor;
         addRequirements(ArduinoSubsystem.get());
     }

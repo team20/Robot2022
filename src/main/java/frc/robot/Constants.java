@@ -6,6 +6,8 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SerialPort;
+
 
 public final class Constants {
 
@@ -121,10 +123,10 @@ public final class Constants {
 		// navX stuff
 		public static final SPI.Port kGyroPort = SPI.Port.kMXP;
 		public static final boolean kGyroReversed = true;
-		public static final double kTurnP = 0.01900; //was 0.02 0.001
-		public static final double kTurnI = 0;//0.00800; //was 0.03
-		public static final double kTurnD = 0;//-0.0000020; //0.0
-		public static final double kTurnTolerance = 0.1;
+		public static final double kTurnP = 0.0125; //was 0.005
+		public static final double kTurnI = 0; //was 0.003
+		public static final double kTurnD = 0; //0.0
+		public static final double kTurnTolerance = 0.5;
 
 		// TODO these need to be updated to reflect this year's robot
 		public static final double ksVolts = 0.196;
@@ -198,13 +200,13 @@ public final class Constants {
 		public static final int kSmartCurrentLimit = 50;
 		public static final double kPeakCurrentLimit = 60;
 		public static final int kPeakCurrentDurationMillis = 100;
-		public static final double kP = 0.000_08; // 0.000_375; then .0004, was 0.00008
+		public static final double kP = 0.000_1;//08; // 0.000_375; then .0004, was 0.00008
 		public static final double kI = 0;
-		public static final double kD = 0.000_0125;// 0.000_03;
+		public static final double kD = 0.000_0250;//0125;// 0.000_03;
 		public static final double kIz = 0.0;
-		public static final double kFF = .000_0804;// 0.000_193;
+		public static final double kFF = .000_1051;//0954;// 0.000_193;
 		public static final double kMaxOutput = 1;
-		public static final double kMinOutput = -1;
+		public static final double kMinOutput = 0;
 		public static final double kGearRatio = 1 / 2.4;
 		public static final double kAllowedErrorPercent = 8; //was 5
 	}
@@ -213,8 +215,8 @@ public final class Constants {
 		public static final int kMotorPort = 7;
 		public static final boolean kInvert = false;
 		public static final int kSmartCurrentLimit = 60;
-		public static final double kP = 0.06;
-		public static final double kI = 0.0001;
+		public static final double kP = 0.13;//0.06;
+		public static final double kI = 0;//0.0001;
 		public static final double kD = 0.0;
 		public static final double kIz = 0;
 		public static final double kFF = 0;
@@ -224,7 +226,7 @@ public final class Constants {
 		public static final double kMinVelocity = 0;
 		public static final double kMaxAcel = 20_000;
 		public static final double kMaxVelocity = 10_000;
-		public static final double kAllowedError = 0.01;
+		public static final double kAllowedError = 0.1;
 
 		public static final double kMinEncoderValue = 0.0;
 		public static final double kMaxEncoderValue = 42.0;

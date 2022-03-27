@@ -10,7 +10,7 @@ public class PixyTargetCommand extends CommandBase {
 
     private final DriveSubsystem m_driveSubsystem;
     private final ArduinoSubsystem m_arduinoSubsystem;
-    private Supplier<Double> m_speed;
+    //private Supplier<Double> m_speed;
 
     /**
      * Initializes a new instance of the {@link TargetCommand} class.
@@ -21,7 +21,7 @@ public class PixyTargetCommand extends CommandBase {
     public PixyTargetCommand(DriveSubsystem driveSubsystem, ArduinoSubsystem arduinoSubsystem, Supplier<Double> speed) {
         m_driveSubsystem = driveSubsystem;
         m_arduinoSubsystem = arduinoSubsystem;
-        m_speed = speed;
+        //m_speed = speed;
         addRequirements(m_driveSubsystem, m_arduinoSubsystem);
     }
 
