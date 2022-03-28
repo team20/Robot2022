@@ -33,16 +33,17 @@ public class ShootCommandComposer {
     double flywheelSetpoint;    
     
    if (shootClass==Operation.LIMELIGHT_REGRESSION) {
-    //double angle = 0;  
       double angle = LimelightSubsystem.get().getYAngle();
-      System.out.println("the angle is: " + angle);
-      // RPM THEN ANGLE
       flywheelSetpoint = -17.589*angle + 2694.4;
-      //System.out.println("flywheel setpoint: " + flywheelSetpoint);
       hoodSetpoint = -0.2671*angle + 12.545;
     }
-      // shootClass.equals("REGRESSION")
-
+    else if (shootClass==Operation.LIMELIGHT_LINEAR) {
+      double yAngle = LimelightSubsystem.get().getYAngle();
+      LinearRangeFinder finder = new LinearRangeFinder();
+      double[] angleAndRPM = finder.getAngleAndRPM(yAngle);
+      hoodSetpoint = angleAndRPM[0];
+      flywheelSetpoint = angleAndRPM[1];
+    }
     else if(shootClass==Operation.PRESET_TARMAC){
       // hoodSetpoint=8;
       //flywheelSetpoint=2400;
