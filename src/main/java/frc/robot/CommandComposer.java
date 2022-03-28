@@ -28,7 +28,7 @@ public class CommandComposer {
         // base of the hub is 8.75" offset from the tape at the top
         // double distanceBase = (LimelightSubsystem.get().getDistance() - 8.75) / 12.0;
 
-        Command aimCommand = new LimelightTurnCommand(LimelightSubsystem.get(), DriveSubsystem.get());
+        Command aimCommand = new LimelightTurnCommand(0);
         //Command aimCommand = new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem, m_arduinoSubsystem);
 
         Command startFlywheelAndPrepRTS = new ParallelCommandGroup(new DeferredCommand(() -> ShootCommandComposer.getShootCommand(10, shootType)));
@@ -208,7 +208,9 @@ public class CommandComposer {
     // }
 
     public static Command testingTurn(double angle) {
-        return new TurnCommand(DriveSubsystem.get(), angle).withTimeout(1);
+        //return new TurnCommand(DriveSubsystem.get(), angle).withTimeout(1);
+        return new TurnCommand(angle).withTimeout(1);
+
     }
 
     public static Command testingDistance(double distance) {
@@ -468,9 +470,9 @@ public class CommandComposer {
     public static Command getTwoToThreeAutoCommandTest(){//2,3
         return new SequentialCommandGroup(
             //new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
-            new TurnCommand(DriveSubsystem.get(), -28).withTimeout(1), //was 1.5
+            new TurnCommand(-28).withTimeout(1), //was 1.5
             new ParallelCommandGroup(new DriveDistanceCommand(60.0), getAutoLoadCommand()).withTimeout(4),
-            new TurnCommand(DriveSubsystem.get(), 20).withTimeout(1), //was 1.5
+            new TurnCommand(20).withTimeout(1), //was 1.5
             new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
             new ParallelCommandGroup(
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
@@ -480,7 +482,7 @@ public class CommandComposer {
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
-            new TurnCommand(DriveSubsystem.get(), -29).withTimeout(1),//29 for red
+            new TurnCommand(-29).withTimeout(1),//29 for red
             new ParallelCommandGroup(new DriveDistanceCommand(175), getAutoLoadCommand().withTimeout(4)),
             //getAutoLoadCommand().withTimeout(1),
             //new IntakeCommand(IntakeCommand.Operation.CMD_STOP), 
@@ -497,7 +499,7 @@ public class CommandComposer {
                     new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
                     new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4050)).withTimeout(1)
                ),
-            new TurnCommand(DriveSubsystem.get(), 24).withTimeout(1), //was 28 now moving to -28
+            new TurnCommand(24).withTimeout(1), //was 28 now moving to -28
             //new ParallelCommandGroup(
             //    new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
             //    new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4150)).withTimeout(1),

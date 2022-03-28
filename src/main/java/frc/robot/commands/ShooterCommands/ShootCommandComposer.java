@@ -8,6 +8,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.LinearRangeFinder;
+import frc.robot.RangeFinder;
+import frc.robot.RegressionRangeFinder;
+import frc.robot.subsystems.LimelightSubsystem;
 // import frc.robot.LinearRangeFinder;
 // import frc.robot.RangeFinder;
 // import frc.robot.RegressionRangeFinder;
@@ -19,25 +23,34 @@ public class ShootCommandComposer {
     PRESET_LAUNCHPAD,
     PRESET_TARMAC,
     PRESET_FENDER_HIGH,
-    PRESET_FENDER_LOW
+    PRESET_FENDER_LOW,
+    PRESET_SAFE
   }
 
   public static Command getShootCommand(double distance, Operation shootClass) {
     
-    // RangeFinder distanceClass;
-    // if (shootClass.equals("LINEAR")) {
-    //   distanceClass = new LinearRangeFinder();
-    // } else {
-    //   // shootClass.equals("REGRESSION")
-    //   distanceClass = new RegressionRangeFinder();
     double hoodSetpoint;
-    double flywheelSetpoint;
-    if(shootClass==Operation.PRESET_TARMAC){
+    double flywheelSetpoint;    
+    
+   if (shootClass==Operation.LIMELIGHT_REGRESSION) {
+    //double angle = 0;  
+      double angle = LimelightSubsystem.get().getYAngle();
+      System.out.println("the angle is: " + angle);
+      // RPM THEN ANGLE
+      flywheelSetpoint = -17.589*angle + 2694.4;
+      //System.out.println("flywheel setpoint: " + flywheelSetpoint);
+      hoodSetpoint = -0.2671*angle + 12.545;
+    }
+      // shootClass.equals("REGRESSION")
+
+    else if(shootClass==Operation.PRESET_TARMAC){
       // hoodSetpoint=8;
-      // flywheelSetpoint=2400;
-      hoodSetpoint=SmartDashboard.getNumber("Hood Setpoint", 0);
-      flywheelSetpoint=SmartDashboard.getNumber("Flywheel RPM", 0);
+      //flywheelSetpoint=2400;
+    //  hoodSetpoint=SmartDashboard.getNumber("Hood Setpoint", 0);
+    //  flywheelSetpoint=SmartDashboard.getNumber("Flywheel RPM", 0);
       //was: hood 8.5, flywheel 4000
+      hoodSetpoint = 14.5;
+      flywheelSetpoint = 2900;
     }
     else if(shootClass==Operation.PRESET_FENDER_LOW){
       hoodSetpoint=9.59;
@@ -47,9 +60,9 @@ public class ShootCommandComposer {
       hoodSetpoint=0;
       flywheelSetpoint=2300;//2500;//3100;//3700;
     }
-    else if(shootClass==Operation.PRESET_LAUNCHPAD){
-      hoodSetpoint=10;
-      flywheelSetpoint=5000;
+    else if(shootClass==Operation.PRESET_SAFE){
+      hoodSetpoint=9;
+      flywheelSetpoint=2500;
     }
     else{
       hoodSetpoint=SmartDashboard.getNumber("Hood Setpoint", 0);
