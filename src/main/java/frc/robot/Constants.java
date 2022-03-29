@@ -202,9 +202,9 @@ public final class Constants {
 		public static final int kPeakCurrentDurationMillis = 100;
 		public static final double kP = 0.000_1;//08; // 0.000_375; then .0004, was 0.00008
 		public static final double kI = 0;
-		public static final double kD = 0.000_0250;//0125;// 0.000_03;
+		public static final double kD = 0;//0.000_0250;//0125;// 0.000_03;
 		public static final double kIz = 0.0;
-		public static final double kFF = .000_1051;//0954;// 0.000_193;
+		public static final double kFF = .000_1050; //.000_1051;//0954;// 0.000_193;
 		public static final double kMaxOutput = 1;
 		public static final double kMinOutput = 0;
 		public static final double kGearRatio = 1 / 2.4;

@@ -16,8 +16,8 @@ import frc.robot.subsystems.LimelightSubsystem;
 
 public class LimelightTurnCommand extends CommandBase {
 
-    private final LimelightSubsystem m_limelightSubsystem;
-    private final DriveSubsystem m_driveSubsystem;
+    // private final LimelightSubsystem m_limelightSubsystem;
+    // private final DriveSubsystem m_driveSubsystem;
     // private final ArduinoSubsystem m_arduinoSubsystem;
 
     private final PIDController m_turnController = new PIDController(
@@ -33,25 +33,24 @@ public class LimelightTurnCommand extends CommandBase {
      * @param driveSubsystem     The drivetrain subsystem to be used
      */
 
-    public LimelightTurnCommand(LimelightSubsystem limelightSubsystem, DriveSubsystem driveSubsystem,
-            double setpointAngle) {
+    public LimelightTurnCommand(double setpointAngle) {
 
         // ArduinoSubsystem arduinoSubsystem, double setpointAngle) {
 
-        m_limelightSubsystem = limelightSubsystem;
-        m_driveSubsystem = driveSubsystem;
+       // m_limelightSubsystem = limelightSubsystem;
+      //  m_driveSubsystem = driveSubsystem;
         // m_arduinoSubsystem = arduinoSubsystem;
         m_setpointAngle = setpointAngle;
 
-        addRequirements(m_limelightSubsystem, m_driveSubsystem);
+        addRequirements(LimelightSubsystem.get(), DriveSubsystem.get());
     }
 
-    public LimelightTurnCommand(LimelightSubsystem limelightSubsystem, DriveSubsystem driveSubsystem) {
-        m_limelightSubsystem = limelightSubsystem;
-        m_driveSubsystem = driveSubsystem;
-        m_setpointAngle = 0; // default setpoint angle is 0(directly in front of the robot)
-        addRequirements(m_limelightSubsystem, m_driveSubsystem);
-    }
+    // public LimelightTurnCommand(LimelightSubsystem limelightSubsystem, DriveSubsystem driveSubsystem) {
+    //     m_limelightSubsystem = limelightSubsystem;
+    //     m_driveSubsystem = driveSubsystem;
+    //     m_setpointAngle = 0; // default setpoint angle is 0(directly in front of the robot)
+    //     addRequirements(m_limelightSubsystem, m_driveSubsystem);
+    // }
 
     // public LimelightTurnCommand(LimelightSubsystem limelightSubsystem,
     // DriveSubsystem driveSubsystem,
@@ -82,7 +81,7 @@ public class LimelightTurnCommand extends CommandBase {
      */
     public void execute() {
         //m_limelightSubsystem.turnOnLight();
-        double measurementAngle = m_limelightSubsystem.getXAngle();
+        double measurementAngle = LimelightSubsystem.get().getXAngle();
         double turnOutput = m_turnController.calculate(measurementAngle);
         // Apply max power limit
         if (Math.abs(turnOutput) > .25) {
@@ -91,18 +90,18 @@ public class LimelightTurnCommand extends CommandBase {
 
         // Apply min power limit
         if (Math.abs(turnOutput) < .05) {
-            turnOutput = Math.signum(turnOutput) * 0.05;
+            turnOutput = Math.signum(turnOutput) * 0.1;
         }
 
-        m_driveSubsystem.tankDrive(-turnOutput, turnOutput); // Flip these if the bot turns the wrong direction
+        DriveSubsystem.get().tankDrive(-turnOutput, turnOutput); // Flip these if the bot turns the wrong direction
     }
 
     /**
      * Stop the drivetrain at the end of the command
      */
     public void end(boolean interupted) {
-        m_limelightSubsystem.turnOffLight();
-        m_driveSubsystem.tankDrive(0, 0);
+      //  m_limelightSubsystem.turnOffLight();
+        DriveSubsystem.get().tankDrive(0, 0);
 
         // m_arduinoSubsystem.resetLEDs();
         // new UpdateShooterLEDsCommand(() -> LEDModes.kTheaterLights,
@@ -111,7 +110,7 @@ public class LimelightTurnCommand extends CommandBase {
 
     public boolean isFinished() { // TODO: assumes you would only press the button once, no holding down
         double elapsed = Duration.between(m_startTime, Instant.now()).toMillis();
-        if (elapsed < 10000000) {
+        if (elapsed < 100) {
             return false;
         }
         return m_turnController.atSetpoint();

@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.ControllerConstants;
@@ -132,7 +133,7 @@ public class RobotContainer {
 
                 // --------------SQUARE BUTTON--------------
                 new JoystickButton(m_driverController, ControllerConstants.Button.kSquare)
-                                .whenHeld(new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem));
+                                .whenHeld(new LimelightTurnCommand(0));
 
                 // --------------CIRCLE BUTTON--------------
                 new JoystickButton(m_driverController, ControllerConstants.Button.kCircle)
@@ -326,11 +327,14 @@ public class RobotContainer {
 
                 // --------------TRIANGLE BUTTON--------------
                 // --------Ramp up for launchpad shot---------
+
+                //TODO TODO TODO YOU COMMENTED THIS OUT!!! FOR EXPERIMENTAL LIMELIGHT CODE!!!!
+                            
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
                                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
                                                 .negate())
                                 .whileActiveOnce(CommandComposer.getPresetShootCommand(
-                                                ShootCommandComposer.Operation.PRESET_LAUNCHPAD));
+                                                ShootCommandComposer.Operation.PRESET_SAFE));
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
                                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
                                                 .negate())
@@ -341,10 +345,16 @@ public class RobotContainer {
                 // --------------SQUARE BUTTON--------------
                 // --------Ramp up for tarmac shot---------
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
-                                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                                                .negate())
-                                .whileActiveOnce(CommandComposer
-                                                .getPresetShootCommand(ShootCommandComposer.Operation.PRESET_TARMAC));
+                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                                .negate())
+                .whileActiveOnce(new SequentialCommandGroup(new LimelightTurnCommand(-2), CommandComposer
+                                .getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION)));
+                        
+                // new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
+                //                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                //                                 .negate())
+                //                 .whileActiveOnce(CommandComposer
+                //                                 .getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION));
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
                                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
                                                 .negate())

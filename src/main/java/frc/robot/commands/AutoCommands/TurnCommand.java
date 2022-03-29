@@ -46,7 +46,7 @@ public class TurnCommand extends CommandBase {
     }
 
     private double getError(double measurementAngle){
-        double error = m_setpointAngle - measurementAngle;
+        double error = m_angle - measurementAngle;
         if(error > 180){
             error -= 360;
         }else if(error < -180){
