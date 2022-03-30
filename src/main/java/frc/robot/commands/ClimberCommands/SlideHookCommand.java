@@ -39,7 +39,7 @@ public class SlideHookCommand extends CommandBase {
     public void execute() {
         SlideHookSubsystem subsystem = SlideHookSubsystem.get();
         if(m_operation == Operation.CMD_POSITION){
-            subsystem.setPosition(m_param/SlideHookConstants.kInchesPerQuarterTurn);
+            subsystem.setPosition(m_param);
             // System.out.println("Setting slide hook position to "+m_param+ " inches");
         }
         else if (m_operation == Operation.CMD_MOVE){

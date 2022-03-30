@@ -311,7 +311,7 @@ public final class Constants {
 		public static final int kRollingAverageSize = 10; // TODO: change, experiment
 	}
 
-	public static final class SlideHookConstants {
+	public static final class SlideHookConstants { //0 to -85
 		public static final int kMasterPort = 6;
 		public static final int kFollowerPort = 8;
 		public static final boolean kMasterInvert = false;
@@ -333,10 +333,11 @@ public final class Constants {
 		public static final double kInchesPerQuarterTurn = .125; // .125 inches of travel per quarter turn (unit
 																	// position)
 		public static final double kStartPosition = 0;// inches
-		public static final double kToTelescopePosition = 2;// inches
+		public static final double kMaxPosition = -85;// inches
+		public static final double kToTelescopePosition = -85*.35;// inches
 
-		public static final double kTelescopeBehindRung = 24;// inches
-		public static final double kTelescopeTouchingRung = 20;// inches
+		public static final double kTelescopeBehindRung = -85;// inches
+		public static final double kTelescopeTouchingRung = -75;// inches
 
 		public static final double kControlled = 13;// inches
 		public static final double kHookVelocity=.5;
@@ -370,7 +371,7 @@ public final class Constants {
 
 		public static final double kExtendedPosition = 170;// inches
 		public static final double kRetractedPosition = 0;// inches
-		public static final double kDisengageFromRetractedPosition = 5;// inches
+		public static final double kDisengageFromRetractedPosition = 10;// inches
 
 		public static final double kControlled = 35;// inches
 		public static final double kDisengageFromControlledPosition = 30;// inches

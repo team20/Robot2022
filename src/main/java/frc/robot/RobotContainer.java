@@ -282,11 +282,9 @@ public class RobotContainer {
                 // .whenActive(CommandComposer.getTraversalClimbCommand());
 
                 // left bumper and square button: high climb
-                // new JoystickButton(m_operatorController,
-                // ControllerConstants.Button.kLeftBumper)
-                // .and(new JoystickButton(m_operatorController,
-                // ControllerConstants.Button.kTriangle))
-                // .whenActive(CommandComposer.getHighClimbCommand());
+                new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle))
+                        .whenActive(CommandComposer.getHighClimbCommand());
 
                 // Slide hook variable speed (when L bumper held and R joystick pressed)
                 // new JoystickButton(m_operatorController,
