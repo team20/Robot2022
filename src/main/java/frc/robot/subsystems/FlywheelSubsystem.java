@@ -66,13 +66,13 @@ public class FlywheelSubsystem extends SubsystemBase implements ShuffleboardLogg
     }
 
     public void periodic() {
-        SmartDashboard.putBoolean("Flywheel at Setpoint", atSetpoint());
-        SmartDashboard.putNumber("Flywheel Velocity", getVelocity());
-        SmartDashboard.putNumber("Flywheel Setpoint", m_setVelocity);
-        if (m_setVelocity == 0) {
+        // SmartDashboard.putBoolean("Flywheel at Setpoint", atSetpoint());
+        // SmartDashboard.putNumber("Flywheel Velocity", getVelocity());
+        // SmartDashboard.putNumber("Flywheel Setpoint", m_setVelocity);
+        if (m_setVelocity == 0 && Math.abs(m_neoEncoderMaster.getVelocity()) > 0.05) {
             m_neoFlywheelMaster.stopMotor();
         } else {
-            m_neoController.setReference(m_setVelocity, ControlType.kVelocity, 0);
+           m_neoController.setReference(m_setVelocity, ControlType.kVelocity, 0);
            // m_neoFlywheelMaster.set(neoBangBangController.calculate(m_neoEncoderMaster.getVelocity(), m_setVelocity));
         }
 
@@ -109,6 +109,7 @@ public class FlywheelSubsystem extends SubsystemBase implements ShuffleboardLogg
         //System.out.println("VELOCITY:" + velocity);
         //m_startTime = Instant.now();
         m_setVelocity = velocity;
+        m_neoController.setReference(m_setVelocity, ControlType.kVelocity, 0);
     }
 
     /**
@@ -118,17 +119,21 @@ public class FlywheelSubsystem extends SubsystemBase implements ShuffleboardLogg
         return Math.abs(getVelocity() - getSetpoint()) < 50;
     }
 
-    public void configureShuffleboard() {
-        ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Flywheel");
-        shuffleboardTab.addNumber("Flywheel Velocity", () -> getVelocity()).withSize(4, 2).withPosition(0, 0)
-                .withWidget(BuiltInWidgets.kGraph);
-        shuffleboardTab.addBoolean("At setpoint", () -> atSetpoint()).withSize(1, 1).withPosition(0, 2)
-                .withWidget(BuiltInWidgets.kBooleanBox);
-        // shuffleboardTab.addNumber("Current draw", () ->
-        // m_neoFlywheelMaster.getOutputCurrent() +
-        // m_neoFlywheelFollower.getOutputCurrent());
-        // shuffleboardTab.addNumber("Setpoint", () ->
-        // getSetpoint()).withWidget(BuiltInWidgets.kTextView).withSize(1,
-        // 1).withPosition(5, 1);
+    public void configureShuffleboard(boolean inCompMode) {
+
+        if(!inCompMode){
+            ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Flywheel");
+            shuffleboardTab.addNumber("Flywheel Velocity", () -> getVelocity()).withSize(4, 2).withPosition(0, 0)
+                    .withWidget(BuiltInWidgets.kGraph);
+            shuffleboardTab.addBoolean("At setpoint", () -> atSetpoint()).withSize(1, 1).withPosition(0, 2)
+                    .withWidget(BuiltInWidgets.kBooleanBox);
+            // shuffleboardTab.addNumber("Current draw", () ->
+            // m_neoFlywheelMaster.getOutputCurrent() +
+            // m_neoFlywheelFollower.getOutputCurrent());
+            // shuffleboardTab.addNumber("Setpoint", () ->
+            // getSetpoint()).withWidget(BuiltInWidgets.kTextView).withSize(1,
+            // 1).withPosition(5, 1);
+        }
+        
     }
 }

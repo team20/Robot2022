@@ -77,7 +77,7 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
         // } 
         if(atSetpoint()){
             // m_pidController.setReference(m_encoder.getPosition(), ControlType.kPosition, 0);
-            m_motor.stopMotor();
+            //m_motor.stopMotor();
         }
     }
 
@@ -165,13 +165,16 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
         setPosition(0);
     }
 
-    public void configureShuffleboard() {
-        ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Arm");
-        shuffleboardTab.addNumber("Encoder Position", () -> getPosition()).withSize(4, 2).withPosition(0, 0)
-                .withWidget(BuiltInWidgets.kGraph);
-        shuffleboardTab.addNumber("Encoder Velocity", () -> getVelocity()).withSize(4, 2).withPosition(4, 0)
-                .withWidget(BuiltInWidgets.kGraph);
-        shuffleboardTab.addBoolean("At setpoint", () -> atSetpoint()).withSize(1, 1).withPosition(0, 2)
-                .withWidget(BuiltInWidgets.kBooleanBox);
+    public void configureShuffleboard(boolean inCompMode) {
+        if(!inCompMode){
+            ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Arm");
+            shuffleboardTab.addNumber("Encoder Position", () -> getPosition()).withSize(4, 2).withPosition(0, 0)
+                    .withWidget(BuiltInWidgets.kGraph);
+            shuffleboardTab.addNumber("Encoder Velocity", () -> getVelocity()).withSize(4, 2).withPosition(4, 0)
+                    .withWidget(BuiltInWidgets.kGraph);
+            shuffleboardTab.addBoolean("At setpoint", () -> atSetpoint()).withSize(1, 1).withPosition(0, 2)
+                    .withWidget(BuiltInWidgets.kBooleanBox);
+        }
+        
     }
 }
