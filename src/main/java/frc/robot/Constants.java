@@ -316,7 +316,7 @@ public final class Constants {
 		public static final int kFollowerPort = 8;
 		public static final boolean kMasterInvert = false;
 		public static final boolean kFollowerOppose = false;
-		public static final int kSmartCurrentLimit = 60;// TODO: change
+		public static final int kSmartCurrentLimit = 40;// TODO: change
 		public static final double kP = .012; // TODO: tune PID
 		public static final double kI = .000001;//0.000001249999968422344;
 		public static final double kD = 0;//0.000001249999968422344;// 0.00001249999968422344;
@@ -334,7 +334,7 @@ public final class Constants {
 																	// position)
 		public static final double kStartPosition = 0;// inches
 		public static final double kMaxPosition = -85;// inches
-		public static final double kToTelescopePosition = -85*.35;// inches
+		public static final double kToTelescopePosition = -17;// inches
 
 		public static final double kTelescopeBehindRung = -85;// inches
 		public static final double kTelescopeTouchingRung = -75;// inches
@@ -355,7 +355,7 @@ public final class Constants {
 		public static final int kFollowerPort = 11; //TODO CHANGE BACK TO 12
 		public static final boolean kMasterInvert = true;
 		public static final boolean kFollowerOppose = true;
-		public static final int kSmartCurrentLimit = 600;// TODO: change
+		public static final int kSmartCurrentLimit = 50;// TODO: change
 		public static final double kP = .03; // TODO: tune PID
 		public static final double kI = 0.000001;
 		public static final double kD = 0.000001249999968422344;// 0.000_03;
@@ -370,7 +370,7 @@ public final class Constants {
 		public static final double kAllowedError = 2;
 
 		public static final double kExtendedPosition = 170;// inches
-		public static final double kRetractedPosition = -5;// inches
+		public static final double kRetractedPosition = -2;// inches
 		public static final double kDisengageFromRetractedPosition = 10;// inches
 
 		public static final double kControlled = 35;// inches

@@ -43,7 +43,7 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
         m_followerMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         m_followerMotor.enableVoltageCompensation(12);
         m_followerMotor.setSmartCurrentLimit(TelescopeHookConstants.kSmartCurrentLimit);
-        m_followerMotor.follow(m_masterMotor, TelescopeHookConstants.kFollowerOppose);
+        // m_followerMotor.follow(m_masterMotor, TelescopeHookConstants.kFollowerOppose);
 
         m_pidController.setP(TelescopeHookConstants.kP);
         m_pidController.setI(TelescopeHookConstants.kI);
