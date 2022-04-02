@@ -10,7 +10,6 @@ public class TelescopeHookCommand extends CommandBase {
     public enum Operation{
         CMD_POSITION,
         CMD_MOVE,
-        CMD_MOVE_FOLLOWER,
         CMD_ZERO_ENCODERS
     }
     private final Operation m_operation;
@@ -32,8 +31,6 @@ public class TelescopeHookCommand extends CommandBase {
             // System.out.println("Motor current is "+subsystem.getOutputCurrent());
         }else if(m_operation == Operation.CMD_MOVE){
             subsystem.setSpeed(m_param);
-        }else if(m_operation == Operation.CMD_MOVE_FOLLOWER){
-            subsystem.setFollowerSpeed(m_param);
         } else if (m_operation == Operation.CMD_ZERO_ENCODERS) {
             subsystem.resetEncoder();
         }
@@ -43,7 +40,7 @@ public class TelescopeHookCommand extends CommandBase {
     @Override
     public boolean isFinished(){
         if(m_operation == Operation.CMD_POSITION){
-            return TelescopeHookSubsystem.get().atSetpoint();
+            return TelescopeHookSubsystem.get().atleftSetpoint();
         }
         return false;
     }

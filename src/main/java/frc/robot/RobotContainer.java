@@ -223,11 +223,6 @@ public class RobotContainer {
                 //                 .whenHeld(new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem));
                 // new POVButton(m_driverController, DPad.kLeft)
                 //         .whenHeld(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, 0.2));
-               //MAKE THIS MANUAL DRIVE LEFT
-               new POVButton(m_driverController, DPad.kLeft)
-                                .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE_FOLLOWER, -.2));
-                                new POVButton(m_driverController, DPad.kLeft)
-                                .whenReleased(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE_FOLLOWER, 0));
                 // ---------------LEFT BUMPER---------------
                 // -------------Fine Steer Left------------
                 new JoystickButton(m_driverController, Button.kLeftBumper)
