@@ -77,7 +77,7 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
         // } 
         if(atSetpoint() && Math.abs(m_encoder.getVelocity()) > 0.05){
             // m_pidController.setReference(m_encoder.getPosition(), ControlType.kPosition, 0);
-            m_motor.stopMotor();
+            //m_motor.stopMotor();
         }
     }
 

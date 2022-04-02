@@ -131,6 +131,7 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
     public void setSpeed(double speed){
       m_masterMotor.set(speed);
   }
+
     public void configureShuffleboard(boolean inCompetitionMode) {
         if (!inCompetitionMode) {
         ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Slide Hook");

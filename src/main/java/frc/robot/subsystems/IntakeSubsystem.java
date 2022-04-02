@@ -36,6 +36,7 @@ public class IntakeSubsystem extends SubsystemBase implements ShuffleboardLoggin
 		//System.out.println("Setting % output: " + speed);
 		m_motor.set(speed);
 	}
+
 	public void configureShuffleboard(boolean inCompetitionMode) {
 		if (!inCompetitionMode) {
 		//ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Intake");

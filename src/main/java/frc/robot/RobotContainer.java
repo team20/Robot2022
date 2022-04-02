@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -75,7 +76,7 @@ public class RobotContainer {
                 m_limelightSubsystem.turnOffLight();
                 //m_limelightSubsystem.turnOnLight();
                 configureShuffleboard();
-                
+                CommandScheduler.getInstance().unregisterSubsystem(m_arduinoSubsystem);
                 m_autoChooser.addOption("Test turn", new TurnCommand(30));
                 m_autoChooser.addOption("Test shots", CommandComposer.testShots());
                 m_autoChooser.addOption("Test drive", new DriveDistanceCommand(157));

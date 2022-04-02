@@ -234,6 +234,7 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     // public double getLastSpeed(){
     //     return lastSpeed;
     // }
+
     public void configureShuffleboard(boolean inCompetitionMode){
         if (!inCompetitionMode) {
         ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Color");

@@ -56,8 +56,8 @@ public class HoodSubsystem extends SubsystemBase implements ShuffleboardLogging 
     }
 
     public void periodic() {
-        //SmartDashboard.putNumber("Hood current", m_motor.getOutputCurrent());
-        //SmartDashboard.putNumber("Hood position", m_encoder.getPosition());
+        // SmartDashboard.putNumber("Hood current", m_motor.getOutputCurrent());
+        // SmartDashboard.putNumber("Hood position", m_encoder.getPosition());
         //System.out.println("output current is: " + m_motor.getOutputCurrent());
         // if(m_motor.getOutputCurrent() > m_maxCurrent && Duration.between(m_startTime, Instant.now()).toMillis() > 100){
         //     m_maxCurrent = m_motor.getOutputCurrent();
