@@ -318,17 +318,17 @@ public final class Constants {
 		public static final boolean kFollowerOppose = false;
 		public static final int kSmartCurrentLimit = 60;// TODO: change
 		public static final double kP = .012; // TODO: tune PID
-		public static final double kI = 0.00000001249999968422344;
-		public static final double kD = 0.000001249999968422344;// 0.00001249999968422344;
+		public static final double kI = .000001;//0.000001249999968422344;
+		public static final double kD = 0;//0.000001249999968422344;// 0.00001249999968422344;
 		public static final double kIz = 0.0;
-		public static final double kFF = 0.00008040000102482736;// 0.000_193;
+		public static final double kFF = 0;//0.00008040000102482736;// 0.000_193;
 		public static final double kMaxOutput = 1;
 		public static final double kMinOutput = -1;
 		public static final int kSlotID = 0;
 		public static final double kMinVelocity = 0;
 		public static final double kMaxAcel = 20_000;
 		public static final double kMaxVelocity = 10_000;
-		public static final double kAllowedError = .25;
+		public static final double kAllowedError = 2;
 
 		public static final double kInchesPerQuarterTurn = .125; // .125 inches of travel per quarter turn (unit
 																	// position)
@@ -357,7 +357,7 @@ public final class Constants {
 		public static final boolean kFollowerOppose = true;
 		public static final int kSmartCurrentLimit = 600;// TODO: change
 		public static final double kP = .03; // TODO: tune PID
-		public static final double kI = 0;
+		public static final double kI = 0.000001;
 		public static final double kD = 0.000001249999968422344;// 0.000_03;
 		public static final double kIz = 0.0;
 		public static final double kFF = 0.00008040000102482736;// 0.000_193;
@@ -367,10 +367,10 @@ public final class Constants {
 		public static final double kMinVelocity = 0;
 		public static final double kMaxAcel = 20_000;
 		public static final double kMaxVelocity = 10_000;
-		public static final double kAllowedError = .5;
+		public static final double kAllowedError = 2;
 
 		public static final double kExtendedPosition = 170;// inches
-		public static final double kRetractedPosition = 0;// inches
+		public static final double kRetractedPosition = -5;// inches
 		public static final double kDisengageFromRetractedPosition = 10;// inches
 
 		public static final double kControlled = 35;// inches

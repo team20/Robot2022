@@ -48,6 +48,9 @@ public class TelescopeHookCommand extends CommandBase {
         return false;
     }
     public void end(boolean interrupted){
-        TelescopeHookSubsystem.get().setSpeed(0.0);
+        if(m_operation != Operation.CMD_POSITION){
+            TelescopeHookSubsystem.get().setSpeed(0.0);
+
+        }
     }
 }

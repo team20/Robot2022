@@ -70,7 +70,7 @@ public class RobotContainer {
          */
         public RobotContainer() {
 
-                //m_limelightSubsystem.turnOffLight();
+                // m_limelightSubsystem.turnOffLight();
                  m_limelightSubsystem.turnOnLight();
                 configureShuffleboard();
                 
@@ -246,6 +246,7 @@ public class RobotContainer {
                  
                 // -------------------LEFT TRIGGER------------------
 
+
                 // ---------------RIGHT TRIGGER---------------
                 // ----------------Arcade Drive----------------
                 m_driveSubsystem.setDefaultCommand(
@@ -282,9 +283,9 @@ public class RobotContainer {
                 // .whenActive(CommandComposer.getTraversalClimbCommand());
 
                 // left bumper and square button: high climb
-                new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle))
-                        .whenActive(CommandComposer.getHighClimbCommand());
+                // new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                // .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle))
+                //         .whenActive(CommandComposer.getHighClimbCommand());
 
                 // Slide hook variable speed (when L bumper held and R joystick pressed)
                 // new JoystickButton(m_operatorController,
@@ -455,11 +456,12 @@ public class RobotContainer {
 
                 // ------------------SHARE BUTTON--------------------
                 // -----------Run the indexer backwards--------------
+                // new JoystickButton(m_operatorController, ControllerConstants.Button.kShare)
+                //                 .whenHeld(new IndexerCommand(IndexerCommand.Operation.CMD_REV_MAN));
+                // new JoystickButton(m_operatorController, ControllerConstants.Button.kShare)
+                //                 .whenReleased(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kShare)
-                                .whenHeld(new IndexerCommand(IndexerCommand.Operation.CMD_REV_MAN));
-                new JoystickButton(m_operatorController, ControllerConstants.Button.kShare)
-                                .whenReleased(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
-
+                .whenActive(CommandComposer.getHighClimbCommand());
                 // ------------------OPTIONS BUTTON--------------------
                 // ------Run the indexer and intake backwards----------
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kOptions)
@@ -472,7 +474,7 @@ public class RobotContainer {
                                                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP)));
 
                 // ------------------TRACKPAD BUTTON--------------------
-
+                
                 // ------------------NOT YET FINALIZED------------------
                 new JoystickButton(m_operatorController, Constants.ControllerConstants.Axis.kRightTrigger)
                                 .whenHeld(CommandComposer.getSpitCommand());
@@ -480,8 +482,8 @@ public class RobotContainer {
                 // new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftStick)
                 //                 .whenHeld(new DriveIntakeArmCommand(
                 //                                 () -> m_operatorController.getRawAxis(Axis.kLeftY) * 0.5));
-                new JoystickButton(m_operatorController, ControllerConstants.Button.kTrackpad)
-                                .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_RESET_ENCODER));
+                // new JoystickButton(m_operatorController, ControllerConstants.Button.kTrackpad)
+                //                 .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_RESET_ENCODER));
         }
 
         public void configureTestingBindings() {

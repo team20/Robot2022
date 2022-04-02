@@ -121,6 +121,9 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
     public void setSpeed(double speed){
         m_masterMotor.set(speed);
     }
+    // public void increment(){
+    //     m_encoder.setPosition(position)
+    // }
     public double getOutputCurrent(){
         return m_masterMotor.getOutputCurrent();
     }

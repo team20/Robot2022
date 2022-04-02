@@ -88,8 +88,8 @@ public class CommandComposer {
         
         SlideHookCommand SlideToTelescopeBehind1 = new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kMaxPosition);
         TelescopeHookCommand TelescopeExtend2=new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kExtendedPosition);
-        SequentialCommandGroup TelescopeExtendWithWait=new SequentialCommandGroup(new WaitCommand(1), TelescopeExtend2);
-        ParallelCommandGroup LeanBack1=new ParallelCommandGroup(SlideToTelescopeBehind1, TelescopeExtendWithWait);
+        // SequentialCommandGroup TelescopeExtendWithWait=new SequentialCommandGroup(new WaitCommand(1), TelescopeExtend2);
+        // ParallelCommandGroup LeanBack1=new ParallelCommandGroup(SlideToTelescopeBehind1, TelescopeExtendWithWait);
 
         SlideHookCommand SlideToTelescopeTouching1 = new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION,SlideHookConstants.kTelescopeTouchingRung);
 
@@ -105,7 +105,9 @@ public class CommandComposer {
         TelescopeRetract1, //on mid bar
         SlideToTelescope1, 
         TelescopeRelease1, 
-        LeanBack1, 
+        SlideToTelescopeBehind1,
+        TelescopeExtend2,
+        // LeanBack1, 
         SlideToTelescopeTouching1, 
         // ControlledMove1, //climbing to high
         TelescopeRetract2);
