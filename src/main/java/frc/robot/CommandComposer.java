@@ -383,12 +383,13 @@ public class CommandComposer {
         );
     }
     
-    public static Command getTwoToThreeAutoCommandBlue(){//2,3
+    public static Command getTwoToThreeAutoCommandBlue(){ //2,3
         return new SequentialCommandGroup(
             //new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
-            new TurnCommand( -24).withTimeout(1), //was 1.5
+            new TurnCommand(-24).withTimeout(1), //was 1.5
             new ParallelCommandGroup(new DriveDistanceCommand(60.0), getAutoLoadCommand()).withTimeout(1),
             new TurnCommand(-15).withTimeout(2), //was 1.5
+            //new LimelightTurnCommand(-2),
            new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
             new ParallelCommandGroup(
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 13), 
@@ -400,8 +401,7 @@ public class CommandComposer {
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
             new TurnCommand( -38).withTimeout(1.5),//29 for red
             new ParallelCommandGroup(new DriveDistanceCommand(161), getAutoLoadCommand().withTimeout(4)),
-           
-
+        
             new ParallelCommandGroup(
                 new DriveDistanceCommand(-161, 0.9),//was -157
                 new SequentialCommandGroup(
