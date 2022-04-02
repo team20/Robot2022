@@ -65,7 +65,7 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
     }
 
     public void periodic() {
-        SmartDashboard.putNumber("Slide Hook Position", getPosition());
+        //SmartDashboard.putNumber("Slide Hook Position", getPosition());
         // System.out.println("Slide Hook Position is "+getPosition());
     }
 
@@ -131,7 +131,9 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
     public void setSpeed(double speed){
       m_masterMotor.set(speed);
   }
-    public void configureShuffleboard() {
+
+    public void configureShuffleboard(boolean inCompetitionMode) {
+        if (!inCompetitionMode) {
         ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Slide Hook");
         shuffleboardTab.addNumber("Encoder Position", () -> getPosition()).withSize(4, 2).withPosition(0, 0)
                 .withWidget(BuiltInWidgets.kGraph);
@@ -140,4 +142,5 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
         shuffleboardTab.addBoolean("At setpoint", () -> atSetpoint()).withSize(1, 1).withPosition(0, 2)
                 .withWidget(BuiltInWidgets.kBooleanBox);
     }
+}
 }

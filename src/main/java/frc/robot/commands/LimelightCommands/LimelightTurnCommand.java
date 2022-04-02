@@ -69,7 +69,7 @@ public class LimelightTurnCommand extends CommandBase {
     public void initialize() {
         m_startTime = Instant.now();
 
-        //m_limelightSubsystem.turnOnLight();
+        LimelightSubsystem.get().turnOnLight();
 
         m_turnController.setTolerance(LimelightConstants.kTurnTolerance);
         m_turnController.setSetpoint(m_setpointAngle);
@@ -100,7 +100,7 @@ public class LimelightTurnCommand extends CommandBase {
      * Stop the drivetrain at the end of the command
      */
     public void end(boolean interupted) {
-      //  m_limelightSubsystem.turnOffLight();
+        LimelightSubsystem.get().turnOffLight();
         DriveSubsystem.get().tankDrive(0, 0);
 
         // m_arduinoSubsystem.resetLEDs();
