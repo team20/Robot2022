@@ -116,21 +116,19 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
         }
 
         public void periodic() {
-                SmartDashboard.putNumber("the angle", getHeading());
+                //SmartDashboard.putNumber("the angle", getHeading());
                 // System.out.println("the angle is: " + getHeading());
-                m_odometry.update(m_gyro.getRotation2d(), getLeftEncoderPosition(),
-                                getRightEncoderPosition());
-                 if(DriverStation.isDisabled()){
-                         m_backLeft.setIdleMode(IdleMode.kCoast);
+                // m_odometry.update(m_gyro.getRotation2d(), getLeftEncoderPosition(),
+                //                 getRightEncoderPosition());
+                 if(DriverStation.isDisabled() && m_frontLeft.getIdleMode() == IdleMode.kBrake){
                          m_frontLeft.setIdleMode(IdleMode.kCoast);
-                         m_backRight.setIdleMode(IdleMode.kCoast);
                          m_frontRight.setIdleMode(IdleMode.kCoast);
 
-                }else{
-                        m_frontLeft.setIdleMode(IdleMode.kBrake);
-                        m_frontRight.setIdleMode(IdleMode.kBrake);
+                 }else if(DriverStation.isEnabled()&& m_frontLeft.getIdleMode() == IdleMode.kCoast){
+                         m_frontLeft.setIdleMode(IdleMode.kBrake);
+                         m_frontRight.setIdleMode(IdleMode.kBrake);
 
-                }
+                 }
         }
 
         /**
@@ -270,18 +268,20 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
         }
 
 
-        public void configureShuffleboard() {
-                ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Drive");
-                // shuffleboardTab.addNumber("Left speed", () -> m_frontLeft.get()).withSize(4, 2)
-                //                 .withPosition(0, 0).withWidget(BuiltInWidgets.kGraph);
-                // shuffleboardTab.addNumber("Right speed", () -> m_frontRight.get()).withSize(4, 2)
-                //                 .withPosition(4, 0).withWidget(BuiltInWidgets.kGraph);
-                shuffleboardTab.addNumber("Left motor speed", () -> getLeftEncoderPosition()).withSize(1, 1)
-                                .withPosition(0, 2).withWidget(BuiltInWidgets.kTextView);
-                shuffleboardTab.addNumber("Right motor speed", () -> getRightEncoderPosition()).withSize(1, 1)
-                                .withPosition(1, 2).withWidget(BuiltInWidgets.kTextView);
-                shuffleboardTab.addNumber("Heading", () -> getHeading()).withSize(1, 1).withPosition(2, 2)
-                                .withWidget(BuiltInWidgets.kTextView);
+        public void configureShuffleboard(boolean inCompetitionMode) {
+                if(!inCompetitionMode){
+                        ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Drive");
+                        // shuffleboardTab.addNumber("Left speed", () -> m_frontLeft.get()).withSize(4, 2)
+                        //                 .withPosition(0, 0).withWidget(BuiltInWidgets.kGraph);
+                        // shuffleboardTab.addNumber("Right speed", () -> m_frontRight.get()).withSize(4, 2)
+                        //                 .withPosition(4, 0).withWidget(BuiltInWidgets.kGraph);
+                        shuffleboardTab.addNumber("Left motor speed", () -> getLeftEncoderPosition()).withSize(1, 1)
+                                        .withPosition(0, 2).withWidget(BuiltInWidgets.kTextView);
+                        shuffleboardTab.addNumber("Right motor speed", () -> getRightEncoderPosition()).withSize(1, 1)
+                                        .withPosition(1, 2).withWidget(BuiltInWidgets.kTextView);
+                        shuffleboardTab.addNumber("Heading", () -> getHeading()).withSize(1, 1).withPosition(2, 2)
+                                        .withWidget(BuiltInWidgets.kTextView);
+                }
 
         }
 }

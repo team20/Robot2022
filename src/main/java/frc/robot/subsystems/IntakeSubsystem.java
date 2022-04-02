@@ -36,9 +36,12 @@ public class IntakeSubsystem extends SubsystemBase implements ShuffleboardLoggin
 		//System.out.println("Setting % output: " + speed);
 		m_motor.set(speed);
 	}
-	public void configureShuffleboard() {
-		//ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Intake");
-		//shuffleboardTab.addNumber("Motor output", () -> m_motor.getMotorOutputPercent()).withSize(4, 2)
-		//		.withPosition(0, 0).withWidget(BuiltInWidgets.kGraph);
+	public void configureShuffleboard(boolean inCompMode) {
+		if(!inCompMode){
+			//ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Intake");
+			//shuffleboardTab.addNumber("Motor output", () -> m_motor.getMotorOutputPercent()).withSize(4, 2)
+			//		.withPosition(0, 0).withWidget(BuiltInWidgets.kGraph);
+		}
+		
 	}
 }

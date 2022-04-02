@@ -21,7 +21,7 @@ public class ArduinoSubsystem extends SubsystemBase {
 	private final PIDController m_distancePid = new PIDController(ArduinoConstants.kDistanceP,
 			ArduinoConstants.kDistanceI, ArduinoConstants.kDistanceD);
 	// I2C communication
-	private final I2C m_wire = new I2C(Port.kOnboard, ArduinoConstants.kAddress);
+	//private final I2C m_wire = new I2C(Port.kOnboard, ArduinoConstants.kAddress);
 	// data read from Arduino
 	private byte[] m_readData = new byte[7];
 	private byte[] m_writeData = new byte[6];
@@ -71,7 +71,7 @@ public class ArduinoSubsystem extends SubsystemBase {
 		// System.out.println("the climber led COLOR: " + m_climberLEDColor);
 
 		//m_wire.writeBulk(m_writeData);
-		m_wire.writeBulk(m_writeData, m_writeData.length);
+		//m_wire.writeBulk(m_writeData, m_writeData.length);
 
 		//System.out.println("aborted?: " + m_wire.writeBulk(m_writeData, m_writeData.length));
 	}
@@ -178,7 +178,7 @@ public class ArduinoSubsystem extends SubsystemBase {
 	 */
 	public void read() {
 		// read byte array
-		m_wire.read(ArduinoConstants.kAddress, m_readData.length, m_readData);
+		//m_wire.read(ArduinoConstants.kAddress, m_readData.length, m_readData);
 		// set values from array to variables
 		m_targetInView = m_readData[ArduinoConstants.kReadTargetInView] == 1;
 		m_xValue = 0;

@@ -1,5 +1,5 @@
 package frc.robot;
 
 public interface ShuffleboardLogging {
-    public void configureShuffleboard();
+    public void configureShuffleboard(boolean inCompetitionMode);
 }
