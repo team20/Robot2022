@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,6 +26,7 @@ import frc.robot.commands.DriveCommands.ArcadeDriveCommand;
 import frc.robot.commands.DriveCommands.PixyTargetCommand;
 import frc.robot.commands.IndexerCommands.IndexerCommand;
 import frc.robot.commands.IntakeCommands.*;
+import frc.robot.commands.LimelightCommands.LimelightOffCommand;
 import frc.robot.commands.LimelightCommands.LimelightTurnCommand;
 import frc.robot.commands.ShooterCommands.*;
 import frc.robot.subsystems.*;
@@ -71,8 +73,8 @@ public class RobotContainer {
          */
         public RobotContainer() {
 
-                //m_limelightSubsystem.turnOffLight();
-                 m_limelightSubsystem.turnOnLight();
+                m_limelightSubsystem.turnOffLight();
+                //m_limelightSubsystem.turnOnLight();
                 configureShuffleboard();
                 CommandScheduler.getInstance().unregisterSubsystem(m_arduinoSubsystem);
                 m_autoChooser.addOption("Test turn", new TurnCommand(30));
@@ -132,10 +134,24 @@ public class RobotContainer {
                 new JoystickButton(m_driverController, ControllerConstants.Button.kTriangle)
                                 .whenReleased(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
 
-                // --------------SQUARE BUTTON--------------
+                // --------------SQUARE BUTTON-------------- //experimentally switching this to control of the limelight shooting on 4/1/22
+            
+                // new JoystickButton(m_driverController, ControllerConstants.Button.kSquare)
+                //                 .whenHeld(new LimelightTurnCommand(0));
+                
                 new JoystickButton(m_driverController, ControllerConstants.Button.kSquare)
-                                .whenHeld(new LimelightTurnCommand(0));
-
+                                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                                                .negate())
+                                .whileActiveOnce(CommandComposer.getPresetShootCommand(
+                                                ShootCommandComposer.Operation.LIMELIGHT_REGRESSION));
+                new JoystickButton(m_driverController, ControllerConstants.Button.kSquare)
+                                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                                                .negate())
+                                .whenInactive(new ParallelCommandGroup(
+                                                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
+                                                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
+                                                new LimelightOffCommand()));
+                
                 // --------------CIRCLE BUTTON--------------
                 new JoystickButton(m_driverController, ControllerConstants.Button.kCircle)
                                 .whenPressed(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_ZERO_ENCODERS,
@@ -174,7 +190,7 @@ public class RobotContainer {
 //                 new POVButton(m_driverController, 315)
 //                                 .whenReleased(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
                
-// -----------------RIGHT DPAD-----------------
+                // -----------------RIGHT DPAD-----------------
                 // ---------Move Right Telescope Manual--------
                 // new POVButton(m_driverController, DPad.kRight)
                 // .whenHeld(new
@@ -327,10 +343,9 @@ public class RobotContainer {
                                                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
 
                 // --------------TRIANGLE BUTTON--------------
-                // --------Ramp up for launchpad shot---------
-
-                //TODO TODO TODO YOU COMMENTED THIS OUT!!! FOR EXPERIMENTAL LIMELIGHT CODE!!!!
-                            
+                // --------Ramp up for safe shot---------
+             
+                //UNCOMMENT THIS TO HAVE A SAFE POSITION TO SHOOT FROM - you added this on 4/1/22
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
                                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
                                                 .negate())
@@ -344,24 +359,37 @@ public class RobotContainer {
                                                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
 
                 // --------------SQUARE BUTTON--------------
-                // --------Ramp up for tarmac shot---------
-                new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
-                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                                .negate())
-                .whileActiveOnce(new SequentialCommandGroup(new LimelightTurnCommand(-2), CommandComposer
-                                .getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION)));
-                        
+                // --------Ramp up for limelight shot--------- //experimental: min ramp up being tested on 4/1/22
+              
                 // new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
-                //                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                //                                 .negate())
-                //                 .whileActiveOnce(CommandComposer
-                //                                 .getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION));
+                // .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                //                 .negate())
+                // .whileActiveOnce(new SequentialCommandGroup(new LimelightTurnCommand(-2), CommandComposer
+                //                 .getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION)));
+                 
+                 new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
+                                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                                                .negate())
+                                .whileActiveOnce(CommandComposer.getPresetShootCommand(
+                                                ShootCommandComposer.Operation.MIN_RAMP_UP));
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
                                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
                                                 .negate())
                                 .whenInactive(new ParallelCommandGroup(
                                                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
                                                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
+                
+                // new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
+                //                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                //                                 .negate())
+                //                 .whileActiveOnce(CommandComposer
+                //                                 .getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION));
+                // new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
+                //                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                //                                 .negate())
+                //                 .whenInactive(new ParallelCommandGroup(
+                //                                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
+                //                                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
 
                 // --------------CIRCLE BUTTON--------------
                 // -------Ramp up for fender high shot-------

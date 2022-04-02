@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.sql.Driver;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -281,6 +283,7 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
                                         .withPosition(1, 2).withWidget(BuiltInWidgets.kTextView);
                         shuffleboardTab.addNumber("Heading", () -> getHeading()).withSize(1, 1).withPosition(2, 2)
                                         .withWidget(BuiltInWidgets.kTextView);
+
                 }
 
         }

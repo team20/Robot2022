@@ -24,7 +24,8 @@ public class ShootCommandComposer {
     PRESET_TARMAC,
     PRESET_FENDER_HIGH,
     PRESET_FENDER_LOW,
-    PRESET_SAFE
+    PRESET_SAFE,
+    MIN_RAMP_UP
   }
 
   public static Command getShootCommand(double distance, Operation shootClass) {
@@ -33,6 +34,7 @@ public class ShootCommandComposer {
     double flywheelSetpoint;    
     
    if (shootClass==Operation.LIMELIGHT_REGRESSION) {
+      LimelightSubsystem.get().turnOnLight();
       double angle = LimelightSubsystem.get().getYAngle();
       flywheelSetpoint = -17.589*angle + 2694.4;
       hoodSetpoint = -0.2671*angle + 12.545;
@@ -64,7 +66,13 @@ public class ShootCommandComposer {
     else if(shootClass==Operation.PRESET_SAFE){
       hoodSetpoint=9;
       flywheelSetpoint=2500;
+    } else if (shootClass==Operation.MIN_RAMP_UP) {
+      hoodSetpoint = 0;
+      flywheelSetpoint = 2000;
     }
+
+
+
     else{
       hoodSetpoint=SmartDashboard.getNumber("Hood Setpoint", 0);
       flywheelSetpoint=SmartDashboard.getNumber("Flywheel RPM", 0);

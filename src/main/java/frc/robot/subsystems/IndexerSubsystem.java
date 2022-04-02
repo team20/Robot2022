@@ -234,15 +234,15 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     // public double getLastSpeed(){
     //     return lastSpeed;
     // }
-    public void configureShuffleboard(boolean inCompMode){
-        if(!inCompMode){
-            ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Color");
-            // shuffleboardTab.addBoolean("isBlue", () -> (m_colorString.equals("Blue"))).withSize(2, 2).withPosition(0, 0).withWidget(BuiltInWidgets.kBooleanBox);
-            // shuffleboardTab.addBoolean("isRed", ()->(m_colorString.equals("Null") ? new Boolean(null) : m_colorString.equals("Red"))).withSize(2, 2).withPosition(2, 0).withWidget(BuiltInWidgets.kBooleanBox);
-            shuffleboardTab.addBoolean("rtf", () -> (m_proximitySensorStartState)).withSize(2, 2).withPosition(4, 0).withWidget(BuiltInWidgets.kBooleanBox);
-            shuffleboardTab.addBoolean("bic", () -> (m_proximitySensorCenterState)).withSize(2, 2).withPosition(6, 0).withWidget(BuiltInWidgets.kBooleanBox);
-            //shuffleboardTab.addBoolean("rts", () -> (m_rtsState)).withSize(2, 2).withPosition(8, 0).withWidget(BuiltInWidgets.kBooleanBox);
-        }
-        
+
+    public void configureShuffleboard(boolean inCompetitionMode){
+        if (!inCompetitionMode) {
+        ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Color");
+        // shuffleboardTab.addBoolean("isBlue", () -> (m_colorString.equals("Blue"))).withSize(2, 2).withPosition(0, 0).withWidget(BuiltInWidgets.kBooleanBox);
+        // shuffleboardTab.addBoolean("isRed", ()->(m_colorString.equals("Null") ? new Boolean(null) : m_colorString.equals("Red"))).withSize(2, 2).withPosition(2, 0).withWidget(BuiltInWidgets.kBooleanBox);
+        shuffleboardTab.addBoolean("rtf", () -> (m_proximitySensorStartState)).withSize(2, 2).withPosition(4, 0).withWidget(BuiltInWidgets.kBooleanBox);
+        shuffleboardTab.addBoolean("bic", () -> (m_proximitySensorCenterState)).withSize(2, 2).withPosition(6, 0).withWidget(BuiltInWidgets.kBooleanBox);
+        //shuffleboardTab.addBoolean("rts", () -> (m_rtsState)).withSize(2, 2).withPosition(8, 0).withWidget(BuiltInWidgets.kBooleanBox);
     }
+}
 }

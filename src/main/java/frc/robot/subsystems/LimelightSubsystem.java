@@ -125,20 +125,19 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
 
     }
 
-    public void configureShuffleboard(boolean inCompMode) {
-        if(!inCompMode){
-            ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Limelight");
-            shuffleboardTab.addNumber("X Angle", () -> getXAngle()).withSize(1, 1).withPosition(0, 0)
-                    .withWidget(BuiltInWidgets.kTextView);
-            shuffleboardTab.addNumber("Distance", () -> getDistance()).withSize(1, 1).withPosition(1, 0)
-                    .withWidget(BuiltInWidgets.kTextView);
-            shuffleboardTab.addBoolean("Target Visible", () -> isTargetVisible()).withSize(1, 1).withPosition(0, 1)
-                    .withWidget(BuiltInWidgets.kBooleanBox);
-            shuffleboardTab.addBoolean("Light On", () -> isLightOn()).withSize(1, 1).withPosition(1, 1)
-                    .withWidget(BuiltInWidgets.kBooleanBox);
-            //TODO: add in a y-value?
+    public void configureShuffleboard(boolean inCompetitionMode) { 
+        if (!inCompetitionMode) {
+        ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Limelight");
+        shuffleboardTab.addNumber("X Angle", () -> getXAngle()).withSize(1, 1).withPosition(0, 0)
+                .withWidget(BuiltInWidgets.kTextView);
+        shuffleboardTab.addNumber("Distance", () -> getDistance()).withSize(1, 1).withPosition(1, 0)
+                .withWidget(BuiltInWidgets.kTextView);
+        shuffleboardTab.addBoolean("Target Visible", () -> isTargetVisible()).withSize(1, 1).withPosition(0, 1)
+                .withWidget(BuiltInWidgets.kBooleanBox);
+        shuffleboardTab.addBoolean("Light On", () -> isLightOn()).withSize(1, 1).withPosition(1, 1)
+                .withWidget(BuiltInWidgets.kBooleanBox);
+        //TODO: add in a y-value?
         }
-       
     }
 
     public double calculateRollingAverage(double updatedAngleMeasurement) {
