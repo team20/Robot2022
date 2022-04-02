@@ -351,19 +351,11 @@ public final class Constants {
 		// public static final int kFollowerPort = 12; //TODO CHANGE BACK TO 12
 		// public static final boolean kMasterInvert = false;
 		// public static final boolean kFollowerOppose = true;
-<<<<<<< HEAD
-		public static final int kLeftPort = 12;
-		public static final int kRightPort = 11; //TODO CHANGE BACK TO 12
-		public static final boolean kLeftInvert = true;
-		public static final boolean kRightInvert = true;
-		public static final int kSmartCurrentLimit = 600;// TODO: change
-=======
 		public static final int kMasterPort = 12;
 		public static final int kFollowerPort = 11; //TODO CHANGE BACK TO 12
 		public static final boolean kMasterInvert = true;
 		public static final boolean kFollowerOppose = true;
 		public static final int kSmartCurrentLimit = 50;// TODO: change
->>>>>>> 31df87b67f05bc2242f7a5e97668ec370f4e8eea
 		public static final double kP = .03; // TODO: tune PID
 		public static final double kI = 0.000001;
 		public static final double kD = 0.000001249999968422344;// 0.000_03;
