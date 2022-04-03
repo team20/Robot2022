@@ -75,9 +75,9 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
         //     m_pidController.setReference(m_encoder.getPosition(), ControlType.kPosition, 0);
         //     m_motor.stopMotor();
         // } 
-        if(atSetpoint()){
+        if(atSetpoint() && Math.abs(m_encoder.getVelocity()) > 0.05){
             // m_pidController.setReference(m_encoder.getPosition(), ControlType.kPosition, 0);
-            m_motor.stopMotor();
+            //m_motor.stopMotor();
         }
     }
 
@@ -165,7 +165,8 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
         setPosition(0);
     }
 
-    public void configureShuffleboard() {
+    public void configureShuffleboard(boolean inCompetitionMode) {
+        if (!inCompetitionMode) {
         ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Arm");
         shuffleboardTab.addNumber("Encoder Position", () -> getPosition()).withSize(4, 2).withPosition(0, 0)
                 .withWidget(BuiltInWidgets.kGraph);
@@ -174,4 +175,5 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
         shuffleboardTab.addBoolean("At setpoint", () -> atSetpoint()).withSize(1, 1).withPosition(0, 2)
                 .withWidget(BuiltInWidgets.kBooleanBox);
     }
+}
 }
