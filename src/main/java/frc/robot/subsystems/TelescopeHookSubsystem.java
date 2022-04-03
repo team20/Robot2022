@@ -131,9 +131,6 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
         m_rightEncoder.setPosition(0);
         setPosition(0);
     }
-    public void setrightSpeed(double speed){
-        m_rightMotor.set(speed);
-    }
     /**
      * 
      * @param speed Percentage output of telescope hook motor
@@ -142,9 +139,7 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
         m_leftMotor.set(speed);
         m_rightMotor.set(speed);
     }
-    // public void increment(){
-    //     m_encoder.setPosition(position)
-    // }
+    
     public double getOutputCurrent(){
         return m_leftMotor.getOutputCurrent();
     }
