@@ -36,8 +36,10 @@ public class ShootCommandComposer {
    if (shootClass==Operation.LIMELIGHT_REGRESSION) {
       LimelightSubsystem.get().turnOnLight();
       double angle = LimelightSubsystem.get().getYAngle();
-      flywheelSetpoint = -17.852*angle + 2638.5;
-      hoodSetpoint = -0.27168*angle + 11.697;
+      flywheelSetpoint = -17.451*angle + 2609.4;
+      hoodSetpoint = -0.2659*angle + 11.255;
+      // flywheelSetpoint = -17.852*angle + 2638.5; //used on 4/2
+      // hoodSetpoint = -0.27168*angle + 11.697;
       // flywheelSetpoint = -17.589*angle + 2694.4;
       // hoodSetpoint = -0.2671*angle + 12.545;
     }
@@ -73,6 +75,7 @@ public class ShootCommandComposer {
       // hoodSetpoint=9;
       // flywheelSetpoint=2500;
     } else if (shootClass==Operation.MIN_RAMP_UP) {
+     // System.out.println("running makenna's command");
       hoodSetpoint = 0;
       flywheelSetpoint = 2000;
     } else {

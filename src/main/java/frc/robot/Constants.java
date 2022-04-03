@@ -158,7 +158,7 @@ public final class Constants {
 		public static final double kQuickStopThreshold = .2;
 		public static final double kQuickStopAlpha = .1;
 		public static final double kBackupDistance = Units.feetToMeters(2);
-		public static final double kRampRate = .1;
+		public static final double kRampRate = .2;
 		public static final double kSpeedLimitFactor = .75;
 
 		public static final boolean kLeftSensorPhase = true; // TODO these are totally arbitrary right now and need to
@@ -300,7 +300,7 @@ public final class Constants {
 		public static final double kTurnP = 0.03;
 		public static final double kTurnI = 0.0000;
 		public static final double kTurnD = 0.0;
-		public static final double kTurnTolerance = 1; // TODO: this is the amount of error that is considered okay
+		public static final double kTurnTolerance = 2; // TODO: this is the amount of error that is considered okay
 														// because obviously we can't get perfectly to the setpoint
 		public static final double kDistanceTolerance = 0.5;
 		public static final double kCameraHeight = 22.5; // TODO: get height once mounted

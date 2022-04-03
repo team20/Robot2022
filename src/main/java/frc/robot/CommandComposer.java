@@ -366,51 +366,6 @@ public class CommandComposer {
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP))
         );
     }
-    
-    public static Command getTwoToThreeAutoCommandBlueNEWCOPY(){ //2,3
-        return new SequentialCommandGroup(
-            //new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
-            //new TurnCommand(-24).withTimeout(1), //was 1.5
-            new ParallelCommandGroup(new DriveDistanceCommand(60.0), getAutoLoadCommand()).withTimeout(1.5),
-            //new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
-            //new TurnCommand(-15).withTimeout(2), //was 1.5
-            new LimelightTurnCommand(-2),
-             new IntakeCommand(IntakeCommand.Operation.CMD_STOP)
-             new ParallelCommandGroup(
-                new     
-             new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 13), 
-                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2700)),//was 3000 //was 4150
-                getAutoShootCommand(),
-            // new ParallelCommandGroup(
-            //     new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
-            //     new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
-            //     new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
-            // new TurnCommand( -38).withTimeout(1.5),//29 for red
-            // new ParallelCommandGroup(new DriveDistanceCommand(161), getAutoLoadCommand().withTimeout(4)),
-            // new ParallelCommandGroup(
-            //     new DriveDistanceCommand(-161, 0.9),//was -157
-            //     new SequentialCommandGroup(
-            //         getAutoLoadCommand().withTimeout(1),
-            //         new IntakeCommand(IntakeCommand.Operation.CMD_STOP)            
-            // )//,
-            //     // new ParallelCommandGroup(
-            //     //     new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
-            //     //     new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4050)).withTimeout(1)
-            // ),
-            // new ParallelCommandGroup(
-
-            //    new LimelightTurnCommand(-2),
-            //     //new TurnCommand( -8).withTimeout(1), //was 28 now moving to -28
-            //    new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11), 
-            //    new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2650)).withTimeout(1),
-            // //new WaitCommand(0.5),
-            // //getAutoShootCommand(),
-            // new ParallelCommandGroup(
-            //     new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
-            //     new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
-            //     new IntakeCommand(IntakeCommand.Operation.CMD_STOP))
-        );
-    }
 
     public static Command getTwoToThreeAutoCommandBlue(){ //2,3
         return new SequentialCommandGroup(
@@ -528,7 +483,7 @@ public class CommandComposer {
             // //     //     new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4050)).withTimeout(1)
             // ),
              new ParallelCommandGroup(
-                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
                 new SequentialCommandGroup(
                 new TurnCommand( 10).withTimeout(1),
                 new LimelightTurnCommand(-2)
