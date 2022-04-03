@@ -12,11 +12,11 @@ public class SlideHookCommand extends CommandBase {
     public enum Operation{
         CMD_MOVE,
         CMD_POSITION,
-        CMD_TO_ANGLE,
         CMD_POSITION_SETTLE,
         CMD_JOYSTICK,
         CMD_JOYSTICK_POSITION,
         CMD_ZERO_ENCODERS,
+        CMD_STOP,
     }
 
     private Operation m_operation;
@@ -41,30 +41,22 @@ public class SlideHookCommand extends CommandBase {
         SlideHookSubsystem subsystem = SlideHookSubsystem.get();
         if(m_operation == Operation.CMD_POSITION){
             subsystem.setPosition(m_param);
-        }
-        else if (m_operation == Operation.CMD_MOVE){
+        }else if (m_operation == Operation.CMD_MOVE){
             subsystem.setSpeed(m_param);
-        }
-        else if(m_operation == Operation.CMD_TO_ANGLE){
-            // System.out.println("NAVX ANGLE IS "+subsystem.getHeading());//TODO: might not be yaw depending on orientation of navx
-            subsystem.setSpeed(m_param);
-        }
-        else if(m_operation == Operation.CMD_JOYSTICK){
-            // System.out.println("NAVX ANGLE IS "+subsystem.getHeading());//TODO: might not be yaw depending on orientation of navx
+        }else if(m_operation == Operation.CMD_JOYSTICK){
             subsystem.setSpeed(Math.abs(m_paramSup.get()) > 0.05 ? m_paramSup.get() : 0);
         }else if(m_operation == Operation.CMD_JOYSTICK_POSITION){
             if(m_paramSup.get()>.1){
-                subsystem.setPosition(0);//85
-            }
-            else if(m_paramSup.get()<-.1){
+                subsystem.setPosition(SlideHookConstants.kStartPosition);
+            }else if(m_paramSup.get()<-.1){
                 subsystem.setPosition(SlideHookConstants.kMaxPosition);
-            //    System.out.println("Running to start position");
-            }
-            else{
+            }else{
                 subsystem.setPercentOutput(0);
             }
         }else if(m_operation==Operation.CMD_ZERO_ENCODERS){
             subsystem.resetEncoder();
+        }else if(m_operation == Operation.CMD_STOP){
+            subsystem.setSpeed(0);
         }
         
     }
@@ -73,22 +65,14 @@ public class SlideHookCommand extends CommandBase {
     public boolean isFinished(){
         if(m_operation == Operation.CMD_POSITION){
             return SlideHookSubsystem.get().atSetpoint();
-        }else if(m_operation == Operation.CMD_TO_ANGLE){
-            return SlideHookSubsystem.get().getHeading()>= m_param;//TODO: see if it is yaw
-        }else if(m_operation == Operation.CMD_MOVE){
-            return false;
-        }else if(m_operation == Operation.CMD_JOYSTICK){
-            return false;
-        }else if(m_operation == Operation.CMD_JOYSTICK_POSITION){
-            return false;
-        }else if(m_operation == Operation.CMD_ZERO_ENCODERS){
-            return false;
+        }else if(m_operation==Operation.CMD_STOP || m_operation==Operation.CMD_ZERO_ENCODERS){
+            return true;
         }
-        return true;
+        return false;
     }
     public void end(boolean interrupted){
-        // if(m_operation != Operation.CMD_MOVE){
-            SlideHookSubsystem.get().setSpeed(0.0);        
-        // }
+      //  if(m_operation != Operation.CMD_POSITION){
+            SlideHookSubsystem.get().setSpeed(0.0);
+    //    }
     }
 }
