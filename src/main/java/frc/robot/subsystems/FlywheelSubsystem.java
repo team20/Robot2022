@@ -11,10 +11,10 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+// import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+// import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FlywheelConstants;
 import frc.robot.ShuffleboardLogging;
@@ -121,11 +121,11 @@ public class FlywheelSubsystem extends SubsystemBase implements ShuffleboardLogg
 
     public void configureShuffleboard(boolean inCompetitionMode) {
         if (!inCompetitionMode) {
-        ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Flywheel");
-        shuffleboardTab.addNumber("Flywheel Velocity", () -> getVelocity()).withSize(4, 2).withPosition(0, 0)
-                .withWidget(BuiltInWidgets.kGraph);
-        shuffleboardTab.addBoolean("At setpoint", () -> atSetpoint()).withSize(1, 1).withPosition(0, 2)
-                .withWidget(BuiltInWidgets.kBooleanBox);
+        // ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Flywheel");
+        // shuffleboardTab.addNumber("Flywheel Velocity", () -> getVelocity()).withSize(4, 2).withPosition(0, 0)
+        //         .withWidget(BuiltInWidgets.kGraph);
+        // shuffleboardTab.addBoolean("At setpoint", () -> atSetpoint()).withSize(1, 1).withPosition(0, 2)
+        //         .withWidget(BuiltInWidgets.kBooleanBox);
         // shuffleboardTab.addNumber("Current draw", () ->
         // m_neoFlywheelMaster.getOutputCurrent() +
         // m_neoFlywheelFollower.getOutputCurrent());

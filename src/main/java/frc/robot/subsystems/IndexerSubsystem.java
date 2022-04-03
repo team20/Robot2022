@@ -14,10 +14,10 @@ import frc.robot.ShuffleboardLogging;
 import frc.robot.Constants.IndexerConstants;
 import edu.wpi.first.wpilibj.DigitalInput;
 
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+// import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+// import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+// import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLogging{
@@ -115,9 +115,9 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
         //save if either the center or start proximity sensors sense a ball
         m_proximitySensorStartState = !m_proximitySensorStart.get();
         m_proximitySensorCenterState = !m_proximitySensorCenter.get();
-        SmartDashboard.putBoolean("Indexer RTF", m_proximitySensorStartState);
-        SmartDashboard.putBoolean("Indexer BIC", m_proximitySensorCenterState);
-        SmartDashboard.putNumber("Indexer Encoder Value", m_neoEncoder.getPosition());
+        // SmartDashboard.putBoolean("Indexer RTF", m_proximitySensorStartState);
+        // SmartDashboard.putBoolean("Indexer BIC", m_proximitySensorCenterState);
+        // SmartDashboard.putNumber("Indexer Encoder Value", m_neoEncoder.getPosition());
 
         //SmartDashboard.putString("Color String", m_colorString);
     }
@@ -237,11 +237,11 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
 
     public void configureShuffleboard(boolean inCompetitionMode){
         if (!inCompetitionMode) {
-        ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Color");
+        //ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Color");
         // shuffleboardTab.addBoolean("isBlue", () -> (m_colorString.equals("Blue"))).withSize(2, 2).withPosition(0, 0).withWidget(BuiltInWidgets.kBooleanBox);
         // shuffleboardTab.addBoolean("isRed", ()->(m_colorString.equals("Null") ? new Boolean(null) : m_colorString.equals("Red"))).withSize(2, 2).withPosition(2, 0).withWidget(BuiltInWidgets.kBooleanBox);
-        shuffleboardTab.addBoolean("rtf", () -> (m_proximitySensorStartState)).withSize(2, 2).withPosition(4, 0).withWidget(BuiltInWidgets.kBooleanBox);
-        shuffleboardTab.addBoolean("bic", () -> (m_proximitySensorCenterState)).withSize(2, 2).withPosition(6, 0).withWidget(BuiltInWidgets.kBooleanBox);
+        //shuffleboardTab.addBoolean("rtf", () -> (m_proximitySensorStartState)).withSize(2, 2).withPosition(4, 0).withWidget(BuiltInWidgets.kBooleanBox);
+        //shuffleboardTab.addBoolean("bic", () -> (m_proximitySensorCenterState)).withSize(2, 2).withPosition(6, 0).withWidget(BuiltInWidgets.kBooleanBox);
         //shuffleboardTab.addBoolean("rts", () -> (m_rtsState)).withSize(2, 2).withPosition(8, 0).withWidget(BuiltInWidgets.kBooleanBox);
     }
 }
