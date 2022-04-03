@@ -1,9 +1,11 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -25,6 +27,7 @@ import frc.robot.commands.DriveCommands.ArcadeDriveCommand;
 import frc.robot.commands.DriveCommands.PixyTargetCommand;
 import frc.robot.commands.IndexerCommands.IndexerCommand;
 import frc.robot.commands.IntakeCommands.*;
+import frc.robot.commands.LimelightCommands.LimelightOffCommand;
 import frc.robot.commands.LimelightCommands.LimelightTurnCommand;
 import frc.robot.commands.ShooterCommands.*;
 import frc.robot.subsystems.*;
@@ -73,7 +76,7 @@ public class RobotContainer {
                 // m_limelightSubsystem.turnOffLight();
                 m_limelightSubsystem.turnOnLight();
                 configureShuffleboard();
-
+                CommandScheduler.getInstance().unregisterSubsystem(m_arduinoSubsystem);
                 m_autoChooser.addOption("Test turn", new TurnCommand(30));
                 m_autoChooser.addOption("Test shots", CommandComposer.testShots());
                 m_autoChooser.addOption("Test drive", new DriveDistanceCommand(157));
@@ -246,10 +249,9 @@ public class RobotContainer {
                                                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
 
                 // --------------TRIANGLE BUTTON--------------
-                // --------Ramp up for launchpad shot---------
-
-                // TODO TODO TODO YOU COMMENTED THIS OUT!!! FOR EXPERIMENTAL LIMELIGHT CODE!!!!
-
+                // --------Ramp up for safe shot---------
+             
+                //UNCOMMENT THIS TO HAVE A SAFE POSITION TO SHOOT FROM - you added this on 4/1/22
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
                                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
                                                 .negate())
@@ -263,21 +265,39 @@ public class RobotContainer {
                                                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
 
                 // --------------SQUARE BUTTON--------------
-                // --------Ramp up for tarmac shot---------
-                new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
+
+                        
+                // --------Ramp up for limelight shot--------- //experimental: min ramp up being tested on 4/1/22
+              
+                // new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
+                // .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                //                 .negate())
+                // .whileActiveOnce(new SequentialCommandGroup(new LimelightTurnCommand(-2), CommandComposer
+                //                 .getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION)));
+                 
+                 new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
                                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
                                                 .negate())
-                                .whileActiveOnce(new SequentialCommandGroup(new LimelightTurnCommand(-2),
-                                                CommandComposer
-                                                                .getPresetShootCommand(
-                                                                                ShootCommandComposer.Operation.LIMELIGHT_REGRESSION)));
-
+                                .whileActiveOnce(CommandComposer.getPresetShootCommand(
+                                                ShootCommandComposer.Operation.MIN_RAMP_UP));
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
                                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
                                                 .negate())
                                 .whenInactive(new ParallelCommandGroup(
                                                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
                                                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
+                
+                // new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
+                //                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                //                                 .negate())
+                //                 .whileActiveOnce(CommandComposer
+                //                                 .getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION));
+                // new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
+                //                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                //                                 .negate())
+                //                 .whenInactive(new ParallelCommandGroup(
+                //                                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
+                //                                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
 
                 // --------------CIRCLE BUTTON--------------
                 // -------Ramp up for fender high shot-------
@@ -451,7 +471,7 @@ public class RobotContainer {
         public void configureShuffleboard() {
                 for (int i = 0; i < m_subsystems.length; i++) {
                         if (LoggingConstants.kSubsystems[i]) {
-                                m_subsystems[i].configureShuffleboard();
+                                m_subsystems[i].configureShuffleboard(true);
                         }
                 }
         }

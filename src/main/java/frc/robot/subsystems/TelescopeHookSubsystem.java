@@ -67,7 +67,6 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
     public void periodic() {
         SmartDashboard.putNumber("Left Telescope Hook Position", getleftPosition());
         SmartDashboard.putNumber("Right Telescope Hook Position", getrightPosition());
-        // System.out.println("Telescope Hook Position: "+getPosition());
     }
 
     /**
@@ -144,7 +143,8 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
         return m_leftMotor.getOutputCurrent();
     }
 
-    public void configureShuffleboard() {
+    public void configureShuffleboard(boolean inCompetitionMode) {
+        if (!inCompetitionMode) {
         ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Telescope Hook");
         shuffleboardTab.addNumber("Encoder Position", () -> getleftPosition()).withSize(4, 2).withPosition(0, 0)
                 .withWidget(BuiltInWidgets.kGraph);
@@ -153,4 +153,5 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
         shuffleboardTab.addBoolean("At setpoint", () -> atleftSetpoint()).withSize(1, 1).withPosition(0, 2)
                 .withWidget(BuiltInWidgets.kBooleanBox);
     }
+}
 }

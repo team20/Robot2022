@@ -125,7 +125,8 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
 
     }
 
-    public void configureShuffleboard() {
+    public void configureShuffleboard(boolean inCompetitionMode) { 
+        if (!inCompetitionMode) {
         ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Limelight");
         shuffleboardTab.addNumber("X Angle", () -> getXAngle()).withSize(1, 1).withPosition(0, 0)
                 .withWidget(BuiltInWidgets.kTextView);
@@ -136,6 +137,7 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
         shuffleboardTab.addBoolean("Light On", () -> isLightOn()).withSize(1, 1).withPosition(1, 1)
                 .withWidget(BuiltInWidgets.kBooleanBox);
         //TODO: add in a y-value?
+        }
     }
 
     public double calculateRollingAverage(double updatedAngleMeasurement) {
