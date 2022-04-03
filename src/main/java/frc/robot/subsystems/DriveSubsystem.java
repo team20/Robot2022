@@ -122,7 +122,8 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
                 // System.out.println("the angle is: " + getHeading());
                 // m_odometry.update(m_gyro.getRotation2d(), getLeftEncoderPosition(),
                 //                 getRightEncoderPosition());
-                 if(DriverStation.isDisabled() && m_frontLeft.getIdleMode() == IdleMode.kBrake){
+                 if(DriverStation.isDisabled() && m_frontLeft.getIdleMode() == IdleMode.kBrake && 
+                 !DriverStation.isAutonomous()){
                          m_frontLeft.setIdleMode(IdleMode.kCoast);
                          m_frontRight.setIdleMode(IdleMode.kCoast);
 

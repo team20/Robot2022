@@ -73,8 +73,8 @@ public class RobotContainer {
          */
         public RobotContainer() {
 
-                m_limelightSubsystem.turnOffLight();
-                //  m_limelightSubsystem.turnOnLight();
+                //m_limelightSubsystem.turnOffLight();
+                  m_limelightSubsystem.turnOnLight();
                 configureShuffleboard();
                 CommandScheduler.getInstance().unregisterSubsystem(m_arduinoSubsystem);
                 m_autoChooser.addOption("Test turn", new TurnCommand(30));
@@ -87,7 +87,7 @@ public class RobotContainer {
                 m_autoChooser.addOption("Four To Two", CommandComposer.getFourToTwoAutoCommand());
                 m_autoChooser.addOption("One To Two", CommandComposer.getOneToTwoAutoCommand());
                 m_autoChooser.addOption("Four To Three", CommandComposer.getFourToThreeAutoCommand());
-                m_autoChooser.addOption("Two To Three Blue", CommandComposer.getTwoToThreeAutoCommandBlue());
+                m_autoChooser.addOption("Two To Three Blue NEW COPY", CommandComposer.getTwoToThreeAutoCommandBlueNEWCOPY());
                 m_autoChooser.addOption("Two To Three Red", CommandComposer.getTwoToThreeAutoCommandRed());
                 m_autoChooser.addOption("Two To Four", CommandComposer.getTwoToFourAutoCommand());
                 m_autoChooser.addOption("Four To Two To Three", CommandComposer.getFourToTwoToThreeAutoCommand()); // m_autoChooser.addOption("Taxi"
@@ -264,22 +264,47 @@ public class RobotContainer {
                 // --------------TRIANGLE BUTTON--------------
                 // --------Ramp up for safe shot---------
              
+                // new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
+                // .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                //                 .negate())
+                // .whileActiveOnce(CommandComposer.getPresetShootCommand(
+                //                 ShootCommandComposer.Operation.PRESET_SAFE));
+                // new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
+                // .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                //                 .negate())
+                // .whenInactive(new ParallelCommandGroup(
+                //                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
+                //                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
+
+
                 //UNCOMMENT THIS TO HAVE A SAFE POSITION TO SHOOT FROM - you added this on 4/1/22
-                new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
-                                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                                                .negate())
-                                .whileActiveOnce(CommandComposer.getPresetShootCommand(
-                                                ShootCommandComposer.Operation.PRESET_SAFE));
-                new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
-                                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                                                .negate())
-                                .whenInactive(new ParallelCommandGroup(
-                                                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
-                                                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
+                // new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
+                //                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                //                                 .negate())
+                //                 .whileActiveOnce(CommandComposer.getPresetShootCommand(
+                //                                 ShootCommandComposer.Operation.PRESET_SAFE));
+                // new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
+                //                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                //                                 .negate())
+                //                 .whenInactive(new ParallelCommandGroup(
+                //                                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
+                //                                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
 
                 // --------------SQUARE BUTTON--------------
 
-                        
+                new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
+                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                                .negate())
+                .whileActiveOnce(CommandComposer.getPresetShootCommand(
+                                ShootCommandComposer.Operation.PRESET_SAFE));
+                new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
+                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                                .negate())
+                .whenInactive(new ParallelCommandGroup(
+                                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
+                                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
+                       
+                
                 // --------Ramp up for limelight shot--------- //experimental: min ramp up being tested on 4/1/22
               
                 // new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
@@ -288,17 +313,18 @@ public class RobotContainer {
                 // .whileActiveOnce(new SequentialCommandGroup(new LimelightTurnCommand(-2), CommandComposer
                 //                 .getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION)));
                  
-                 new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
-                                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                                                .negate())
-                                .whileActiveOnce(CommandComposer.getPresetShootCommand(
-                                                ShootCommandComposer.Operation.MIN_RAMP_UP));
-                new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
-                                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                                                .negate())
-                                .whenInactive(new ParallelCommandGroup(
-                                                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
-                                                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
+                //uncomment this 4/3/22
+                //  new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
+                //                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                //                                 .negate())
+                //                 .whileActiveOnce(CommandComposer.getPresetShootCommand(
+                //                                 ShootCommandComposer.Operation.MIN_RAMP_UP));
+                // new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
+                //                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                //                                 .negate())
+                //                 .whenInactive(new ParallelCommandGroup(
+                //                                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
+                //                                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
                 
                 // new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
                 //                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
@@ -429,8 +455,8 @@ public class RobotContainer {
                 // new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftStick)
                 //                 .whenHeld(new DriveIntakeArmCommand(
                 //                                 () -> m_operatorController.getRawAxis(Axis.kLeftY) * 0.5));
-                // new JoystickButton(m_operatorController, ControllerConstants.Button.kTrackpad)
-                //                 .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_RESET_ENCODER));
+                new JoystickButton(m_operatorController, ControllerConstants.Button.kTrackpad)
+                                .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_RESET_ENCODER));
         }
 
         public void configureTestingBindings() {

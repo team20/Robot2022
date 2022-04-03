@@ -131,7 +131,7 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
 
     public void setSpeed(double speed){
         // m_neoController.setReference(speed, ControlType.kVelocity, 0);
-        System.out.println(0/0);
+        //System.out.println(0/0);
         m_motor.set(speed);
         // if(speed !=0){
         //     lastSpeed = speed;
