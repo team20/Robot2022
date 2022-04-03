@@ -317,7 +317,7 @@ public final class Constants {
 		public static final boolean kMasterInvert = false;
 		public static final boolean kFollowerOppose = false;
 		public static final int kSmartCurrentLimit = 40;// TODO: change
-		public static final double kP = .012; // TODO: tune PID
+		public static final double kP = .024; // TODO: tune PID
 		public static final double kI = .000001;//0.000001249999968422344;
 		public static final double kD = 0;//0.000001249999968422344;// 0.00001249999968422344;
 		public static final double kIz = 0.0;
@@ -333,17 +333,21 @@ public final class Constants {
 		public static final double kInchesPerQuarterTurn = .125; // .125 inches of travel per quarter turn (unit
 																	// position)
 		public static final double kStartPosition = 0;// inches
-		public static final double kMaxPosition = -85;// inches
-		public static final double kToTelescopePosition = -17;// inches
+		public static final double kMaxPosition = -87;// inches
+		public static final double kToTelescopePosition = -17.5;// inches
 
-		public static final double kTelescopeBehindRung = -85;// inches
-		public static final double kTelescopeTouchingRung = -75;// inches
+		public static final double kTelescopeBehindRung = -81;// inches
+		public static final double kTelescopeTouchingRung = -60;// inches
 
-		public static final double kControlled = 13;// inches
+		public static final double kControlled = -87;// inches
 		public static final double kHookVelocity=.5;
 
 		public static final double kUntilSlideEngaged=2;
 		public static final double kUntilTelescopeDown=5;
+
+		public static final double kUntilTelescopeBack=-57;
+		public static final double kIntermediate=-38;
+
 	}
 
 	public static final class TelescopeHookConstants {
@@ -354,12 +358,12 @@ public final class Constants {
 		public static final int kLeftPort = 12;
 		public static final int kRightPort = 11; //TODO CHANGE BACK TO 12
 		public static final boolean kLeftInvert = true;
-		public static final boolean kRightInvert = true;
+		public static final boolean kRightInvert = false;
 		public static final int kSmartCurrentLimit = 50;// TODO: change
-		public static final double kP = .03; // TODO: tune PID
-		public static final double kI = 0.000001;
+		public static final double kP = .12; // TODO: tune PID
+		public static final double kI = 0.000005;
 		public static final double kD = 0.000001249999968422344;// 0.000_03;
-		public static final double kIz = 0.0;
+		public static final double kIz = 5;
 		public static final double kFF = 0.00008040000102482736;// 0.000_193;
 		public static final double kMaxOutput = 1;
 		public static final double kMinOutput = -1;
@@ -367,16 +371,20 @@ public final class Constants {
 		public static final double kMinVelocity = 0;
 		public static final double kMaxAcel = 20_000;
 		public static final double kMaxVelocity = 10_000;
-		public static final double kAllowedError = 2;
+		public static final double kAllowedError = 1;
 
 		public static final double kExtendedPosition = 170;// inches
-		public static final double kRetractedPosition = -2;// inches
-		public static final double kDisengageFromRetractedPosition = 10;// inches
+		public static final double kRetractedPosition = 0;// inches
+		public static final double kDisengageFromRetractedPosition = 21;// inches
 
-		public static final double kControlled = 35;// inches
-		public static final double kDisengageFromControlledPosition = 30;// inches
+		public static final double kControlled = 136;// inches
+		public static final double kControlledEnd = 127;// inches
+
+		public static final double kDisengageFromControlledPosition = 35;// inches
 
 		public static final double kUntilTelescopeBehind=2;
+		public static final double kBackEngage=131;
+
 	}
 
 	public static final class LoggingConstants {

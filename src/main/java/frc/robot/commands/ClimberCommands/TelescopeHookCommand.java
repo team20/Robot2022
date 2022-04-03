@@ -40,7 +40,7 @@ public class TelescopeHookCommand extends CommandBase {
     @Override
     public boolean isFinished(){
         if(m_operation == Operation.CMD_POSITION){
-            return TelescopeHookSubsystem.get().atleftSetpoint();
+            return TelescopeHookSubsystem.get().atleftSetpoint() && TelescopeHookSubsystem.get().atrightSetpoint();
         }
         return false;
     }

@@ -20,7 +20,7 @@ import frc.robot.ShuffleboardLogging;
 public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLogging {
 
     private final CANSparkMax m_masterMotor = new CANSparkMax(SlideHookConstants.kMasterPort, MotorType.kBrushless);
-    // private final CANSparkMax m_followerMotor = new CANSparkMax(SlideHookConstants.kFollowerPort, MotorType.kBrushless);
+    private final CANSparkMax m_followerMotor = new CANSparkMax(SlideHookConstants.kFollowerPort, MotorType.kBrushless);
 
     private final AHRS m_gyro = new AHRS(DriveConstants.kGyroPort);
 
@@ -41,25 +41,19 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
         m_masterMotor.enableVoltageCompensation(12);
         m_masterMotor.setSmartCurrentLimit(SlideHookConstants.kSmartCurrentLimit);
 
-        // m_followerMotor.restoreFactoryDefaults();
-        // m_followerMotor.setInverted(SlideHookConstants.kMasterInvert);
-        // m_followerMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        // m_followerMotor.enableVoltageCompensation(12);
-        // m_followerMotor.setSmartCurrentLimit(SlideHookConstants.kSmartCurrentLimit);
-        // m_followerMotor.follow(m_masterMotor, SlideHookConstants.kFollowerOppose);
+        m_followerMotor.restoreFactoryDefaults();
+        m_followerMotor.setInverted(SlideHookConstants.kMasterInvert);
+        m_followerMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        m_followerMotor.enableVoltageCompensation(12);
+        m_followerMotor.setSmartCurrentLimit(SlideHookConstants.kSmartCurrentLimit);
+        m_followerMotor.follow(m_masterMotor, SlideHookConstants.kFollowerOppose);
         
         m_pidController.setP(SlideHookConstants.kP);
         m_pidController.setI(SlideHookConstants.kI);
         m_pidController.setIZone(SlideHookConstants.kIz);
         m_pidController.setD(SlideHookConstants.kD);
         m_pidController.setFF(SlideHookConstants.kFF);
-        m_pidController.setOutputRange(SlideHookConstants.kMinOutput, SlideHookConstants.kMaxOutput);
-
-        m_pidController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, SlideHookConstants.kSlotID);
-        m_pidController.setSmartMotionMaxAccel(SlideHookConstants.kMaxAcel, SlideHookConstants.kSlotID);
-        m_pidController.setSmartMotionMaxVelocity(SlideHookConstants.kMaxVelocity, SlideHookConstants.kSlotID);
-        m_pidController.setSmartMotionAllowedClosedLoopError(SlideHookConstants.kAllowedError, SlideHookConstants.kSlotID);
-        m_pidController.setSmartMotionMinOutputVelocity(SlideHookConstants.kMinVelocity, SlideHookConstants.kSlotID);
+        // m_pidController.setOutputRange(SlideHookConstants.kMinOutput, SlideHookConstants.kMaxOutput);
 
         resetEncoder();
     }

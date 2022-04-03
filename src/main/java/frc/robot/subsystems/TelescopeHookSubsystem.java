@@ -25,8 +25,8 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
     private final RelativeEncoder m_leftEncoder = m_leftMotor.getEncoder();
     private final SparkMaxPIDController m_leftPidController = m_leftMotor.getPIDController();
 
-    private final RelativeEncoder m_rightEncoder = m_leftMotor.getEncoder();
-    private final SparkMaxPIDController m_rightPidController = m_leftMotor.getPIDController();
+    private final RelativeEncoder m_rightEncoder = m_rightMotor.getEncoder();
+    private final SparkMaxPIDController m_rightPidController = m_rightMotor.getPIDController();
     private double m_setPosition = 0;
 
     /**
@@ -100,6 +100,10 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
     public boolean atleftSetpoint() {
         return (Math.abs(m_setPosition - getleftPosition()) <= TelescopeHookConstants.kAllowedError);
     }
+
+    public boolean atrightSetpoint() {
+        return (Math.abs(m_setPosition - getrightPosition()) <= TelescopeHookConstants.kAllowedError);
+    }
     /**
      * @param speed Percent output of the hook
      */
@@ -116,6 +120,7 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
     public void setPosition(double position) {
         m_setPosition = position;
         m_leftPidController.setReference(position, ControlType.kPosition, TelescopeHookConstants.kSlotID);
+        m_rightPidController.setReference(position, ControlType.kPosition, TelescopeHookConstants.kSlotID);
     }
 
     /**
@@ -123,6 +128,7 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
      */
     public void resetEncoder() {
         m_leftEncoder.setPosition(0);
+        m_rightEncoder.setPosition(0);
         setPosition(0);
     }
     public void setrightSpeed(double speed){
@@ -134,6 +140,7 @@ public class TelescopeHookSubsystem extends SubsystemBase implements Shuffleboar
      */
     public void setSpeed(double speed){
         m_leftMotor.set(speed);
+        m_rightMotor.set(speed);
     }
     // public void increment(){
     //     m_encoder.setPosition(position)
