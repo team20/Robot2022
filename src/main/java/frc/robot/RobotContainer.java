@@ -189,11 +189,22 @@ public class RobotContainer {
                         .whenHeld(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, 0.5));
                 // ---------------LEFT BUMPER---------------
                 // -------------Fine Steer Left------------
-                new JoystickButton(m_driverController, Button.kLeftBumper)
-                                .whenHeld(new ArcadeDriveCommand(m_driveSubsystem,
-                                                () -> 0.0, () -> DriveConstants.kFineTurningSpeed,
-                                                () -> -DriveConstants.kFineTurningSpeed));
 
+                new JoystickButton(m_driverController, Button.kLeftBumper)
+                        .whileActiveOnce(new SequentialCommandGroup(new LimelightTurnCommand(-2), CommandComposer
+                        .getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION)));
+                                 
+                new JoystickButton(m_driverController, Button.kLeftBumper)
+                        .whenInactive(new ParallelCommandGroup(
+                                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
+                                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)
+                                ));
+                
+                // new JoystickButton(m_driverController, Button.kLeftBumper)
+                //                 .whenHeld(new ArcadeDriveCommand(m_driveSubsystem,
+                //                                 () -> 0.0, () -> DriveConstants.kFineTurningSpeed,
+                //                                 () -> -DriveConstants.kFineTurningSpeed));
+                
                 // ---------------RIGHT BUMPER---------------
                 // -------------Fine Steer Right------------
                 new JoystickButton(m_driverController, Button.kRightBumper)
