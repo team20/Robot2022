@@ -12,10 +12,19 @@ public class RegressionRangeFinder extends RangeFinder{
 
     public double[] getAngleAndRPM(double limelightAngle) {
         double angle = LimelightSubsystem.get().getYAngle();
-        // RPM THEN ANGLE
-        RPM = -17.589*limelightAngle + 2694.4;
-        Angle = -0.2671*limelightAngle + 12.545;
-        //System.out.println("RPM: " + RPM);
+
+        if(angle >= -13){
+            // RPM THEN ANGLE
+            RPM = -17.451*limelightAngle + 2609.4;
+            Angle = -0.2659*limelightAngle + 11.255;
+            //System.out.println("RPM: " + RPM);
+        } else{
+            // RPM THEN ANGLE
+            RPM = -82.992*limelightAngle + 1665.1;
+            Angle = -0.2659*limelightAngle + 11.255;
+            System.out.println("ANGLE: " + Angle);
+        }
+        
         double[] ret = {Angle, RPM};
         return ret;
     }

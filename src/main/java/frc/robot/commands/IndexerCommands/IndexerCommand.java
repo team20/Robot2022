@@ -52,6 +52,7 @@ public class IndexerCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    //System.out.println("RUNNING INDEXER COMMAND");
     IndexerSubsystem indexerSubsystem = IndexerSubsystem.get();
     if (m_operation == Operation.CMD_ADV) {
       // System.out.println("Desired state: " + (byte)m_desiredIndexerState);
