@@ -36,8 +36,10 @@ public class ShootCommandComposer {
    if (shootClass==Operation.LIMELIGHT_REGRESSION) {
       LimelightSubsystem.get().turnOnLight();
       double angle = LimelightSubsystem.get().getYAngle();
-      flywheelSetpoint = -17.589*angle + 2694.4;
-      hoodSetpoint = -0.2671*angle + 12.545;
+      flywheelSetpoint = -17.852*angle + 2638.5;
+      hoodSetpoint = -0.27168*angle + 11.697;
+      // flywheelSetpoint = -17.589*angle + 2694.4;
+      // hoodSetpoint = -0.2671*angle + 12.545;
     }
     else if (shootClass==Operation.LIMELIGHT_LINEAR) {
       double yAngle = LimelightSubsystem.get().getYAngle();
