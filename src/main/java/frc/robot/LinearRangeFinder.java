@@ -2,9 +2,9 @@ package frc.robot;
 
 public class LinearRangeFinder extends RangeFinder {
     //double[] m_distances = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13}; // sorted in increasing order
-    double[] m_yAngles = {21.96, 17.69, 12.15, 7.2, 3.39, 0.3, -2.65, -4.85, -6.88}; // sorted in increasing order
-    double[] m_bestAngle= {7.5, 7.5, 9, 10, 11, 13, 13.5, 14,  14.5};
-    double[] m_bestRPM = {2350, 2350, 2500, 2550, 2650, 2600, 2750, 2750, 2900};
+    double[] m_yAngles = {16.81, 12.88, 7.37, 3.05, -0.65, -4.51, -7.81, -10.1, -12.17, -15.59, -16.85, -18.3, -18.89, -19.53}; // sorted in increasing order
+    double[] m_bestAngle= {7.5, 7.5, 9, 10, 11, 13, 13.5, 14,  14.5, 14.5, 14, 14.5, 14.5, 15.4};
+    double[] m_bestRPM = {2350, 2350, 2500, 2550, 2650, 2600, 2750, 2750, 2900, 2950, 3100, 3150, 3200, 3325};
     
     public LinearRangeFinder() {
         //test();

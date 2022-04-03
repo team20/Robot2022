@@ -254,7 +254,7 @@ public final class Constants {
 		public static final double kMinPosition = 0;
     	public static final double kAllowedErrorPercent = 1;
 		public static final double kSpeed = 1.0;
-		public static final int kStartProximitySensorPort = 3; //was 0
+		public static final int kStartProximitySensorPort = 0; //was 0
 		public static final int kCenterProximitySensorPort = 1;
 	}
 

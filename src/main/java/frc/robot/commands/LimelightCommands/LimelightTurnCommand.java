@@ -100,7 +100,7 @@ public class LimelightTurnCommand extends CommandBase {
      * Stop the drivetrain at the end of the command
      */
     public void end(boolean interupted) {
-        LimelightSubsystem.get().turnOffLight();
+        //LimelightSubsystem.get().turnOffLight();
         DriveSubsystem.get().tankDrive(0, 0);
 
         // m_arduinoSubsystem.resetLEDs();

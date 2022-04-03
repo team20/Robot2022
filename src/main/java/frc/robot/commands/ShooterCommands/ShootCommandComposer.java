@@ -36,8 +36,10 @@ public class ShootCommandComposer {
    if (shootClass==Operation.LIMELIGHT_REGRESSION) {
       LimelightSubsystem.get().turnOnLight();
       double angle = LimelightSubsystem.get().getYAngle();
-      flywheelSetpoint = -17.589*angle + 2694.4;
-      hoodSetpoint = -0.2671*angle + 12.545;
+      flywheelSetpoint = -17.852*angle + 2638.5;
+      hoodSetpoint = -0.27168*angle + 11.697;
+      // flywheelSetpoint = -17.589*angle + 2694.4;
+      // hoodSetpoint = -0.2671*angle + 12.545;
     }
     else if (shootClass==Operation.LIMELIGHT_LINEAR) {
       double yAngle = LimelightSubsystem.get().getYAngle();
@@ -49,8 +51,8 @@ public class ShootCommandComposer {
     else if(shootClass==Operation.PRESET_TARMAC){
       // hoodSetpoint=8;
       //flywheelSetpoint=2400;
-    //  hoodSetpoint=SmartDashboard.getNumber("Hood Setpoint", 0);
-    //  flywheelSetpoint=SmartDashboard.getNumber("Flywheel RPM", 0);
+      // hoodSetpoint=SmartDashboard.getNumber("Hood Setpoint", 0);
+      // flywheelSetpoint=SmartDashboard.getNumber("Flywheel RPM", 0);
       //was: hood 8.5, flywheel 4000
       hoodSetpoint = 14.5;
       flywheelSetpoint = 2900;
@@ -64,18 +66,20 @@ public class ShootCommandComposer {
       flywheelSetpoint=2300;//2500;//3100;//3700;
     }
     else if(shootClass==Operation.PRESET_SAFE){
-      hoodSetpoint=9;
-      flywheelSetpoint=2500;
+      // SmartDashboard.putNumber("Hood Setpoint", 0.0);
+      // SmartDashboard.putNumber("Flywheel RPM", 0.0);
+      hoodSetpoint=SmartDashboard.getNumber("Hood Setpoint", 0);
+      flywheelSetpoint=SmartDashboard.getNumber("Flywheel RPM", 0);
+      // hoodSetpoint=9;
+      // flywheelSetpoint=2500;
     } else if (shootClass==Operation.MIN_RAMP_UP) {
       hoodSetpoint = 0;
       flywheelSetpoint = 2000;
-    }
-
-
-
-    else{
-      hoodSetpoint=SmartDashboard.getNumber("Hood Setpoint", 0);
-      flywheelSetpoint=SmartDashboard.getNumber("Flywheel RPM", 0);
+    } else {
+      // SmartDashboard.putNumber("Hood Setpoint", 0.0);
+      // SmartDashboard.putNumber("Flywheel RPM", 0.0);
+      hoodSetpoint=0;//SmartDashboard.getNumber("Hood Setpoint", 0);
+      flywheelSetpoint=0;//SmartDashboard.getNumber("Flywheel RPM", 0);
     }
     
 
@@ -91,7 +95,7 @@ public class ShootCommandComposer {
         new FlywheelCommand(FlywheelCommand.Operation.CMD_SETTLE, 0),
         new HoodCommand(HoodCommand.Operation.CMD_SETTLE, 0));
     // first set the setpoints, then wait for them to settle
-    return new SequentialCommandGroup(setGroup, settleGroup);
+    return new SequentialCommandGroup(setGroup);
   }
 
   public static Command getShootStopCommand() {
