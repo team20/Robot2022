@@ -10,7 +10,7 @@ public class LimelightOffCommand extends CommandBase {
     }
 
     public void initialize() {
-        LimelightSubsystem.get().turnOffLight();
+        //LimelightSubsystem.get().turnOffLight();
     }
 
     /**
@@ -26,7 +26,8 @@ public class LimelightOffCommand extends CommandBase {
     }
 
     public boolean isFinished() { // TODO: assumes you would only press the button once, no holding down
-        return !LimelightSubsystem.get().isLightOn();
+        return true;
+        //return !LimelightSubsystem.get().isLightOn();
     }
 
 }

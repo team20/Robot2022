@@ -23,7 +23,6 @@ import frc.robot.commands.AutoCommands.*;
 import frc.robot.commands.ClimberCommands.SlideHookCommand;
 import frc.robot.commands.ClimberCommands.TelescopeHookCommand;
 import frc.robot.commands.DriveCommands.ArcadeDriveCommand;
-import frc.robot.commands.DriveCommands.PixyTargetCommand;
 import frc.robot.commands.IndexerCommands.IndexerCommand;
 import frc.robot.commands.IntakeCommands.*;
 import frc.robot.commands.LimelightCommands.LimelightOffCommand;
@@ -80,14 +79,13 @@ public class RobotContainer {
                 m_autoChooser.addOption("Test turn", new TurnCommand(30));
                 m_autoChooser.addOption("Test shots", CommandComposer.testShots());
                 m_autoChooser.addOption("Test drive", new DriveDistanceCommand(157));
-              m_autoChooser.addOption("Two Ball Straight", CommandComposer.getTwoBallStraight());
+                m_autoChooser.addOption("Two Ball Straight", CommandComposer.getTwoBallStraight());
                 m_autoChooser.addOption("Two Ball 4 Red", CommandComposer.getTwoBallStarting4Red());
                 m_autoChooser.addOption("Two Ball 4 Blue", CommandComposer.getTwoBallStarting4Blue()); //using this one 3/14
                 m_autoChooser.addOption("Two Ball 2 Blue", CommandComposer.getTwoBallStarting2Blue()); //good **start with this one
                 m_autoChooser.addOption("Four To Two", CommandComposer.getFourToTwoAutoCommand());
                 m_autoChooser.addOption("One To Two", CommandComposer.getOneToTwoAutoCommand());
                 m_autoChooser.addOption("Four To Three", CommandComposer.getFourToThreeAutoCommand());
-                m_autoChooser.addOption("Two To Three Blue NEW COPY", CommandComposer.getTwoToThreeAutoCommandBlueNEWCOPY());
                 m_autoChooser.addOption("Two To Three Red", CommandComposer.getTwoToThreeAutoCommandRed());
                 m_autoChooser.addOption("Two To Three Test", CommandComposer.getTwoToThreeAutoCommandTest());
                 m_autoChooser.addOption("Two To Four", CommandComposer.getTwoToFourAutoCommand());
@@ -188,6 +186,7 @@ public class RobotContainer {
                 //                 .whenHeld(new LimelightTurnCommand(m_limelightSubsystem, m_driveSubsystem));
                 new POVButton(m_driverController, DPad.kLeft)
                         .whenHeld(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, 0.5));
+             
                 // ---------------LEFT BUMPER---------------
                 // -------------Fine Steer Left------------
 
@@ -201,6 +200,7 @@ public class RobotContainer {
                                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)
                                 ));
                 
+
                 // new JoystickButton(m_driverController, Button.kLeftBumper)
                 //                 .whenHeld(new ArcadeDriveCommand(m_driveSubsystem,
                 //                                 () -> 0.0, () -> DriveConstants.kFineTurningSpeed,
@@ -293,17 +293,17 @@ public class RobotContainer {
 
                 // --------------SQUARE BUTTON--------------
 
-                new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
-                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                                .negate())
-                .whileActiveOnce(CommandComposer.getPresetShootCommand(
-                                ShootCommandComposer.Operation.PRESET_SAFE));
-                new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
-                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                                .negate())
-                .whenInactive(new ParallelCommandGroup(
-                                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
-                                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
+                // new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
+                // .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                //                 .negate())
+                // .whileActiveOnce(CommandComposer.getPresetShootCommand(
+                //                 ShootCommandComposer.Operation.PRESET_SAFE));
+                // new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
+                // .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                //                 .negate())
+                // .whenInactive(new ParallelCommandGroup(
+                //                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
+                //                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
                        
                 
                 // --------Ramp up for limelight shot--------- //experimental: min ramp up being tested on 4/1/22
@@ -315,18 +315,24 @@ public class RobotContainer {
                 //                 .getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION)));
                  
                 //uncomment this 4/3/22
-                //  new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
-                //                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                //                                 .negate())
-                //                 .whileActiveOnce(CommandComposer.getPresetShootCommand(
-                //                                 ShootCommandComposer.Operation.MIN_RAMP_UP));
+                new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
+                                .and(new JoystickButton(m_driverController, ControllerConstants.Button.kLeftBumper)
+                                                .negate())
+                                .whileActiveOnce(CommandComposer.getPresetShootCommand(
+                                                ShootCommandComposer.Operation.MIN_RAMP_UP));
+
+                new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
+                                .or(new JoystickButton(m_driverController, ControllerConstants.Button.kLeftBumper))
+                                .whenInactive(new ParallelCommandGroup(
+                                                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
+                                                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
                 // new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
-                //                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                //                                 .negate())
-                //                 .whenInactive(new ParallelCommandGroup(
-                //                                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
-                //                                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
-                
+                //                 .and(new JoystickButton(m_driverController, ControllerConstants.Button.kLeftBumper))
+                //                 .whenActive(new LimelightOffCommand());
+                //                         /*new ParallelCommandGroup(
+                                        //         new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
+                                        //     new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)*///)));
+                                              
                 // new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
                 //                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
                 //                                 .negate())
@@ -433,19 +439,28 @@ public class RobotContainer {
                 // ---------------RIGHT BUTTON JOYSTICK---------------
 
                 // ------------------SHARE BUTTON--------------------
-                
-                // new JoystickButton(m_driverController, ControllerConstants.Button.kShare)
-                // .whenActive(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kControlled));
+
+                new JoystickButton(m_operatorController, ControllerConstants.Button.kShare)
+                        .whenHeld(new ParallelCommandGroup(
+                                new IndexerCommand(IndexerCommand.Operation.CMD_REV_MAN)
+                                ));
+                new JoystickButton(m_operatorController, ControllerConstants.Button.kShare)
+                        .whenReleased(new ParallelCommandGroup(
+                                new IndexerCommand(IndexerCommand.Operation.CMD_STOP)
+                        ));
+               
                 // ------------------OPTIONS BUTTON--------------------
                 // ------Run the indexer and intake backwards----------
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kOptions)
                                 .whenHeld(new ParallelCommandGroup(
                                                 new IndexerCommand(IndexerCommand.Operation.CMD_REV_MAN),
-                                                new IntakeCommand(IntakeCommand.Operation.CMD_RUN_REV)));
+                                                new IntakeCommand(IntakeCommand.Operation.CMD_RUN_REV),
+                                                new FlywheelCommand(FlywheelCommand.Operation.CMD_REVERSE, 0)));
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kOptions)
                                 .whenReleased(new ParallelCommandGroup(
                                                 new IndexerCommand(IndexerCommand.Operation.CMD_STOP),
-                                                new IntakeCommand(IntakeCommand.Operation.CMD_STOP)));
+                                                new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
+                                                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
 
                 // ------------------TRACKPAD BUTTON--------------------
                 
