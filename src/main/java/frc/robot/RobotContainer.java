@@ -89,6 +89,7 @@ public class RobotContainer {
                 m_autoChooser.addOption("Four To Three", CommandComposer.getFourToThreeAutoCommand());
                 m_autoChooser.addOption("Two To Three Blue NEW COPY", CommandComposer.getTwoToThreeAutoCommandBlueNEWCOPY());
                 m_autoChooser.addOption("Two To Three Red", CommandComposer.getTwoToThreeAutoCommandRed());
+                m_autoChooser.addOption("Two To Three Test", CommandComposer.getTwoToThreeAutoCommandTest());
                 m_autoChooser.addOption("Two To Four", CommandComposer.getTwoToFourAutoCommand());
                 m_autoChooser.addOption("Four To Two To Three", CommandComposer.getFourToTwoToThreeAutoCommand()); // m_autoChooser.addOption("Taxi"
                                                                                                                    // ,

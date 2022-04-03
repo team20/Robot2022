@@ -95,7 +95,7 @@ public class ShootCommandComposer {
         new FlywheelCommand(FlywheelCommand.Operation.CMD_SETTLE, 0),
         new HoodCommand(HoodCommand.Operation.CMD_SETTLE, 0));
     // first set the setpoints, then wait for them to settle
-    return new SequentialCommandGroup(setGroup, settleGroup);
+    return new SequentialCommandGroup(setGroup);
   }
 
   public static Command getShootStopCommand() {

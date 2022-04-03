@@ -122,6 +122,7 @@ public class HoodSubsystem extends SubsystemBase implements ShuffleboardLogging 
             m_pidController.setReference(position, CANSparkMax.ControlType.kPosition, HoodConstants.kSlotID);
             //System.out.println("reference position is: " + position);
         }else{
+            //m_pidController.setReference(15.4, CANSparkMax.ControlType.kPosition, HoodConstants.kSlotID);
             //System.out.println("INVALID ANGLE");
         }
         
