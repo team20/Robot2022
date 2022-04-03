@@ -53,13 +53,7 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
         m_pidController.setIZone(SlideHookConstants.kIz);
         m_pidController.setD(SlideHookConstants.kD);
         m_pidController.setFF(SlideHookConstants.kFF);
-        m_pidController.setOutputRange(SlideHookConstants.kMinOutput, SlideHookConstants.kMaxOutput);
-
-        m_pidController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, SlideHookConstants.kSlotID);
-        m_pidController.setSmartMotionMaxAccel(SlideHookConstants.kMaxAcel, SlideHookConstants.kSlotID);
-        m_pidController.setSmartMotionMaxVelocity(SlideHookConstants.kMaxVelocity, SlideHookConstants.kSlotID);
-        m_pidController.setSmartMotionAllowedClosedLoopError(SlideHookConstants.kAllowedError, SlideHookConstants.kSlotID);
-        m_pidController.setSmartMotionMinOutputVelocity(SlideHookConstants.kMinVelocity, SlideHookConstants.kSlotID);
+        // m_pidController.setOutputRange(SlideHookConstants.kMinOutput, SlideHookConstants.kMaxOutput);
 
         resetEncoder();
     }
