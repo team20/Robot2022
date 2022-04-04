@@ -375,12 +375,11 @@ public class CommandComposer {
             //new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
             //new TurnCommand(-15).withTimeout(2), //was 1.5
             new LimelightTurnCommand(-2),
-             new IntakeCommand(IntakeCommand.Operation.CMD_STOP)
+             new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
              new ParallelCommandGroup(
-                new     
-             new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 13), 
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 13), 
                  new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2700)),//was 3000 //was 4150
-                getAutoShootCommand(),
+                getAutoShootCommand()
             // new ParallelCommandGroup(
             //     new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
             //     new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
