@@ -30,6 +30,7 @@ public class Robot extends TimedRobot {
     CameraServer.startAutomaticCapture();
     m_robotContainer = new RobotContainer();
     LiveWindow.disableAllTelemetry();
+    CameraServer.startAutomaticCapture();
   }
 
   @Override
