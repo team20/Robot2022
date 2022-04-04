@@ -6,6 +6,7 @@ package frc.robot.commands.ShooterCommands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.ArduinoSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
 
 public class FlywheelCommand extends CommandBase {
@@ -15,7 +16,8 @@ public class FlywheelCommand extends CommandBase {
 
   public enum Operation {
     CMD_SET_VELOCITY,
-    CMD_SETTLE
+    CMD_SETTLE,
+    CMD_REVERSE
   }
 
   /** Creates a new FlywheelCommand. */
@@ -34,6 +36,9 @@ public class FlywheelCommand extends CommandBase {
     // System.out.println("OPERATION: " + m_operation);
     if (m_operation == Operation.CMD_SET_VELOCITY) {
       FlywheelSubsystem.get().setVelocity(m_flywheelParam);
+    } else if (m_operation == Operation.CMD_REVERSE) {
+      FlywheelSubsystem.get().setVelocityForNegatives();
+      FlywheelSubsystem.get().setSpeed(-0.5);
     }
 
   }
@@ -46,7 +51,9 @@ public class FlywheelCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+    if(m_operation==Operation.CMD_REVERSE){
+      FlywheelSubsystem.get().setSpeed(0);
+    }
   }
 
   // Returns true when the command should end.
@@ -57,6 +64,8 @@ public class FlywheelCommand extends CommandBase {
     } else if (m_operation == Operation.CMD_SETTLE) {
       SmartDashboard.putBoolean("Flywheel at setpoint", FlywheelSubsystem.get().atSetpoint());
       return FlywheelSubsystem.get().atSetpoint();
+    } else if (m_operation == Operation.CMD_REVERSE) {
+      return false;
     }
     return true;
 

@@ -527,7 +527,7 @@ public class CommandComposer {
             // //     //     new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4050)).withTimeout(1)
             // ),
              new ParallelCommandGroup(
-                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
                 new SequentialCommandGroup(
                 new TurnCommand( 10).withTimeout(1),
                 new LimelightTurnCommand(-2)

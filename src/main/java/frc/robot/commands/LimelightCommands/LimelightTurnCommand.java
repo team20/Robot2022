@@ -89,8 +89,8 @@ public class LimelightTurnCommand extends CommandBase {
         }
 
         // Apply min power limit
-        if (Math.abs(turnOutput) < .05) {
-            turnOutput = Math.signum(turnOutput) * 0.1;
+        if (Math.abs(turnOutput) < .1) {
+            turnOutput = .1;//Math.signum(turnOutput) * 2;
         }
 
         DriveSubsystem.get().tankDrive(-turnOutput, turnOutput); // Flip these if the bot turns the wrong direction

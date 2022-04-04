@@ -69,6 +69,7 @@ public class FlywheelSubsystem extends SubsystemBase implements ShuffleboardLogg
         SmartDashboard.putBoolean("Flywheel at Setpoint", atSetpoint());
         SmartDashboard.putNumber("Flywheel Velocity", getVelocity());
         SmartDashboard.putNumber("Flywheel Setpoint", m_setVelocity);
+        //essentially the end method of the flywheel velocity setpoint mode
         if (m_setVelocity == 0 && Math.abs(m_neoEncoderMaster.getVelocity()) > 0.05) {
             m_neoFlywheelMaster.stopMotor();
         } else {
@@ -76,6 +77,10 @@ public class FlywheelSubsystem extends SubsystemBase implements ShuffleboardLogg
            // m_neoFlywheelMaster.set(neoBangBangController.calculate(m_neoEncoderMaster.getVelocity(), m_setVelocity));
         }
 
+    }
+
+    public void setSpeed(double reverse) {
+        m_neoFlywheelMaster.set(reverse);
     }
 
     public void incrementSpeed() {
@@ -110,6 +115,10 @@ public class FlywheelSubsystem extends SubsystemBase implements ShuffleboardLogg
         //m_startTime = Instant.now();
         m_setVelocity = velocity;
         m_neoController.setReference(m_setVelocity, ControlType.kVelocity, 0);
+    }
+
+    public void setVelocityForNegatives() {
+        m_setVelocity = -5;
     }
 
     /**
