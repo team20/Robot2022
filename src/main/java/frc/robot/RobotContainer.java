@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -74,7 +75,7 @@ public class RobotContainer {
 
                 // m_limelightSubsystem.turnOffLight();
                 m_limelightSubsystem.turnOnLight();
-
+                // CameraServer.getInstance().startAutomaticCapture();
                 configureShuffleboard();
                 CommandScheduler.getInstance().unregisterSubsystem(m_arduinoSubsystem);
                 m_autoChooser.addOption("Test turn", new TurnCommand(30));
