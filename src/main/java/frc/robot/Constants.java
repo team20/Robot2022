@@ -318,7 +318,7 @@ public final class Constants {
 		public static final boolean kFollowerOppose = false;
 		public static final int kSmartCurrentLimit = 40;// TODO: change
 		public static final double kP = .024; // TODO: tune PID
-		public static final double kI = .000001;//0.000001249999968422344;
+		public static final double kI = .000005;//0.000001249999968422344;
 		public static final double kD = 0;//0.000001249999968422344;// 0.00001249999968422344;
 		public static final double kIz = 0.0;
 		public static final double kFF = 0;//0.00008040000102482736;// 0.000_193;
@@ -332,7 +332,7 @@ public final class Constants {
 		public static final double kToTelescopePosition = -17.5;// inches
 
 		public static final double kTelescopeBehindRung = -81;// inches
-		public static final double kTelescopeTouchingRung = -60;// inches
+		public static final double kTelescopeTouchingRung = -50;// inches
 
 		public static final double kControlled = -87;// inches
 
