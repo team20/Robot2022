@@ -28,6 +28,7 @@ import frc.robot.commands.DriveCommands.ArcadeDriveCommand;
 import frc.robot.commands.IndexerCommands.IndexerCommand;
 import frc.robot.commands.IntakeCommands.*;
 import frc.robot.commands.LimelightCommands.LimelightOffCommand;
+import frc.robot.commands.LimelightCommands.LimelightOnCommand;
 import frc.robot.commands.LimelightCommands.LimelightTurnCommand;
 import frc.robot.commands.ShooterCommands.*;
 import frc.robot.subsystems.*;
@@ -73,45 +74,28 @@ public class RobotContainer {
          */
         public RobotContainer() {
 
-                // m_limelightSubsystem.turnOffLight();
-                m_limelightSubsystem.turnOnLight();
-                // CameraServer.getInstance().startAutomaticCapture();
+                m_limelightSubsystem.turnOffLight();
                 configureShuffleboard();
-                CommandScheduler.getInstance().unregisterSubsystem(m_arduinoSubsystem);
-                m_autoChooser.addOption("Test turn", new TurnCommand(30));
-                m_autoChooser.addOption("Test shots", CommandComposer.testShots());
-                m_autoChooser.addOption("Test drive", new DriveDistanceCommand(157));
-                m_autoChooser.addOption("Two Ball Straight", CommandComposer.getTwoBallStraight());
-                m_autoChooser.addOption("Two Ball 4 Red", CommandComposer.getTwoBallStarting4Red());
-                m_autoChooser.addOption("Two Ball 4 Blue", CommandComposer.getTwoBallStarting4Blue()); // using this one
-                                                                                                       // 3/14
-                m_autoChooser.addOption("Two Ball 2 Blue", CommandComposer.getTwoBallStarting2Blue()); // good **start
-                                                                                                       // with this one
-                m_autoChooser.addOption("Four To Two", CommandComposer.getFourToTwoAutoCommand());
-                m_autoChooser.addOption("One To Two", CommandComposer.getOneToTwoAutoCommand());
-                m_autoChooser.addOption("Four To Three", CommandComposer.getFourToThreeAutoCommand());
-                m_autoChooser.addOption("Two To Three Red", CommandComposer.getTwoToThreeAutoCommandRed());
-                m_autoChooser.addOption("Two To Three Test", CommandComposer.getTwoToThreeAutoCommandTest());
-                m_autoChooser.addOption("Two To Four", CommandComposer.getTwoToFourAutoCommand());
-                m_autoChooser.addOption("Four To Two To Three", CommandComposer.getFourToTwoToThreeAutoCommand()); // m_autoChooser.addOption("Taxi"
-                                                                                                                   // ,
-                                                                                                                   // new
-                                                                                                                   // Taxi(m_driveSubsystem));
-                // m_autoChooser.addOption("Taxi, shoot high");
-                // m_autoChooser.addOption("Shoot high, taxi");
-                // m_autoChooser.addOption("Shoot low, taxi");
-                // m_autoChooser.addOption("Taxi, pick-up, shoot high (2x)");
-                // m_autoChooser.addOption("Shoot high, taxi, pick-up, shoot high");
+                //CommandScheduler.getInstance().unregisterSubsystem(m_arduinoSubsystem);
+                
+                //m_limelightSubsystem.turnOnLight();
+                // CameraServer.getInstance().startAutomaticCapture();
 
-                // TODO do we need shots from all possible positions? red and blue? do get fms
-                // info for the colors? choice in code not shuffleboard??
-                // DriverStation.Alliance getAlliance() will return Red or Blue (Alliance.Red or
-                // Alliance.Blue)
-
-                // taxi, taxi then shoot, shoot then taxi (both height considerations)
-                // shoot taxi pick up ball and shoot
-                // shoot both with taxiing
-
+                m_autoChooser.addOption("Two Ball - Closest to Hangar ", CommandComposer.getTwoBallHangar());
+                m_autoChooser.addOption("Two Ball - Middle Position", CommandComposer.getTwoBallMiddlePosition()); 
+                m_autoChooser.addOption("Two Ball - Far Right Position", CommandComposer.getTwoBallFarRight()); 
+                m_autoChooser.addOption("Four Ball - Limelight Aiming", CommandComposer.getFourBallLimelight());
+                m_autoChooser.addOption("Four Ball - NavX Aiming Only", CommandComposer.getFourBallNavx());
+                // m_autoChooser.addOption("Test turn", new TurnCommand(30));
+                // m_autoChooser.addOption("Test shots", CommandComposer.testShots());
+                // m_autoChooser.addOption("Test drive", new DriveDistanceCommand(157));
+                // m_autoChooser.addOption("Two Ball Straight", CommandComposer.getTwoBallStraight());
+                // m_autoChooser.addOption("Four To Two", CommandComposer.getFourToTwoAutoCommand());
+                // m_autoChooser.addOption("One To Two", CommandComposer.getOneToTwoAutoCommand());
+                // m_autoChooser.addOption("Four To Three", CommandComposer.getFourToThreeAutoCommand());
+                // m_autoChooser.addOption("Two To Three Red", CommandComposer.getTwoToThreeAutoCommandRed());
+                // m_autoChooser.addOption("Two To Four", CommandComposer.getTwoToFourAutoCommand());
+                // m_autoChooser.addOption("Four To Two To Three", CommandComposer.getFourToTwoToThreeAutoCommand());
                 SmartDashboard.putData(m_autoChooser);
 
                 configureButtonBindings();
@@ -123,8 +107,9 @@ public class RobotContainer {
                 // **************DRIVER CONTROLS**************
                 // *******************************************
 
-                // ---------------X BUTTON--------------
-                // ------------------Pixy----------------
+                // --------------==--------X BUTTON----------------------
+                // ------------------High climb when held----------------
+
                 new JoystickButton(m_driverController, ControllerConstants.Button.kX)
                                 .whenHeld(CommandComposer.getHighClimbCommand());
 
@@ -133,15 +118,18 @@ public class RobotContainer {
                                         new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_STOP, 0), 
                                         new SlideHookCommand(SlideHookCommand.Operation.CMD_STOP, 0)));
 
-                // --------------TRIANGLE BUTTON--------------
+                // ---------------TRIANGLE BUTTON--------------
                 // -------------Indexer Manual Forwards--------
+
                 new JoystickButton(m_driverController, ControllerConstants.Button.kTriangle)
                                 .whenHeld(new IndexerCommand(IndexerCommand.Operation.CMD_FWD_MAN));
 
                 new JoystickButton(m_driverController, ControllerConstants.Button.kTriangle)
                                 .whenReleased(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
 
-                // --------------SQUARE BUTTON--------------
+                // -------------------SQUARE BUTTON-------------------
+                // -------------Traversal climb when held-------------
+
                 new JoystickButton(m_driverController, ControllerConstants.Button.kSquare)
                                 .whenHeld(CommandComposer.getTraversalClimbCommand());
 
@@ -149,11 +137,14 @@ public class RobotContainer {
                                 .whenReleased(new ParallelRaceGroup(
                                         new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_STOP, 0), 
                                         new SlideHookCommand(SlideHookCommand.Operation.CMD_STOP, 0)));
-                // --------------CIRCLE BUTTON--------------
+
+                // --------------CIRCLE BUTTON------------------
+                // ---------Zero the telescope encoders---------
+
                 new JoystickButton(m_driverController, ControllerConstants.Button.kCircle)
                         .whenPressed(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_ZERO_ENCODERS, 0));
 
-                // -----------------UP DPAD-----------------
+                // --------------------UP DPAD----------------------
                 // ------Telescope To Top Position OR manual--------
 
                 new POVButton(m_driverController, DPad.kUp).or(new POVButton(m_driverController, 45))
@@ -165,12 +156,14 @@ public class RobotContainer {
                                 .whenInactive(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, 0));
 
                 // -----------------RIGHT DPAD-----------------
-                // ---------Move Telescope Manual--------
+                // -----------Move Telescope Manual------------
+
                 new POVButton(m_driverController, DPad.kRight)
                                 .whenHeld(new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, -.2));
 
-                // -----------------DOWN DPAD-----------------
+                // ----------------------DOWN DPAD-----------------------
                 // ---------Telescope To Top Position OR manual----------
+
                 new POVButton(m_driverController, DPad.kDown).or(new POVButton(m_driverController, 135))
                                 .or(new POVButton(m_driverController, 225)).whileActiveOnce(
                                                 new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION,
@@ -182,30 +175,34 @@ public class RobotContainer {
 
                 // -----------------LEFT DPAD-----------------
                 // --------Slide Hook Manual Move-------------
+
                 new POVButton(m_driverController, DPad.kLeft)
                          .whenHeld(new SlideHookCommand(SlideHookCommand.Operation.CMD_MOVE, 0.5));
 
-                // ---------------LEFT BUMPER---------------
-                // -------------Fine Steer Left------------
+                // ------------------LEFT BUMPER----------------
+                // --------------Limelight shooting-------------
 
                 new JoystickButton(m_driverController, Button.kLeftBumper)
-                        .whileActiveOnce(new SequentialCommandGroup(new LimelightTurnCommand(-2), CommandComposer
-                        .getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION)));
+                        .whileActiveOnce(new SequentialCommandGroup(
+                                new LimelightOnCommand(), 
+                                new LimelightTurnCommand(-2),
+                                CommandComposer.getPresetShootCommand(
+                                ShootCommandComposer.Operation.LIMELIGHT_REGRESSION)));
                                  
                 new JoystickButton(m_driverController, Button.kLeftBumper)
                         .whenInactive(new ParallelCommandGroup(
                                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
-                                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)
-                                ));
-                
-
+                                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
+                                new LimelightOffCommand())); //TODO will the off command override the autos?
+           
+                //fine turning - old
                 // new JoystickButton(m_driverController, Button.kLeftBumper)
                 //                 .whenHeld(new ArcadeDriveCommand(m_driveSubsystem,
                 //                                 () -> 0.0, () -> DriveConstants.kFineTurningSpeed,
                 //                                 () -> -DriveConstants.kFineTurningSpeed));
                 
                 // ---------------RIGHT BUMPER---------------
-                // -------------Fine Steer Right------------
+                // -------------Fine Steer Right-------------
                 new JoystickButton(m_driverController, Button.kRightBumper)
                                 .whenHeld(new ArcadeDriveCommand(m_driveSubsystem,
                                                 () -> 0.0, () -> -DriveConstants.kFineTurningSpeed,
@@ -217,6 +214,7 @@ public class RobotContainer {
 
                 // ---------------RIGHT TRIGGER---------------
                 // ----------------Arcade Drive----------------
+              
                 m_driveSubsystem.setDefaultCommand(
                                 new ArcadeDriveCommand(m_driveSubsystem,
                                                 () -> -m_driverController.getRawAxis(Axis.kLeftY),
@@ -224,7 +222,7 @@ public class RobotContainer {
                                                 () -> m_driverController.getRawAxis(Axis.kRightTrigger)));
 
                 // ---------------RIGHT AXIS JOYSTICK---------------
-                // slide hook manual position
+                // ------------slide hook manual position-----------
                 m_slideHookSubsystem.setDefaultCommand(
                                 new SlideHookCommand(SlideHookCommand.Operation.CMD_JOYSTICK_POSITION,
                                                 () -> m_driverController.getRawAxis(Axis.kRightY)));
@@ -234,6 +232,8 @@ public class RobotContainer {
                 // ---------------RIGHT BUTTON JOYSTICK---------------
 
                 // ------------------SHARE BUTTON--------------------
+                // ------Zero telescope and slide hook encoders------
+
                 new JoystickButton(m_driverController, ControllerConstants.Button.kShare)
                                 .whenPressed(new ParallelCommandGroup(
                                                 new TelescopeHookCommand(
@@ -248,13 +248,15 @@ public class RobotContainer {
                 // ************OPERATOR CONTROLS**************
                 // *******************************************
 
-                // ---------------X BUTTON--------------
+                // -----------------X BUTTON-=====-------------
                 // --------Ramp up for fender low shot---------
+
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kX)
                                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
                                                 .negate())
                                 .whileActiveOnce(CommandComposer.getPresetShootCommand(
                                                 ShootCommandComposer.Operation.PRESET_FENDER_LOW));
+
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kX)
                                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
                                                 .negate())
@@ -263,101 +265,45 @@ public class RobotContainer {
                                                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
 
                 // --------------TRIANGLE BUTTON--------------
-                // --------Ramp up for safe shot---------
-             
-                // new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
-                // .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                //                 .negate())
-                // .whileActiveOnce(CommandComposer.getPresetShootCommand(
-                //                 ShootCommandComposer.Operation.PRESET_SAFE));
-                // new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
-                // .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                //                 .negate())
-                // .whenInactive(new ParallelCommandGroup(
-                //                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
-                //                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
+                // -----------Ramp up for safe shot----------- //TODO where is the safe shot?
 
-
-                //UNCOMMENT THIS TO HAVE A SAFE POSITION TO SHOOT FROM - you added this on 4/1/22
-                // new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
-                //                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                //                                 .negate())
-                //                 .whileActiveOnce(CommandComposer.getPresetShootCommand(
-                //                                 ShootCommandComposer.Operation.PRESET_SAFE));
-                // new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
-                //                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                //                                 .negate())
-                //                 .whenInactive(new ParallelCommandGroup(
-                //                                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
-                //                                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
-
-                // --------------SQUARE BUTTON--------------
-
-                // new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
-                // .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                //                 .negate())
-                // .whileActiveOnce(CommandComposer.getPresetShootCommand(
-                //                 ShootCommandComposer.Operation.PRESET_SAFE));
-                // new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
-                // .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                //                 .negate())
-                // .whenInactive(new ParallelCommandGroup(
-                //                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
-                //                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
-                       
-                
-                // --------Ramp up for limelight shot--------- //experimental: min ramp up being tested on 4/1/22
-              
-                // new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
-                // .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                //                 .negate())
-                // .whileActiveOnce(new SequentialCommandGroup(new LimelightTurnCommand(-2), CommandComposer
-                //                 .getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION)));
-                 
-                //uncomment this 4/3/22
-                new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
-                                .and(new JoystickButton(m_driverController, ControllerConstants.Button.kLeftBumper)
+                new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
+                                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
                                                 .negate())
                                 .whileActiveOnce(CommandComposer.getPresetShootCommand(
-                                                ShootCommandComposer.Operation.MIN_RAMP_UP));
+                                                ShootCommandComposer.Operation.PRESET_SAFE));
 
-                new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
-                                .or(new JoystickButton(m_driverController, ControllerConstants.Button.kLeftBumper))
+                new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
+                                .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
+                                                .negate())
                                 .whenInactive(new ParallelCommandGroup(
                                                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
                                                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
-                // new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
-                //                 .and(new JoystickButton(m_driverController, ControllerConstants.Button.kLeftBumper))
-                //                 .whenActive(new LimelightOffCommand());
-                //                         /*new ParallelCommandGroup(
-                                        //         new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
-                                        //     new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)*///)));
-                                              
-                // new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
-                //                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                //                                 .negate())
-                //                 .whileActiveOnce(CommandComposer
-                //                                 .getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION));
-                // new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
-                //                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
-                //                                 .negate())
-                //                 .whenInactive(new ParallelCommandGroup(
-                //                                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
-                //                                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
 
-                // --------------CIRCLE BUTTON--------------
+                // -----------------SQUARE BUTTON-----------------
+                // --------Pre ramp up for limelight shot--------- 
+              
+                new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
+                        .and(new JoystickButton(m_driverController, ControllerConstants.Button.kLeftBumper)
+                                .negate())
+                        .whileActiveOnce(CommandComposer.getPresetShootCommand(
+                                ShootCommandComposer.Operation.MIN_RAMP_UP));
+
+                new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
+                        .or(new JoystickButton(m_driverController, ControllerConstants.Button.kLeftBumper))
+                        .whenInactive(new ParallelCommandGroup(
+                                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
+                                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
+                
+                // ---------------CIRCLE BUTTON--------------
                 // -------Ramp up for fender high shot-------
+
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kCircle)
                                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
                                                 .negate())
                                 .whileActiveOnce(CommandComposer.getPresetShootCommand(
                                                 ShootCommandComposer.Operation.PRESET_FENDER_HIGH));
-                // new JoystickButton(m_operatorController, ControllerConstants.Button.kCircle)
-                // .and(new JoystickButton(m_operatorController,
-                // ControllerConstants.Button.kLeftBumper)
-                // .negate())
-                // .whileActiveOnce(CommandComposer.getPresetShootCommand(
-                // ShootCommandComposer.Operation.LIMELIGHT_LINEAR));
+               
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kCircle)
                                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
                                                 .negate())
@@ -367,11 +313,13 @@ public class RobotContainer {
 
                 // -----------------UP DPAD-----------------
                 // -----------Bring the intake arm up-------
+
                 new POVButton(m_operatorController, DPad.kUp)
                                 .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP));
 
                 // -----------------RIGHT DPAD-----------------
                 // -------Bring the hood to mechanical zero----
+
                 new POVButton(m_operatorController, DPad.kRight)
                                 .whenHeld(new HoodCommand(HoodCommand.Operation.CMD_POWER_ZERO, 0));
                 new POVButton(m_operatorController, DPad.kRight)
@@ -379,22 +327,22 @@ public class RobotContainer {
 
                 // -----------------DOWN DPAD-----------------
                 // --------Bring the intake arm down----------
+
                 new POVButton(m_operatorController, DPad.kDown)
                                 .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN));
 
                 // -----------------LEFT DPAD-----------------
-                // Manual index
+                // ---------------Manual index----------------
+
                 new POVButton(m_operatorController, DPad.kLeft)
                                 .whenHeld(new IndexerCommand(IndexerCommand.Operation.CMD_FWD_MAN));
 
                 new POVButton(m_operatorController, DPad.kLeft)
                                 .whenReleased(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
 
-                new JoystickButton(m_operatorController, DPad.kLeft)
-                                .whenHeld(new IndexerCommand(IndexerCommand.Operation.CMD_FWD_MAN));
-
                 // ---------------LEFT BUMPER----------------
                 // --------------Intake arm manual-------------
+               
                 // new JoystickButton(m_operatorController,
                 // Constants.ControllerConstants.Button.kLeftBumper)
                 // .whenHeld(CommandComposer.getLoadCommand());
@@ -407,6 +355,7 @@ public class RobotContainer {
                 // new JoystickButton(m_operatorController,
                 // Constants.ControllerConstants.Button.kLeftBumper)
                 // .whenReleased(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
+
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
                                 .whenHeld(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_MANUAL));
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
@@ -414,6 +363,7 @@ public class RobotContainer {
 
                 // ---------------RIGHT BUMPER---------------
                 // ---------Run the intake fowards-----------
+
                 // new JoystickButton(m_operatorController,
                 // Constants.ControllerConstants.Button.kRightBumper)
                 // .whenHeld(CommandComposer.getLoadCommand());
@@ -423,6 +373,7 @@ public class RobotContainer {
                 // new JoystickButton(m_operatorController,
                 // Constants.ControllerConstants.Button.kRightBumper)
                 // .whenReleased(new IntakeCommand(IntakeCommand.Operation.CMD_STOP));
+
                 new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
                                 .whenHeld(CommandComposer.getLoadCommand());
                 new JoystickButton(m_operatorController, Constants.ControllerConstants.Button.kRightBumper)
@@ -432,7 +383,11 @@ public class RobotContainer {
 
                 // -------------------LEFT TRIGGER------------------
 
-                // ---------------RIGHT TRIGGER---------------
+                // ----------------RIGHT TRIGGER---------------
+                // ---------------Spit out a ball--------------
+
+                new JoystickButton(m_operatorController, Constants.ControllerConstants.Axis.kRightTrigger)
+                .whenHeld(CommandComposer.getSpitCommand());
 
                 // ---------------RIGHT AXIS JOYSTICK---------------
 
@@ -441,6 +396,7 @@ public class RobotContainer {
                 // ---------------RIGHT BUTTON JOYSTICK---------------
 
                 // ------------------SHARE BUTTON--------------------
+                // -----------Manually reverse the indexer-----------
 
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kShare)
                         .whenHeld(new ParallelCommandGroup(
@@ -451,8 +407,9 @@ public class RobotContainer {
                                 new IndexerCommand(IndexerCommand.Operation.CMD_STOP)
                         ));
                
-                // ------------------OPTIONS BUTTON--------------------
-                // ------Run the indexer and intake backwards----------
+                // -----------------------OPTIONS BUTTON-----------------------
+                // ------Run the indexer, flywheel, and intake backwards-------
+
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kOptions)
                                 .whenHeld(new ParallelCommandGroup(
                                                 new IndexerCommand(IndexerCommand.Operation.CMD_REV_MAN),
@@ -465,17 +422,17 @@ public class RobotContainer {
                                                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)));
 
                 // ------------------TRACKPAD BUTTON--------------------
+                // -----------Reset the intake arm encoders-------------
+
+                new JoystickButton(m_operatorController, ControllerConstants.Button.kTrackpad)
+                .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_RESET_ENCODER));
 
                 // ------------------NOT YET FINALIZED------------------
-                new JoystickButton(m_operatorController, Constants.ControllerConstants.Axis.kRightTrigger)
-                                .whenHeld(CommandComposer.getSpitCommand());
-
+               
                 // new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftStick)
                 //                 .whenHeld(new DriveIntakeArmCommand(
                 //                                 () -> m_operatorController.getRawAxis(Axis.kLeftY) * 0.5));
-                new JoystickButton(m_operatorController, ControllerConstants.Button.kTrackpad)
-                                .whenPressed(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_RESET_ENCODER));
-
+              
         }
 
         public void configureTestingBindings() {
@@ -532,29 +489,7 @@ public class RobotContainer {
         }
 
         public Command getAutonomousCommand() {
-                // return new SequentialCommandGroup(new ZeroCommand(),
-                // m_autoChooser.getSelected());
                 return m_autoChooser.getSelected();
         }
 
-        public void generateAutonomousCommands() {
-                m_autoChooser.setDefaultOption("Shoot then Taxi",
-                                new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem, m_hoodSubsystem,
-                                                m_indexerSubsystem, 2));
-                m_autoChooser.addOption("Taxi Only",
-                                new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem, m_hoodSubsystem,
-                                                m_indexerSubsystem, 1));
-                m_autoChooser.addOption("Shoot then Taxi",
-                                new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem, m_hoodSubsystem,
-                                                m_indexerSubsystem, 2));
-                m_autoChooser.addOption("Drive to Cargo, Shoot Twice",
-                                new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem, m_hoodSubsystem,
-                                                m_indexerSubsystem, 3));
-                m_autoChooser.addOption("Shoot Lower Two Cargo",
-                                new ComplexAutoSequence(m_driveSubsystem, m_flywheelSubsystem, m_hoodSubsystem,
-                                                m_indexerSubsystem, 4));
-
-                SmartDashboard.putData(m_autoChooser);
-
-        }
 }
