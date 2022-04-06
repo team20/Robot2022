@@ -158,7 +158,7 @@ public final class Constants {
 		public static final double kQuickStopThreshold = .2;
 		public static final double kQuickStopAlpha = .1;
 		public static final double kBackupDistance = Units.feetToMeters(2);
-		public static final double kRampRate = .1;
+		public static final double kRampRate = .1;//1?
 		public static final double kSpeedLimitFactor = .75;
 
 		public static final boolean kLeftSensorPhase = true; // TODO these are totally arbitrary right now and need to
