@@ -44,9 +44,9 @@ public class TelescopeHookCommand extends CommandBase {
             subsystem.setSpeed(Math.abs(m_paramSup.get()) > 0.05 ? m_paramSup.get() : 0);
         }else if(m_operation == Operation.CMD_JOYSTICK_POSITION){
             if(m_paramSup.get()>.1){
-                subsystem.setPosition(TelescopeHookConstants.kExtendedPosition);
-            }else if(m_paramSup.get()<-.1){
                 subsystem.setPosition(TelescopeHookConstants.kRetractedPosition);
+            }else if(m_paramSup.get()<-.1){
+                subsystem.setPosition(TelescopeHookConstants.kExtendedPosition);
             }else{
                 subsystem.setSpeed(0);
             }
