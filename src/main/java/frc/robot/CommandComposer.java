@@ -213,11 +213,11 @@ public class CommandComposer {
 
             //new TurnCommand(13.3).withTimeout(2), //was 1.5
             new LimelightTurnCommand(-2),
-           new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
-             new ParallelCommandGroup(
-                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 13), 
-                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2700)),//was 3000 //was 4150
-            getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION),
+            new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
+            // new ParallelCommandGroup(
+            //      new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 13), 
+            //      new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2700)),//was 3000 //was 4150
+            getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION), //TODO
             getAutoShootCommand(),
             new ParallelCommandGroup(
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
@@ -225,7 +225,7 @@ public class CommandComposer {
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
             new TurnCommand( -15).withTimeout(1.5),//29 for red
             //new WaitCommand(8),
-            new ParallelCommandGroup(new DriveDistanceCommand(164), getAutoLoadCommand().withTimeout(2.5)),
+            new ParallelCommandGroup(new DriveDistanceCommand(164), getAutoLoadCommand().withTimeout(3)),
             new ParallelCommandGroup(
                 new DriveDistanceCommand(-164, 0.9),//was -157
                  new SequentialCommandGroup(
@@ -266,7 +266,7 @@ public class CommandComposer {
             new ParallelCommandGroup(
                  new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 13), 
                  new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2700)),//was 3000 //was 4150
-            getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION),
+            //getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION), //TODO might need to go back in
             getAutoShootCommand(),
             new ParallelCommandGroup(
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
@@ -334,12 +334,12 @@ public class CommandComposer {
             new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
             //new TurnCommand( -32).withTimeout(1.5),
             new ParallelCommandGroup(new DriveDistanceCommand(55), getAutoLoadCommand()),
-            //new TurnCommand( 20).withTimeout(1.5), 
+            //new TurnCommand(-3.63).withTimeout(1.5), 
             new LimelightTurnCommand(-2),
             new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
             new ParallelCommandGroup(
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 10.5), 
-                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2600)),
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2600)), //was 2600
             getAutoShootCommand(),
             new ParallelCommandGroup(
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
@@ -369,6 +369,40 @@ public class CommandComposer {
                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
             new LimelightOffCommand()    
+        );
+    }
+
+    public static Command getFiveBall(){ //5 ball auto
+        return new SequentialCommandGroup(
+            new LimelightOnCommand(),
+            new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
+            //new TurnCommand( -32).withTimeout(1.5),
+            new ParallelCommandGroup(new DriveDistanceCommand(40), getAutoLoadCommand().withTimeout(2)),
+            //new TurnCommand( 20).withTimeout(1.5), 
+            new LimelightTurnCommand(-2),
+            new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 10.5), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2600)),
+            getAutoShootCommand(),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
+            new TurnCommand(-95),
+            new ParallelCommandGroup(new DriveDistanceCommand(164), getAutoLoadCommand().withTimeout(2.5)),
+            new ParallelCommandGroup(
+                new DriveDistanceCommand(-164, 0.9),//was -157
+                 new SequentialCommandGroup(
+                     getAutoLoadCommand().withTimeout(3.5))          
+            ),
+            // new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP),
+            // new WaitCommand(.25),
+            // new DriveDistanceCommand(12),
+            // new DriveDistanceCommand(-12),
+            // new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
+
+            new LimelightOffCommand()  
         );
     }
 

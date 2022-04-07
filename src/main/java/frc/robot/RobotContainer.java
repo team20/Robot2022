@@ -79,6 +79,7 @@ public class RobotContainer {
                 //CommandScheduler.getInstance().unregisterSubsystem(m_arduinoSubsystem);
                 
                 //m_limelightSubsystem.turnOnLight();
+                
                 // CameraServer.getInstance().startAutomaticCapture();
 
                 m_autoChooser.addOption("Two Ball - Closest to Hangar ", CommandComposer.getTwoBallHangar());
@@ -107,7 +108,7 @@ public class RobotContainer {
                 // **************DRIVER CONTROLS**************
                 // *******************************************
 
-                // --------------==--------X BUTTON----------------------
+                // ------------------------X BUTTON----------------------
                 // ------------------High climb when held----------------
 
                 new JoystickButton(m_driverController, ControllerConstants.Button.kX)
