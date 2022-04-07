@@ -455,49 +455,49 @@ public class CommandComposer {
         );
     }
 
-    // public static Command getTwoToThreeAutoCommandRed(){//2,3
-    //     return new SequentialCommandGroup(
-    //         new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
-    //         new TurnCommand( -32).withTimeout(1.5), //was 1.5
-    //         new ParallelCommandGroup(new DriveDistanceCommand(30.0), getAutoLoadCommand()).withTimeout(4),
-    //         new TurnCommand( 20).withTimeout(1), //was 1.5
-    //         new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
-    //         new ParallelCommandGroup(
-    //             new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
-    //             new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4150)),
-    //         getAutoShootCommand(),
-    //         new ParallelCommandGroup(
-    //             new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
-    //             new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
-    //             new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
-    //         new TurnCommand( -29).withTimeout(1),//29 for red
-    //         new ParallelCommandGroup(new DriveDistanceCommand(157), getAutoLoadCommand().withTimeout(4)),
-    //         //getAutoLoadCommand().withTimeout(1),
-    //         //new IntakeCommand(IntakeCommand.Operation.CMD_STOP), 
-    //         //new TurnCommand( -30).withTimeout(1),
-    //         //new DriveDistanceCommand(-157, 0.9),
+    public static Command getTwoToThreeAutoCommandRed(){//2,3
+        return new SequentialCommandGroup(
+            new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
+            new TurnCommand( -32).withTimeout(1.5), //was 1.5
+            new ParallelCommandGroup(new DriveDistanceCommand(30.0), getAutoLoadCommand()).withTimeout(4),
+            new TurnCommand( 20).withTimeout(1), //was 1.5
+            new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4150)),
+            getAutoShootCommand(),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
+            new TurnCommand( -29).withTimeout(1),//29 for red
+            new ParallelCommandGroup(new DriveDistanceCommand(157), getAutoLoadCommand().withTimeout(4)),
+            //getAutoLoadCommand().withTimeout(1),
+            //new IntakeCommand(IntakeCommand.Operation.CMD_STOP), 
+            //new TurnCommand( -30).withTimeout(1),
+            //new DriveDistanceCommand(-157, 0.9),
 
-    //         new ParallelCommandGroup(
-    //             new DriveDistanceCommand(-150, 0.9),//was -157
-    //             new SequentialCommandGroup(
-    //             getAutoLoadCommand().withTimeout(0.5),
-    //             new IntakeCommand(IntakeCommand.Operation.CMD_STOP)            
-    //             ),
-    //             new ParallelCommandGroup(
-    //                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
-    //                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4050)).withTimeout(1)
-    //            ),
-    //         new TurnCommand( 24).withTimeout(1), //was 28 now moving to -28
-    //         //new ParallelCommandGroup(
-    //         //    new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
-    //         //    new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4150)).withTimeout(1),
-    //         getAutoShootCommandNoWait(),
-    //         new ParallelCommandGroup(
-    //             new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
-    //             new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
-    //             new IntakeCommand(IntakeCommand.Operation.CMD_STOP))
-    //     );
-    // }
+            new ParallelCommandGroup(
+                new DriveDistanceCommand(-150, 0.9),//was -157
+                new SequentialCommandGroup(
+                getAutoLoadCommand().withTimeout(0.5),
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP)            
+                ),
+                new ParallelCommandGroup(
+                    new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
+                    new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4050)).withTimeout(1)
+               ),
+            new TurnCommand( 24).withTimeout(1), //was 28 now moving to -28
+            //new ParallelCommandGroup(
+            //    new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
+            //    new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4150)).withTimeout(1),
+            getAutoShootCommandNoWait(),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP))
+        );
+    }
     public static Command getTwoToThreeAutoCommandTest(){ //2,3
         return new SequentialCommandGroup(
             new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
@@ -597,50 +597,6 @@ public class CommandComposer {
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP))
         );
     }
-
-    // public static Command getTwoToThreeAutoCommandRed(){//2,3
-    //     return new SequentialCommandGroup(
-    //         new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
-    //         new TurnCommand( -32).withTimeout(1.5), //was 1.5
-    //         new ParallelCommandGroup(new DriveDistanceCommand(30.0), getAutoLoadCommand()).withTimeout(4),
-    //         new TurnCommand( 20).withTimeout(1), //was 1.5
-    //         new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
-    //         new ParallelCommandGroup(
-    //             new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
-    //             new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4150)),
-    //         getAutoShootCommand(),
-    //         new ParallelCommandGroup(
-    //             new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
-    //             new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
-    //             new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
-    //         new TurnCommand( -29).withTimeout(1),//29 for red
-    //         new ParallelCommandGroup(new DriveDistanceCommand(157), getAutoLoadCommand().withTimeout(4)),
-    //         //getAutoLoadCommand().withTimeout(1),
-    //         //new IntakeCommand(IntakeCommand.Operation.CMD_STOP), 
-    //         //new TurnCommand( -30).withTimeout(1),
-    //         //new DriveDistanceCommand(-157, 0.9),
-
-    //         new ParallelCommandGroup(
-    //             new DriveDistanceCommand(-150, 0.9),//was -157
-    //             new SequentialCommandGroup(
-    //             getAutoLoadCommand().withTimeout(0.5),
-    //             new IntakeCommand(IntakeCommand.Operation.CMD_STOP)            
-    //             ),
-    //             new ParallelCommandGroup(
-    //                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
-    //                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4050)).withTimeout(1)
-    //            ),
-    //         new TurnCommand( 24).withTimeout(1), //was 28 now moving to -28
-    //         //new ParallelCommandGroup(
-    //         //    new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
-    //         //    new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4150)).withTimeout(1),
-    //         getAutoShootCommandNoWait(),
-    //         new ParallelCommandGroup(
-    //             new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
-    //             new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
-    //             new IntakeCommand(IntakeCommand.Operation.CMD_STOP))
-    //     );
-    // }
 
     public static Command getFiveBall(){//2,3
         return new SequentialCommandGroup(

@@ -80,22 +80,22 @@ public class RobotContainer {
                 configureShuffleboard();
                 CommandScheduler.getInstance().unregisterSubsystem(m_arduinoSubsystem);
                 m_autoChooser.addOption("5 Ball Straight", CommandComposer.getFiveBall());
-                // m_autoChooser.addOption("Test turn", new TurnCommand(30));
-                // m_autoChooser.addOption("Test shots", CommandComposer.testShots());
-                // m_autoChooser.addOption("Test drive", new DriveDistanceCommand(157));
-                // m_autoChooser.addOption("Two Ball Straight", CommandComposer.getTwoBallStraight());
-                // m_autoChooser.addOption("Two Ball 4 Red", CommandComposer.getTwoBallStarting4Red());
-                // m_autoChooser.addOption("Two Ball 4 Blue", CommandComposer.getTwoBallStarting4Blue()); // using this one
-                //                                                                                        // 3/14
-                // m_autoChooser.addOption("Two Ball 2 Blue", CommandComposer.getTwoBallStarting2Blue()); // good **start
-                //                                                                                        // with this one
-                // m_autoChooser.addOption("Four To Two", CommandComposer.getFourToTwoAutoCommand());
-                // m_autoChooser.addOption("One To Two", CommandComposer.getOneToTwoAutoCommand());
-                // m_autoChooser.addOption("Four To Three", CommandComposer.getFourToThreeAutoCommand());
-                // m_autoChooser.addOption("Two To Three Red", CommandComposer.getTwoToThreeAutoCommandRed());
-                // m_autoChooser.addOption("Two To Three Test", CommandComposer.getTwoToThreeAutoCommandTest());
-                // m_autoChooser.addOption("Two To Four", CommandComposer.getTwoToFourAutoCommand());
-                // m_autoChooser.addOption("Four To Two To Three", CommandComposer.getFourToTwoToThreeAutoCommand()); // m_autoChooser.addOption("Taxi"
+                m_autoChooser.addOption("Test turn", new TurnCommand(30));
+                m_autoChooser.addOption("Test shots", CommandComposer.testShots());
+                m_autoChooser.addOption("Test drive", new DriveDistanceCommand(157));
+                m_autoChooser.addOption("Two Ball Straight", CommandComposer.getTwoBallStraight());
+                m_autoChooser.addOption("Two Ball 4 Red", CommandComposer.getTwoBallStarting4Red());
+                m_autoChooser.addOption("Two Ball 4 Blue", CommandComposer.getTwoBallStarting4Blue()); // using this one
+                                                                                                       // 3/14
+                m_autoChooser.addOption("Two Ball 2 Blue", CommandComposer.getTwoBallStarting2Blue()); // good **start
+                                                                                                       // with this one
+                m_autoChooser.addOption("Four To Two", CommandComposer.getFourToTwoAutoCommand());
+                m_autoChooser.addOption("One To Two", CommandComposer.getOneToTwoAutoCommand());
+                m_autoChooser.addOption("Four To Three", CommandComposer.getFourToThreeAutoCommand());
+                m_autoChooser.addOption("Two To Three Red", CommandComposer.getTwoToThreeAutoCommandRed());
+                m_autoChooser.addOption("Two To Three Test", CommandComposer.getTwoToThreeAutoCommandTest());
+                m_autoChooser.addOption("Two To Four", CommandComposer.getTwoToFourAutoCommand());
+                m_autoChooser.addOption("Four To Two To Three", CommandComposer.getFourToTwoToThreeAutoCommand()); // m_autoChooser.addOption("Taxi"
                                                                                                                    // ,
                                                                                                                    // new
                                                                                                                    // Taxi(m_driveSubsystem));
