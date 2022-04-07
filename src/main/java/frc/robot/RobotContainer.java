@@ -77,7 +77,7 @@ public class RobotContainer {
 
                 m_limelightSubsystem.turnOffLight();
                 configureShuffleboard();
-                CommandScheduler.getInstance().unregisterSubsystem(m_arduinoSubsystem);
+                // CommandScheduler.getInstance().unregisterSubsystem(m_arduinoSubsystem);
                 m_autoChooser.addOption("5 Ball Straight", CommandComposer.getFiveBall());
                 m_autoChooser.addOption("Two Ball - Closest to Hangar ", CommandComposer.getTwoBallHangar());
                 m_autoChooser.addOption("Two Ball - Middle Position", CommandComposer.getTwoBallMiddlePosition()); 

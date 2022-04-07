@@ -136,9 +136,9 @@ public class CommandComposer {
         SlideHookCommand SlideToTelescopeTouch = new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kUntilTelescopeBack);//TODO: change this higher?
         
 
-            // SlideHookCommand SlideExtend = new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kMaxPosition);
-            // SequentialCommandGroup TelescopeRetract2 =new SequentialCommandGroup(new WaitCommand(1),new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kDisengageFromControlledPosition));
-        // ParallelCommandGroup BringAllDown=new ParallelCommandGroup(SlideExtend, TelescopeRetract2);
+            SlideHookCommand SlideExtend = new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kMaxPosition);
+            SequentialCommandGroup TelescopeRetract2 =new SequentialCommandGroup(new WaitCommand(1),new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kDisengageFromControlledPosition));
+        ParallelCommandGroup BringAllDown=new ParallelCommandGroup(SlideExtend, TelescopeRetract2);
 
         return new SequentialCommandGroup( 
         TelescopeRetract1, //on mid bar
@@ -153,9 +153,8 @@ public class CommandComposer {
         TelescopeRetract, //on mid bar
         SlideToTelescopeGroup2, 
         ReachForHigh,  
-        SlideToTelescopeTouch
-        // BringAllDown);
-        );
+        SlideToTelescopeTouch,
+        BringAllDown);
     }
 
 
