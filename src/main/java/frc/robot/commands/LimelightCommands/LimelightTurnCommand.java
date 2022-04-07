@@ -35,33 +35,10 @@ public class LimelightTurnCommand extends CommandBase {
 
     public LimelightTurnCommand(double setpointAngle) {
 
-        // ArduinoSubsystem arduinoSubsystem, double setpointAngle) {
-
-       // m_limelightSubsystem = limelightSubsystem;
-      //  m_driveSubsystem = driveSubsystem;
-        // m_arduinoSubsystem = arduinoSubsystem;
         m_setpointAngle = setpointAngle;
 
         addRequirements(LimelightSubsystem.get(), DriveSubsystem.get());
     }
-
-    // public LimelightTurnCommand(LimelightSubsystem limelightSubsystem, DriveSubsystem driveSubsystem) {
-    //     m_limelightSubsystem = limelightSubsystem;
-    //     m_driveSubsystem = driveSubsystem;
-    //     m_setpointAngle = 0; // default setpoint angle is 0(directly in front of the robot)
-    //     addRequirements(m_limelightSubsystem, m_driveSubsystem);
-    // }
-
-    // public LimelightTurnCommand(LimelightSubsystem limelightSubsystem,
-    // DriveSubsystem driveSubsystem,
-    // ArduinoSubsystem arduinoSubsystem) {
-    // m_limelightSubsystem = limelightSubsystem;
-    // m_driveSubsystem = driveSubsystem;
-    // m_arduinoSubsystem = arduinoSubsystem;
-    // m_setpointAngle = 0; // default setpoint angle is 0 (directly in front of the
-    // robot)
-    // addRequirements(m_limelightSubsystem, m_driveSubsystem);
-    // }
 
     /**
      * Set the tolerance and goal of the PIDs
@@ -69,7 +46,7 @@ public class LimelightTurnCommand extends CommandBase {
     public void initialize() {
         m_startTime = Instant.now();
 
-        LimelightSubsystem.get().turnOnLight();
+        //LimelightSubsystem.get().turnOnLight();
 
         m_turnController.setTolerance(LimelightConstants.kTurnTolerance);
         m_turnController.setSetpoint(m_setpointAngle);
@@ -102,10 +79,6 @@ public class LimelightTurnCommand extends CommandBase {
     public void end(boolean interupted) {
         //LimelightSubsystem.get().turnOffLight();
         DriveSubsystem.get().tankDrive(0, 0);
-
-        // m_arduinoSubsystem.resetLEDs();
-        // new UpdateShooterLEDsCommand(() -> LEDModes.kTheaterLights,
-        // () -> LEDColors.kGreen).execute(); //change this to Arya's theater lights
     }
 
     public boolean isFinished() { // TODO: assumes you would only press the button once, no holding down

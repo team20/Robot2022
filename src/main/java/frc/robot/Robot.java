@@ -30,7 +30,7 @@ public class Robot extends TimedRobot {
     CameraServer.startAutomaticCapture();
     m_robotContainer = new RobotContainer();
     LiveWindow.disableAllTelemetry();
-    CameraServer.startAutomaticCapture();
+    //CameraServer.startAutomaticCapture();
   }
 
   @Override
@@ -67,6 +67,7 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    //DriveSubsystem.get().zeroHeading();
     if(m_aCommand != null) {
       m_aCommand.cancel();
     }

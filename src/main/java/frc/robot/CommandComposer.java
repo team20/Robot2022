@@ -48,12 +48,13 @@ public class CommandComposer {
         
         Command shootCommand = new SequentialCommandGroup(
             new ParallelCommandGroup(new FlywheelCommand(FlywheelCommand.Operation.CMD_SETTLE,0), 
-                                     new HoodCommand(HoodCommand.Operation.CMD_SETTLE,0)).withTimeout(2), 
+                                     new HoodCommand(HoodCommand.Operation.CMD_SETTLE,0)).withTimeout(1.25), 
             new DeferredCommand(IndexerCommandComposer::getShootCommand),
+            new WaitCommand(0.25),
             new DeferredCommand(IndexerCommandComposer::getShootCommand),
 
             //new FlywheelCommand(FlywheelCommand.Operation.CMD_SETTLE,0),
-            new WaitCommand(0.3), 
+            //new WaitCommand(0.3), 
             new DeferredCommand(IndexerCommandComposer::getShootCommand));
 
         return new SequentialCommandGroup(shootCommand);
@@ -201,6 +202,212 @@ public class CommandComposer {
         return new DriveDistanceCommand(distance);
     }
 
+    //the relevant autos
+
+    public static Command getFourBallLimelight(){ //four ball auto with limelight aiming
+        return new SequentialCommandGroup(
+            new LimelightOnCommand(),
+            new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
+            //new TurnCommand(13.3).withTimeout(1), //was 1.5
+            new ParallelCommandGroup(new DriveDistanceCommand(60.0), getAutoLoadCommand()).withTimeout(2),
+
+            //new TurnCommand(13.3).withTimeout(2), //was 1.5
+            new LimelightTurnCommand(-2),
+            new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
+            // new ParallelCommandGroup(
+            //      new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 13), 
+            //      new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2700)),//was 3000 //was 4150
+            getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION), //TODO
+            getAutoShootCommand(),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
+            new TurnCommand( -15).withTimeout(1.5),//29 for red
+            //new WaitCommand(8),
+            new ParallelCommandGroup(new DriveDistanceCommand(164), getAutoLoadCommand().withTimeout(3)),
+            new ParallelCommandGroup(
+                new DriveDistanceCommand(-164, 0.9),//was -157
+                 new SequentialCommandGroup(
+                     getAutoLoadCommand().withTimeout(3.5))          
+            ),
+            // //     // new ParallelCommandGroup(
+            // //     //     new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
+            // //     //     new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4050)).withTimeout(1)
+            // ),
+             new ParallelCommandGroup(
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
+                new SequentialCommandGroup(
+                //new TurnCommand(12.08).withTimeout(1)
+                new TurnCommand( 10).withTimeout(1),
+                new LimelightTurnCommand(-2)
+                ), //was 28 now moving to -28
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2650)).withTimeout(1),
+            // //new WaitCommand(0.5),
+            getAutoShootCommandNoWait(),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
+            new LimelightOffCommand()
+        );
+    }
+
+    public static Command getFourBallNavx(){ //four ball auto using the navx
+        return new SequentialCommandGroup(
+            new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
+            //new TurnCommand(13.3).withTimeout(1), //was 1.5
+            new ParallelCommandGroup(new DriveDistanceCommand(60.0), getAutoLoadCommand()).withTimeout(2),
+
+            new TurnCommand(13.3).withTimeout(2), //was 1.5
+            //new LimelightTurnCommand(-2),
+            new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
+            new ParallelCommandGroup(
+                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 13), 
+                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2700)),//was 3000 //was 4150
+            //getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION), //TODO might need to go back in
+            getAutoShootCommand(),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
+            new TurnCommand( -15).withTimeout(1.5),//29 for red
+            //new WaitCommand(8),
+            new ParallelCommandGroup(new DriveDistanceCommand(164), getAutoLoadCommand().withTimeout(2.5)),
+            new ParallelCommandGroup(
+                new DriveDistanceCommand(-164, 0.9),//was -157
+                 new SequentialCommandGroup(
+                     getAutoLoadCommand().withTimeout(3.5))          
+            ),
+            // //     // new ParallelCommandGroup(
+            // //     //     new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
+            // //     //     new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4050)).withTimeout(1)
+            // ),
+             new ParallelCommandGroup(
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
+                new SequentialCommandGroup(
+                new TurnCommand(12.08).withTimeout(1)
+                // new TurnCommand(10).withTimeout(1),
+                // new LimelightTurnCommand(-2)
+                ), //was 28 now moving to -28
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2650)).withTimeout(1),
+            // //new WaitCommand(0.5),
+            getAutoShootCommandNoWait(),
+             new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP))
+        );
+    }
+
+    public static Command getTwoBallFarRight(){ //2 ball starting in furthest right position
+        return new SequentialCommandGroup(
+            new LimelightOnCommand(),
+            new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
+            //new TurnCommand( -32).withTimeout(1.5),
+            new ParallelCommandGroup(new DriveDistanceCommand(40), getAutoLoadCommand().withTimeout(2)),
+            //new TurnCommand( 20).withTimeout(1.5), 
+            new LimelightTurnCommand(-2),
+            new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 10.5), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2600)),
+            getAutoShootCommand(),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
+            new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP),
+            new WaitCommand(.25),
+            new DriveDistanceCommand(12),
+            new DriveDistanceCommand(-12),
+            new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
+            new LimelightOffCommand()  
+        );
+    }
+
+    public static Command getTwoBallHangar(){ //2 ball starting near the hangar
+        return new SequentialCommandGroup(
+            new LimelightOnCommand(),
+            new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
+            //new TurnCommand( -32).withTimeout(1.5),
+            new ParallelCommandGroup(new DriveDistanceCommand(55), getAutoLoadCommand()),
+            //new TurnCommand(-3.63).withTimeout(1.5), 
+            new LimelightTurnCommand(-2),
+            new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 10.5), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2600)), //was 2600
+            getAutoShootCommand(),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
+            new DriveDistanceCommand(9),
+            new LimelightOffCommand()    
+        );
+    }
+
+    public static Command getTwoBallMiddlePosition(){ //two ball starting in middle position
+        return new SequentialCommandGroup(
+            new LimelightOnCommand(),
+            new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
+            //new TurnCommand(-24).withTimeout(1), //was 1.5
+            new ParallelCommandGroup(new DriveDistanceCommand(60.0), getAutoLoadCommand()).withTimeout(1),
+
+            //new TurnCommand(-15).withTimeout(2), //was 1.5
+            new LimelightTurnCommand(-2),
+            new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
+            new ParallelCommandGroup(
+                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 13), 
+                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2700)),//was 3000 //was 4150
+            getAutoShootCommand(),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
+            new LimelightOffCommand()    
+        );
+    }
+
+    public static Command getFiveBall(){ //5 ball auto
+        return new SequentialCommandGroup(
+            new LimelightOnCommand(),
+            new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
+            //new TurnCommand( -32).withTimeout(1.5),
+            new ParallelCommandGroup(new DriveDistanceCommand(40), getAutoLoadCommand().withTimeout(2)),
+            //new TurnCommand( 20).withTimeout(1.5), 
+            new LimelightTurnCommand(-2),
+            new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 10.5), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2600)),
+            getAutoShootCommand(),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
+            new TurnCommand(-95),
+            new ParallelCommandGroup(new DriveDistanceCommand(164), getAutoLoadCommand().withTimeout(2.5)),
+            new ParallelCommandGroup(
+                new DriveDistanceCommand(-164, 0.9),//was -157
+                 new SequentialCommandGroup(
+                     getAutoLoadCommand().withTimeout(3.5))          
+            ),
+            // new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP),
+            // new WaitCommand(.25),
+            // new DriveDistanceCommand(12),
+            // new DriveDistanceCommand(-12),
+            // new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
+
+            new LimelightOffCommand()  
+        );
+    }
+
+    //irrelevant autos
+
     public static Command getTwoBallStraight(){//go back straight and shoot
         return new SequentialCommandGroup(
             new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
@@ -228,62 +435,6 @@ public class CommandComposer {
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP)));
-    }
-    public static Command getTwoBallStarting4Red(){//4
-        return new SequentialCommandGroup(
-            new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
-            new TurnCommand( 32).withTimeout(1.5),
-            new ParallelCommandGroup(new DriveDistanceCommand(45), getAutoLoadCommand()), 
-            new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
-            new ParallelCommandGroup(
-                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 12), 
-                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4200)),
-            getAutoShootCommand(),
-            new ParallelCommandGroup(
-                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
-                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
-                new IntakeCommand(IntakeCommand.Operation.CMD_STOP))
-                
-        );
-    }
-
-    public static Command getTwoBallStarting4Blue(){//4
-        return new SequentialCommandGroup(
-            new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
-            new TurnCommand( 23).withTimeout(.75),//was 27 turn
-            new ParallelCommandGroup(new DriveDistanceCommand(55), getAutoLoadCommand().withTimeout(5)), 
-            new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
-            new TurnCommand( -30).withTimeout(.75),
-            //new LimelightTurnCommand(LimelightSubsystem.get(), DriveSubsystem.get()).withTimeout(8),
-            new ParallelCommandGroup(
-                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 12), 
-                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4200)),
-            getAutoShootCommand(),
-            new ParallelCommandGroup(
-                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
-                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
-                new IntakeCommand(IntakeCommand.Operation.CMD_STOP))
-                
-        );
-    }
-
-    public static Command getTwoBallStarting2Blue(){//2
-        return new SequentialCommandGroup(
-            new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
-            new TurnCommand( -32).withTimeout(1.5),
-            new ParallelCommandGroup(new DriveDistanceCommand(40), getAutoLoadCommand()),
-            new TurnCommand( 20).withTimeout(1.5), 
-            new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
-            new ParallelCommandGroup(
-                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 9.1), 
-                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4000)),
-            getAutoShootCommand(),
-            new ParallelCommandGroup(
-                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
-                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
-                new IntakeCommand(IntakeCommand.Operation.CMD_STOP))
-                
-        );
     }
 
     public static Command getFourToTwoAutoCommand(){//4,2
@@ -366,51 +517,7 @@ public class CommandComposer {
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP))
         );
     }
-    
-    public static Command getTwoToThreeAutoCommandBlueNEWCOPY(){ //2,3
-        return new SequentialCommandGroup(
-            //new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
-            //new TurnCommand(-24).withTimeout(1), //was 1.5
-            new ParallelCommandGroup(new DriveDistanceCommand(60.0), getAutoLoadCommand()).withTimeout(1.5),
-            //new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
-            //new TurnCommand(-15).withTimeout(2), //was 1.5
-            new LimelightTurnCommand(-2),
-             new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
-             new ParallelCommandGroup(
-                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 13), 
-                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2700)),//was 3000 //was 4150
-                getAutoShootCommand()
-            // new ParallelCommandGroup(
-            //     new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
-            //     new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
-            //     new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
-            // new TurnCommand( -38).withTimeout(1.5),//29 for red
-            // new ParallelCommandGroup(new DriveDistanceCommand(161), getAutoLoadCommand().withTimeout(4)),
-            // new ParallelCommandGroup(
-            //     new DriveDistanceCommand(-161, 0.9),//was -157
-            //     new SequentialCommandGroup(
-            //         getAutoLoadCommand().withTimeout(1),
-            //         new IntakeCommand(IntakeCommand.Operation.CMD_STOP)            
-            // )//,
-            //     // new ParallelCommandGroup(
-            //     //     new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
-            //     //     new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4050)).withTimeout(1)
-            // ),
-            // new ParallelCommandGroup(
-
-            //    new LimelightTurnCommand(-2),
-            //     //new TurnCommand( -8).withTimeout(1), //was 28 now moving to -28
-            //    new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11), 
-            //    new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2650)).withTimeout(1),
-            // //new WaitCommand(0.5),
-            // //getAutoShootCommand(),
-            // new ParallelCommandGroup(
-            //     new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
-            //     new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
-            //     new IntakeCommand(IntakeCommand.Operation.CMD_STOP))
-        );
-    }
-
+ 
     public static Command getTwoToThreeAutoCommandBlue(){ //2,3
         return new SequentialCommandGroup(
             //new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
@@ -496,52 +603,7 @@ public class CommandComposer {
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP))
         );
     }
-    public static Command getTwoToThreeAutoCommandTest(){ //2,3
-        return new SequentialCommandGroup(
-            //new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
-            //new TurnCommand(-24).withTimeout(1), //was 1.5
-            new ParallelCommandGroup(new DriveDistanceCommand(60.0), getAutoLoadCommand()).withTimeout(2),
 
-            //new TurnCommand(-15).withTimeout(2), //was 1.5
-            new LimelightTurnCommand(-2),
-           new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
-             new ParallelCommandGroup(
-                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 13), 
-                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2700)),//was 3000 //was 4150
-            getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION),
-            getAutoShootCommand(),
-            new ParallelCommandGroup(
-                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
-                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
-                new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
-            new TurnCommand( -15).withTimeout(1.5),//29 for red
-            //new WaitCommand(8),
-            new ParallelCommandGroup(new DriveDistanceCommand(164), getAutoLoadCommand().withTimeout(4)),
-            new ParallelCommandGroup(
-                new DriveDistanceCommand(-164, 0.9),//was -157
-                 new SequentialCommandGroup(
-                     getAutoLoadCommand().withTimeout(3.5))          
-            ),
-            // //     // new ParallelCommandGroup(
-            // //     //     new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
-            // //     //     new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4050)).withTimeout(1)
-            // ),
-             new ParallelCommandGroup(
-                new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
-                new SequentialCommandGroup(
-                new TurnCommand( 10).withTimeout(1),
-                new LimelightTurnCommand(-2)
-                ), //was 28 now moving to -28
-                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11), 
-                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2650)).withTimeout(1),
-            // //new WaitCommand(0.5),
-            getAutoShootCommandNoWait(),
-             new ParallelCommandGroup(
-                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
-                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
-                new IntakeCommand(IntakeCommand.Operation.CMD_STOP))
-        );
-    }
     public static Command getTwoToFourAutoCommand(){
         return new SequentialCommandGroup(
             new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
@@ -568,6 +630,7 @@ public class CommandComposer {
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP))
         );
     }
+
     public static Command getFourToTwoToThreeAutoCommand(){
         return new SequentialCommandGroup(
             new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),

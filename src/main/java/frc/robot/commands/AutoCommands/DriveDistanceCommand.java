@@ -42,8 +42,8 @@ public class DriveDistanceCommand extends CommandBase {
   @Override
   public void initialize() {
     DriveSubsystem.get().resetEncoders();
-    SmartDashboard.putNumber("encoder start left", DriveSubsystem.get().getLeftEncoderPosition());
-    SmartDashboard.putNumber("encoder start right", DriveSubsystem.get().getRightEncoderPosition());
+    //SmartDashboard.putNumber("encoder start left", DriveSubsystem.get().getLeftEncoderPosition());
+    //SmartDashboard.putNumber("encoder start right", DriveSubsystem.get().getRightEncoderPosition());
     //m_startTime = Instant.now();
 
     // Creates a ProfiledPIDController
@@ -65,8 +65,8 @@ public class DriveDistanceCommand extends CommandBase {
   public void execute() {
     m_startDistanceLeft = 0;
     m_startDistanceRight = 0;
-    SmartDashboard.putNumber("encoder start left", DriveSubsystem.get().getLeftEncoderPosition());
-    SmartDashboard.putNumber("encoder start right", DriveSubsystem.get().getRightEncoderPosition());
+    //SmartDashboard.putNumber("encoder start left", DriveSubsystem.get().getLeftEncoderPosition());
+    //SmartDashboard.putNumber("encoder start right", DriveSubsystem.get().getRightEncoderPosition());
 
     // Calculates the output of the PID algorithm based on the sensor reading
     // and sends it to a motor
@@ -89,10 +89,10 @@ public class DriveDistanceCommand extends CommandBase {
   public boolean isFinished() {
     double currDistanceLeft = DriveSubsystem.get().getLeftEncoderPosition();
     double currDistanceRight = DriveSubsystem.get().getRightEncoderPosition();
-    SmartDashboard.putNumber("encoder current left", DriveSubsystem.get().getLeftEncoderPosition());
-    SmartDashboard.putNumber("encoder current right", DriveSubsystem.get().getRightEncoderPosition());
-    SmartDashboard.putBoolean("DriveDistance finished", (currDistanceLeft - m_startDistanceLeft) > m_distance
-        && (currDistanceRight - m_startDistanceRight) > m_distance);
+    // SmartDashboard.putNumber("encoder current left", DriveSubsystem.get().getLeftEncoderPosition());
+    // SmartDashboard.putNumber("encoder current right", DriveSubsystem.get().getRightEncoderPosition());
+    // SmartDashboard.putBoolean("DriveDistance finished", (currDistanceLeft - m_startDistanceLeft) > m_distance
+    //     && (currDistanceRight - m_startDistanceRight) > m_distance);
     
     // return Math.abs(currDistanceLeft - m_startDistanceLeft) > Math.abs(m_distance)
     //     && Math.abs(currDistanceRight - m_startDistanceRight) > Math.abs(m_distance);

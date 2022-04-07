@@ -28,10 +28,11 @@ public class ZeroCommand extends CommandBase {
     public void initialize() {
         m_startTime = Instant.now();
         DriveSubsystem.get().resetEncoders();
-        DriveSubsystem.get().zeroHeading();
-        HoodSubsystem.get().resetEncoder();
-        IntakeArmSubsystem.get().resetEncoder();
-        TelescopeHookSubsystem.get().resetEncoder();
+        //DriveSubsystem.get().zeroHeading();
+        // HoodSubsystem.get().resetEncoder();
+        // IntakeArmSubsystem.get().resetEncoder();
+        // TelescopeHookSubsystem.get().resetEncoder();
+        
     }
 
     // Called every time the scheduler runs while the command is scheduled.

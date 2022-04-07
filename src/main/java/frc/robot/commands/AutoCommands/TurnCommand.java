@@ -24,7 +24,7 @@ public class TurnCommand extends CommandBase {
 
     public void initialize() {
         //m_startTime = Instant.now();
-        System.out.println("starting turn");
+        //System.out.println("starting turn");
         // double goalAngle = m_angle + DriveSubsystem.get().getHeading();
         // if(goalAngle > 180){
         //     goalAngle -= 360;
@@ -39,7 +39,7 @@ public class TurnCommand extends CommandBase {
 
     public void execute() {
         double measurementAngle = DriveSubsystem.get().getHeading();
-        SmartDashboard.putNumber("Angle ", measurementAngle);
+        //SmartDashboard.putNumber("Angle ", measurementAngle);
         double turnOutput = m_turnController.calculate(measurementAngle);
         DriveSubsystem.get().arcadeDrive(0, turnOutput, -turnOutput);
         
