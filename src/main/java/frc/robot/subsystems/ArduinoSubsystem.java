@@ -25,7 +25,7 @@ public class ArduinoSubsystem extends SubsystemBase {
 		} else {
 			m_flywheelAtSetpoint = false;
 		}		
-		System.out.println("flywheel at setpoint: " + m_flywheelAtSetpoint);
+		//System.out.println("flywheel at setpoint: " + m_flywheelAtSetpoint);
 		m_arduino.set(m_flywheelAtSetpoint);
 	}
 

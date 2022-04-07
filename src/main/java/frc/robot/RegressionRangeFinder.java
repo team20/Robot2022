@@ -22,7 +22,7 @@ public class RegressionRangeFinder extends RangeFinder{
             // RPM THEN ANGLE
             RPM = -82.992*limelightAngle + 1665.1;
             Angle = -0.2659*limelightAngle + 11.255;
-            System.out.println("ANGLE: " + Angle);
+            //System.out.println("ANGLE: " + Angle);
         }
         
         double[] ret = {Angle, RPM};
