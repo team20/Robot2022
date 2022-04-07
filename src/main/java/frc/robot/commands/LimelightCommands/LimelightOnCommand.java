@@ -3,14 +3,14 @@ package frc.robot.commands.LimelightCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.LimelightSubsystem;
 
-public class LimelightOffCommand extends CommandBase {
+public class LimelightOnCommand extends CommandBase {
 
-    public LimelightOffCommand() {
+    public LimelightOnCommand() {
         addRequirements(LimelightSubsystem.get());
     }
 
     public void initialize() {
-        LimelightSubsystem.get().turnOffLight();
+        LimelightSubsystem.get().turnOnLight();
     }
 
     /**

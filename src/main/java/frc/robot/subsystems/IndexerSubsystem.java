@@ -117,7 +117,7 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
         m_proximitySensorCenterState = !m_proximitySensorCenter.get();
         SmartDashboard.putBoolean("Indexer RTF", m_proximitySensorStartState);
         SmartDashboard.putBoolean("Indexer BIC", m_proximitySensorCenterState);
-        SmartDashboard.putNumber("Indexer Encoder Value", m_neoEncoder.getPosition());
+        //SmartDashboard.putNumber("Indexer Encoder Value", m_neoEncoder.getPosition());
 
         //SmartDashboard.putString("Color String", m_colorString);
     }
