@@ -377,33 +377,32 @@ public class CommandComposer {
         return new SequentialCommandGroup(
             new LimelightOnCommand(),
             new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
-            //new TurnCommand( -32).withTimeout(1.5),
-            new ParallelCommandGroup(new DriveDistanceCommand(40), getAutoLoadCommand().withTimeout(2)),
-            //new TurnCommand( 20).withTimeout(1.5), 
-            new LimelightTurnCommand(-2),
+            new ParallelCommandGroup(new DriveDistanceCommand(37.0), getAutoLoadCommand()),
             new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
-            new ParallelCommandGroup(
-                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 10.5), 
-                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2600)),
+            getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION),
             getAutoShootCommand(),
             new ParallelCommandGroup(
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
-                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
-                new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
-            new TurnCommand(-95),
-            new ParallelCommandGroup(new DriveDistanceCommand(164), getAutoLoadCommand().withTimeout(2.5)),
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)
+                ),
+            new TurnCommand(-121.68),
+            new ParallelCommandGroup(new DriveDistanceCommand(172), getAutoLoadCommand()),
+            new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
+            new TurnCommand(-78),
+            getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION),
+            getAutoShootCommand(),
             new ParallelCommandGroup(
-                new DriveDistanceCommand(-164, 0.9),//was -157
-                 new SequentialCommandGroup(
-                     getAutoLoadCommand().withTimeout(3.5))          
-            ),
-            // new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_UP),
-            // new WaitCommand(.25),
-            // new DriveDistanceCommand(12),
-            // new DriveDistanceCommand(-12),
-            // new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
-
-            new LimelightOffCommand()  
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)
+        ),           new ParallelCommandGroup(new DriveDistanceCommand(91), getAutoLoadCommand()),
+           new ParallelCommandGroup(new DriveDistanceCommand(-118), getAutoLoadCommand()),
+           getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION),
+           getAutoShootCommand(),
+           new ParallelCommandGroup(
+               new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+               new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)
+        ),
+        new LimelightOffCommand()
         );
     }
 
@@ -660,33 +659,4 @@ public class CommandComposer {
         );
     }
 
-    public static Command getFiveBall(){//2,3
-        return new SequentialCommandGroup(
-            // new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
-            new ParallelCommandGroup(new DriveDistanceCommand(37.0), getAutoLoadCommand()),
-            new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
-            getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION),
-            getAutoShootCommand(),
-            new ParallelCommandGroup(
-                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
-                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)
-                ),
-            new TurnCommand(-121.68),
-            new ParallelCommandGroup(new DriveDistanceCommand(172), getAutoLoadCommand()),
-            new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
-            new TurnCommand(-78),
-            getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION),
-            getAutoShootCommand(),
-            new ParallelCommandGroup(
-                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
-                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)
-        ),           new ParallelCommandGroup(new DriveDistanceCommand(91), getAutoLoadCommand()),
-           new ParallelCommandGroup(new DriveDistanceCommand(-118), getAutoLoadCommand()),
-           getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION),
-           getAutoShootCommand(),
-           new ParallelCommandGroup(
-               new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
-               new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)
-       )        );
-    }
 }
