@@ -75,10 +75,11 @@ public class RobotContainer {
          */
         public RobotContainer() {
 
-                m_limelightSubsystem.turnOffLight();
+                //m_limelightSubsystem.turnOffLight();
                 configureShuffleboard();
                 // CommandScheduler.getInstance().unregisterSubsystem(m_arduinoSubsystem);
                 m_autoChooser.addOption("5 Ball Straight", CommandComposer.getFiveBall());
+                m_autoChooser.addOption("5 Ball DO THIS ONE", CommandComposer.getTest());
                 m_autoChooser.addOption("Two Ball - Closest to Hangar ", CommandComposer.getTwoBallHangar());
                 m_autoChooser.addOption("Two Ball - Middle Position", CommandComposer.getTwoBallMiddlePosition()); 
                 m_autoChooser.addOption("Two Ball - Far Right Position", CommandComposer.getTwoBallFarRight()); 
@@ -223,8 +224,8 @@ public class RobotContainer {
 
                 // ---------------RIGHT AXIS JOYSTICK---------------
                 // ------------slide hook manual position-----------
-                m_slideHookSubsystem.setDefaultCommand(
-                                new SlideHookCommand(SlideHookCommand.Operation.CMD_JOYSTICK_POSITION,
+                m_telescopeHookSubsystem.setDefaultCommand(
+                                new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_JOYSTICK_POSITION,
                                                 () -> m_driverController.getRawAxis(Axis.kRightY)));
                 // ---------------LEFT BUTTON JOYSTICK---------------
 
@@ -381,6 +382,12 @@ public class RobotContainer {
                 // ---------------LEFT AXIS JOYSTICK---------------
 
                 // -------------------LEFT TRIGGER------------------
+
+                // new JoystickButton(m_operatorController,  Constants.ControllerConstants.Axis.kLeftTrigger)
+                // .whenHeld(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_MANUAL_DOWN));
+                // new JoystickButton(m_operatorController, Constants.ControllerConstants.Axis.kLeftTrigger)
+                // .whenReleased(new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_STOP));
+
 
                 // ----------------RIGHT TRIGGER---------------
                 // ---------------Spit out a ball--------------

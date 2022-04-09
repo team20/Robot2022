@@ -10,7 +10,8 @@ public class ArduinoSubsystem extends SubsystemBase {
 	public static ArduinoSubsystem get(){return s_subsystem;}
 
 	private final DigitalOutput m_arduino = new DigitalOutput(ArduinoConstants.kAddress);
-	private boolean m_flywheelAtSetpoint = false;
+	//private boolean m_flywheelAtSetpoint = false;
+	private boolean m_ballSeen;
 
 	/**
 	 * Initializes a new instance of the {@link ArduinoSubsystem} class.
@@ -20,21 +21,29 @@ public class ArduinoSubsystem extends SubsystemBase {
 	}
 
 	public void periodic() {
-		if (FlywheelSubsystem.get().atSetpoint() == true) {
-			m_flywheelAtSetpoint = true;
-		} else {
-			m_flywheelAtSetpoint = false;
-		}		
+		// if (FlywheelSubsystem.get().atSetpoint() == true) {
+		// 	m_flywheelAtSetpoint = true;
+		// } else {
+		// 	m_flywheelAtSetpoint = false;
+		// }		
 		//System.out.println("flywheel at setpoint: " + m_flywheelAtSetpoint);
-		m_arduino.set(m_flywheelAtSetpoint);
+		if (IndexerSubsystem.get().gamePieceRTF()) {
+			m_ballSeen = true;
+		} else {
+			m_ballSeen = false;
+		}
+
+		m_arduino.set(m_ballSeen);
 	}
 
 	public void write() {
-		m_arduino.set(m_flywheelAtSetpoint);
+		//m_arduino.set(m_flywheelAtSetpoint);
+		m_arduino.set(m_ballSeen);
 	}
 
-	public void setFlywheelState(boolean flywheelAtSetpoint) {
-		m_flywheelAtSetpoint = flywheelAtSetpoint;
+	public void setFlywheelState(boolean ballSeen) {
+		//m_flywheelAtSetpoint = flywheelAtSetpoint;
+		m_ballSeen = ballSeen;
 	}
 
 }
