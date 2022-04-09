@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.SerialPort;
 public final class Constants {
 
 	public static final class ArduinoConstants {
-		public static final int kAddress = 23;
+		public static final int kAddress = 2;
 		public static final double kDistanceP = 0;
 		public static final double kDistanceI = 0;
 		public static final double kDistanceD = 0;

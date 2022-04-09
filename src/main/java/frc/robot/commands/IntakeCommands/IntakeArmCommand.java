@@ -16,6 +16,7 @@ public class IntakeArmCommand extends CommandBase {
     CMD_RESET_ENCODER,
     CMD_ARM_MANUAL,
     CMD_ARM_STOP,
+    CMD_ARM_MANUAL_DOWN
   }
 
   private Operation m_operation;
@@ -45,6 +46,10 @@ public class IntakeArmCommand extends CommandBase {
       IntakeArmSubsystem.get().setCoastMode();
       // IntakeArmSubsystem.get().setPercentOutput(0);//TODO find speed
     } 
+    else if (m_operation==Operation.CMD_ARM_MANUAL_DOWN) {
+      IntakeArmSubsystem.get().setPercentOutput(.5);
+    }
+
     else if(m_operation==Operation.CMD_RESET_ENCODER){
       IntakeArmSubsystem.get().resetEncoder();
     }else if(m_operation==Operation.CMD_ARM_MANUAL){

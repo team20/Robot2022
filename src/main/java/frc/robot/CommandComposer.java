@@ -77,65 +77,89 @@ public class CommandComposer {
     }
 
     public static Command getHighClimbCommand() {//slide 0 to -87, telescope 0 to 170
+        //pull up on mid
         TelescopeHookCommand TelescopeRetract =new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kRetractedPosition);
         
-            SlideHookCommand SlideToTelescope = new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kToTelescopePosition);//17.5
+        //switch from telescope on mid bar to slide on mid bar
+        SlideHookCommand SlideToTelescope = new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kToTelescopePosition);//17.5
             TelescopeHookCommand TelescopePowerDown=new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, -.5);
         ParallelDeadlineGroup SlideToTelescopeGroup=new ParallelDeadlineGroup(SlideToTelescope, SlideToTelescope, TelescopePowerDown);
 
-            TelescopeHookCommand TelescopeExtend=new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kExtendedPosition);
+        ParallelRaceGroup SlowDisengage=new ParallelRaceGroup(new WaitCommand(1), new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, .1)).withTimeout(1);
+
+        //telescopes extend in front of high lean back
+        TelescopeHookCommand TelescopeExtend=new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kExtendedPosition);
             SequentialCommandGroup SlideExtendWithWait=new SequentialCommandGroup(new WaitCommand(.4),new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kIntermediate));//-38
         ParallelCommandGroup ReachForHigh=new ParallelCommandGroup(TelescopeExtend, SlideExtendWithWait);
-
+        
+        //telescopes all the way up touching high front
         SlideHookCommand SlideToTelescopeTouch = new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kUntilTelescopeBack);//-57
-        SlideHookCommand SlideExtend = new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kMaxPosition);//-57
-        TelescopeHookCommand TelescopeRetract2 =new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kDisengageFromControlledPosition);//25
-
+        
+        //telescope push against  high, telescope pull down
+            SlideHookCommand SlideExtend = new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kMaxPosition);//-57
+            TelescopeHookCommand TelescopeRetract2 =new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kDisengageFromControlledPosition);//25
         ParallelCommandGroup BringAllDown=new ParallelCommandGroup(SlideExtend, TelescopeRetract2);
         return new SequentialCommandGroup( 
         TelescopeRetract, //on mid bar
         SlideToTelescopeGroup, 
+        SlowDisengage,
         ReachForHigh,  
         SlideToTelescopeTouch,
         BringAllDown);
     }
     public static Command getTraversalClimbCommand() {
         //slide 0 to -85, telescope 0 to 170
+
+        //pull up on mid
         TelescopeHookCommand TelescopeRetract1 =new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kRetractedPosition);
         
+        //switch from telescope on mid bar to slide on mid bar
             SlideHookCommand SlideToTelescope = new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kToTelescopePosition);//17.5
             TelescopeHookCommand TelescopePowerDown=new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, -.5);
         ParallelRaceGroup SlideToTelescopeGroup=new ParallelRaceGroup(SlideToTelescope, TelescopePowerDown);
         
-            SequentialCommandGroup SlideToTelescopeBehindWithWait = new SequentialCommandGroup(new WaitCommand(.4),new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kTelescopeBehindRung)); //-81
-            TelescopeHookCommand TelescopeExtend2=new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kExtendedPosition);
-        ParallelCommandGroup LeanBack1=new ParallelCommandGroup(SlideToTelescopeBehindWithWait, TelescopeExtend2);
+        ParallelRaceGroup SlowDisengage=new ParallelRaceGroup(new WaitCommand(1), new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, .1)).withTimeout(1);
 
+        //extend telescopes behind high bar lean back
+            SequentialCommandGroup SlideToTelescopeBehindWithWait = new SequentialCommandGroup(new WaitCommand(.4),new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kTelescopeBehindRung)); //-81
+            TelescopeHookCommand TelescopeExtend1=new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kExtendedPosition);
+            ParallelRaceGroup LeanBack1=new ParallelRaceGroup(SlideToTelescopeBehindWithWait, TelescopeExtend1);
+
+        //extended telescope touch high bar
         SlideHookCommand SlideToTelescopeTouching1 = new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION,SlideHookConstants.kTelescopeTouchingRung);//-55
 
+        //telescope down resting on bar
         TelescopeHookCommand TelescopeEngage1 = new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION,145);// TelescopeHookConstants.kControlled);//136 both on telescope
 
+        //vantine move
             TelescopeHookCommand TelescopeControlledRetract1 = new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kControlledEnd);
             SlideHookCommand SlideControlledExtend1 = new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kControlled);
         ParallelCommandGroup ControlledMove1 = new ParallelCommandGroup(TelescopeControlledRetract1,SlideControlledExtend1);
 
+        //telescope partial retract, slide hooks to start
             TelescopeHookCommand TelescopeRetractPart2=new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kDisengageFromControlledPosition);
-            SequentialCommandGroup SlideToStartWithWait=new SequentialCommandGroup(new WaitCommand(.1), new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kStartPosition)); 
+            SequentialCommandGroup SlideToStartWithWait=new SequentialCommandGroup(new WaitCommand(.5), new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kStartPosition)); 
         ParallelCommandGroup SlideToStartGroup=new ParallelCommandGroup(TelescopeRetractPart2, SlideToStartWithWait);
         
+        //telescopes all the way up, robot fully on high
         TelescopeHookCommand TelescopeRetract =new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kRetractedPosition);
         
+        //slide hooks on high
             SlideHookCommand SlideToTelescope2 = new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kToTelescopePosition);
             TelescopeHookCommand TelescopePowerDown2=new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, -.5);
         ParallelDeadlineGroup SlideToTelescopeGroup2=new ParallelDeadlineGroup(SlideToTelescope2, SlideToTelescope2, TelescopePowerDown2);
 
+        ParallelRaceGroup SlowDisengage2=new ParallelRaceGroup(new WaitCommand(1), new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, .1)).withTimeout(1);
+
+        //telescopes extend in front traverse lean back
             TelescopeHookCommand TelescopeExtend=new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kExtendedPosition);
-            SequentialCommandGroup SlideExtendWithWait=new SequentialCommandGroup(new WaitCommand(.4),new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kIntermediate));
+            SequentialCommandGroup SlideExtendWithWait=new SequentialCommandGroup(new WaitCommand(.5),new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kIntermediate));
         ParallelCommandGroup ReachForHigh=new ParallelCommandGroup(TelescopeExtend, SlideExtendWithWait);
 
+        //telescopes all the way up touching traverse
         SlideHookCommand SlideToTelescopeTouch = new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kUntilTelescopeBack);//TODO: change this higher?
         
-
+        //telescope down onto traverse, slide all the way out for vantine
             SlideHookCommand SlideExtend = new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kMaxPosition);
             SequentialCommandGroup TelescopeRetract2 =new SequentialCommandGroup(new WaitCommand(1),new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kDisengageFromControlledPosition));
         ParallelCommandGroup BringAllDown=new ParallelCommandGroup(SlideExtend, TelescopeRetract2);
@@ -143,6 +167,7 @@ public class CommandComposer {
         return new SequentialCommandGroup( 
         TelescopeRetract1, //on mid bar
         SlideToTelescopeGroup, 
+        SlowDisengage,
         LeanBack1, 
         SlideToTelescopeTouching1, 
         TelescopeEngage1,
@@ -152,6 +177,7 @@ public class CommandComposer {
         
         TelescopeRetract, //on mid bar
         SlideToTelescopeGroup2, 
+        SlowDisengage2,
         ReachForHigh,  
         SlideToTelescopeTouch,
         BringAllDown);
@@ -224,7 +250,7 @@ public class CommandComposer {
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
-            new TurnCommand( -15).withTimeout(1.5),//29 for red
+            new TurnCommand(-11.5).withTimeout(1.5),//red got it at -15, blue at -13.5
             //new WaitCommand(8),
             new ParallelCommandGroup(new DriveDistanceCommand(164), getAutoLoadCommand().withTimeout(3)),
             new ParallelCommandGroup(
@@ -250,59 +276,126 @@ public class CommandComposer {
             new ParallelCommandGroup(
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
-                new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
-            new LimelightOffCommand()
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP))//,
+            //new LimelightOffCommand()
         );
     }
 
     public static Command getFourBallNavx(){ //four ball auto using the navx
         return new SequentialCommandGroup(
+            new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN)//,
+            //new TurnCommand(13.3).withTimeout(1), //was 1.5
+        //     new ParallelCommandGroup(new DriveDistanceCommand(60.0), getAutoLoadCommand()).withTimeout(2),
+
+        //     new TurnCommand(13.3).withTimeout(2), //was 1.5
+        //     //new LimelightTurnCommand(-2),
+        //     new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
+        //     new ParallelCommandGroup(
+        //          new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 13), 
+        //          new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2700)),//was 3000 //was 4150
+        //     //getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION), //TODO might need to go back in
+        //     getAutoShootCommand(),
+        //     new ParallelCommandGroup(
+        //         new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+        //         new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
+        //         new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
+        //     new TurnCommand( -15).withTimeout(1.5),//29 for red
+        //     //new WaitCommand(8),
+        //     new ParallelCommandGroup(new DriveDistanceCommand(164), getAutoLoadCommand().withTimeout(2.5)),
+        //     new ParallelCommandGroup(
+        //         new DriveDistanceCommand(-164, 0.9),//was -157
+        //          new SequentialCommandGroup(
+        //              getAutoLoadCommand().withTimeout(3.5))          
+        //     ),
+        //     // //     // new ParallelCommandGroup(
+        //     // //     //     new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
+        //     // //     //     new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4050)).withTimeout(1)
+        //     // ),
+        //      new ParallelCommandGroup(
+        //         new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
+        //         new SequentialCommandGroup(
+        //         new TurnCommand(12.08).withTimeout(1)
+        //         // new TurnCommand(10).withTimeout(1),
+        //         // new LimelightTurnCommand(-2)
+        //         ), //was 28 now moving to -28
+        //         new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11), 
+        //         new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2650)).withTimeout(1),
+        //     // //new WaitCommand(0.5),
+        //     getAutoShootCommandNoWait(),
+        //      new ParallelCommandGroup(
+        //         new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+        //         new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
+        //         new IntakeCommand(IntakeCommand.Operation.CMD_STOP))
+        // );
+        );
+    }
+
+    public static Command getTest() {
+        return new SequentialCommandGroup(
+            new LimelightOnCommand(),
             new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
             //new TurnCommand(13.3).withTimeout(1), //was 1.5
             new ParallelCommandGroup(new DriveDistanceCommand(60.0), getAutoLoadCommand()).withTimeout(2),
 
-            new TurnCommand(13.3).withTimeout(2), //was 1.5
-            //new LimelightTurnCommand(-2),
+            //new TurnCommand(13.3).withTimeout(2), //was 1.5
+            new LimelightTurnCommand(-2),
             new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
-            new ParallelCommandGroup(
-                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 13), 
-                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2700)),//was 3000 //was 4150
-            //getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION), //TODO might need to go back in
+            // new ParallelCommandGroup(
+            //      new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 13), 
+            //      new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2700)),//was 3000 //was 4150
+            getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION), //TODO
             getAutoShootCommand(),
             new ParallelCommandGroup(
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
-            new TurnCommand( -15).withTimeout(1.5),//29 for red
+            new TurnCommand(-11.5).withTimeout(1.5),//red got it at -15, blue at -13.5
             //new WaitCommand(8),
-            new ParallelCommandGroup(new DriveDistanceCommand(164), getAutoLoadCommand().withTimeout(2.5)),
+            new ParallelCommandGroup(new DriveDistanceCommand(164), getAutoLoadCommand().withTimeout(3)),
             new ParallelCommandGroup(
-                new DriveDistanceCommand(-164, 0.9),//was -157
+                new SequentialCommandGroup(
+                    new TurnCommand(-22).withTimeout(1.5),
+                    new DriveDistanceCommand(-250, 0.9)            
+                ),//was -157
                  new SequentialCommandGroup(
                      getAutoLoadCommand().withTimeout(3.5))          
             ),
             // //     // new ParallelCommandGroup(
             // //     //     new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
             // //     //     new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4050)).withTimeout(1)
-            // ),
+            // )
              new ParallelCommandGroup(
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
                 new SequentialCommandGroup(
-                new TurnCommand(12.08).withTimeout(1)
-                // new TurnCommand(10).withTimeout(1),
-                // new LimelightTurnCommand(-2)
+                //new TurnCommand(12.08).withTimeout(1)
+                new TurnCommand( 66).withTimeout(1),
+                new LimelightTurnCommand(-2)
                 ), //was 28 now moving to -28
-                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11), 
-                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2650)).withTimeout(1),
+                // new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11), 
+                // new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2650)
+                getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION)
+                ).withTimeout(2),
             // //new WaitCommand(0.5),
             getAutoShootCommandNoWait(),
+            // new ParallelCommandGroup(
+            //     new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+            //     new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
+            //     new IntakeCommand(IntakeCommand.Operation.CMD_STOP))//,
+            new ParallelCommandGroup(
+                new DriveDistanceCommand(8, 0.9),//was -157
+                 new SequentialCommandGroup(
+                     getAutoLoadCommand().withTimeout(1))          
+            ),
+             getAutoShootCommandNoWait(),
              new ParallelCommandGroup(
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP))
+            //new LimelightOffCommand()
         );
     }
 
+    //TODO add timeouts
     public static Command getTwoBallFarRight(){ //2 ball starting in furthest right position
         return new SequentialCommandGroup(
             new LimelightOnCommand(),
@@ -324,8 +417,8 @@ public class CommandComposer {
             new WaitCommand(.25),
             new DriveDistanceCommand(12),
             new DriveDistanceCommand(-12),
-            new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
-            new LimelightOffCommand()  
+            new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN)//,
+            //new LimelightOffCommand()  
         );
     }
 
@@ -346,8 +439,8 @@ public class CommandComposer {
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
-            new DriveDistanceCommand(9),
-            new LimelightOffCommand()    
+            new DriveDistanceCommand(9)//,
+            //new LimelightOffCommand()    
         );
     }
 
@@ -368,8 +461,8 @@ public class CommandComposer {
             new ParallelCommandGroup(
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
-                new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
-            new LimelightOffCommand()    
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP))//,
+            //new LimelightOffCommand()    
         );
     }
 
@@ -401,8 +494,8 @@ public class CommandComposer {
            new ParallelCommandGroup(
                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)
-        ),
-        new LimelightOffCommand()
+        )//,
+        //new LimelightOffCommand()
         );
     }
 

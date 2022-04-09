@@ -15,8 +15,12 @@ public class RegressionRangeFinder extends RangeFinder{
 
         if(angle >= -13){
             // RPM THEN ANGLE
-            RPM = -17.451*limelightAngle + 2609.4;
-            Angle = -0.2659*limelightAngle + 11.255;
+
+            RPM = -16.234*limelightAngle + 2601.1; //new value for nyc
+            Angle = -0.2731*limelightAngle + 11.337;
+
+            // RPM = -17.451*limelightAngle + 2609.4;
+            // Angle = -0.2659*limelightAngle + 11.255;
             //System.out.println("RPM: " + RPM);
         } else{
             // RPM THEN ANGLE
