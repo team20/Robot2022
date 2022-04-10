@@ -56,12 +56,18 @@ public class ShootCommandComposer {
       // hoodSetpoint=SmartDashboard.getNumber("Hood Setpoint", 0);
       // flywheelSetpoint=SmartDashboard.getNumber("Flywheel RPM", 0);
       //was: hood 8.5, flywheel 4000
+      
       hoodSetpoint = 14.5;
       flywheelSetpoint = 2900;
+
+      // //double angle=SmartDashboard.getNumber("Flywheel RPM", 0);
+      // flywheelSetpoint = -16.234*(-4.51) + 2601.1; //new value for nyc
+      // hoodSetpoint = -0.2731*(-4.51) + 11.337;
+
     }
     else if(shootClass==Operation.PRESET_FENDER_LOW){
-      hoodSetpoint=9.59;
-      flywheelSetpoint=1600;//2200;//was 2000
+      hoodSetpoint=11;//9.59;
+      flywheelSetpoint=1500;//1600;//2200;//was 2000
     }
     else if(shootClass==Operation.PRESET_FENDER_HIGH){
       hoodSetpoint=0;
@@ -108,4 +114,5 @@ public class ShootCommandComposer {
         new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0),
         new HoodCommand(HoodCommand.Operation.CMD_POWER_ZERO, 0));
   }
+
 }

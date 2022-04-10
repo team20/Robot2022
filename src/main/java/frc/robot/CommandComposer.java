@@ -85,7 +85,7 @@ public class CommandComposer {
             TelescopeHookCommand TelescopePowerDown=new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, -.5);
         ParallelDeadlineGroup SlideToTelescopeGroup=new ParallelDeadlineGroup(SlideToTelescope, SlideToTelescope, TelescopePowerDown);
 
-        ParallelRaceGroup SlowDisengage=new ParallelRaceGroup(new WaitCommand(1), new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, .1)).withTimeout(1);
+        ParallelRaceGroup SlowDisengage=new ParallelRaceGroup(new WaitCommand(.5), new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, .1)).withTimeout(1);
 
         //telescopes extend in front of high lean back
         TelescopeHookCommand TelescopeExtend=new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kExtendedPosition);
@@ -104,7 +104,7 @@ public class CommandComposer {
         SlideToTelescopeGroup, 
         SlowDisengage,
         ReachForHigh,  
-        SlideToTelescopeTouch,
+        // SlideToTelescopeTouch,
         BringAllDown);
     }
     public static Command getTraversalClimbCommand() {
@@ -118,7 +118,7 @@ public class CommandComposer {
             TelescopeHookCommand TelescopePowerDown=new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, -.5);
         ParallelRaceGroup SlideToTelescopeGroup=new ParallelRaceGroup(SlideToTelescope, TelescopePowerDown);
         
-        ParallelRaceGroup SlowDisengage=new ParallelRaceGroup(new WaitCommand(1), new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, .1)).withTimeout(1);
+        ParallelRaceGroup SlowDisengage=new ParallelRaceGroup(new WaitCommand(.5), new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, .1)).withTimeout(1);
 
         //extend telescopes behind high bar lean back
             SequentialCommandGroup SlideToTelescopeBehindWithWait = new SequentialCommandGroup(new WaitCommand(.4),new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kTelescopeBehindRung)); //-81
@@ -149,7 +149,7 @@ public class CommandComposer {
             TelescopeHookCommand TelescopePowerDown2=new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, -.5);
         ParallelDeadlineGroup SlideToTelescopeGroup2=new ParallelDeadlineGroup(SlideToTelescope2, SlideToTelescope2, TelescopePowerDown2);
 
-        ParallelRaceGroup SlowDisengage2=new ParallelRaceGroup(new WaitCommand(1), new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, .1)).withTimeout(1);
+        ParallelRaceGroup SlowDisengage2=new ParallelRaceGroup(new WaitCommand(.5), new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_MOVE, .1)).withTimeout(1);
 
         //telescopes extend in front traverse lean back
             TelescopeHookCommand TelescopeExtend=new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kExtendedPosition);
@@ -161,7 +161,7 @@ public class CommandComposer {
         
         //telescope down onto traverse, slide all the way out for vantine
             SlideHookCommand SlideExtend = new SlideHookCommand(SlideHookCommand.Operation.CMD_POSITION, SlideHookConstants.kMaxPosition);
-            SequentialCommandGroup TelescopeRetract2 =new SequentialCommandGroup(new WaitCommand(1),new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kDisengageFromControlledPosition));
+            SequentialCommandGroup TelescopeRetract2 =new SequentialCommandGroup(new WaitCommand(.25),new TelescopeHookCommand(TelescopeHookCommand.Operation.CMD_POSITION, TelescopeHookConstants.kDisengageFromControlledPosition));
         ParallelCommandGroup BringAllDown=new ParallelCommandGroup(SlideExtend, TelescopeRetract2);
 
         return new SequentialCommandGroup( 
@@ -179,7 +179,7 @@ public class CommandComposer {
         SlideToTelescopeGroup2, 
         SlowDisengage2,
         ReachForHigh,  
-        SlideToTelescopeTouch,
+        // SlideToTelescopeTouch,
         BringAllDown);
     }
 
@@ -229,6 +229,25 @@ public class CommandComposer {
         return new DriveDistanceCommand(distance);
     }
 
+    public static Command getShootType() {
+        if (LimelightSubsystem.get().isTargetVisible()) {
+            return getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION);
+        } else {
+            return new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 10), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2550)              
+            );
+        }
+    }
+
+    public static Command getTurnType() {
+        if (LimelightSubsystem.get().getXAngle() < 0 && LimelightSubsystem.get().getXAngle() > -2) {
+            return new LimelightOnCommand(); //TODO another filler command?
+        } else {
+            return new LimelightTurnCommand(-2);
+        }        
+    }
+
     //the relevant autos
 
     public static Command getFourBallLimelight(){ //four ball auto with limelight aiming
@@ -238,13 +257,19 @@ public class CommandComposer {
             //new TurnCommand(13.3).withTimeout(1), //was 1.5
             new ParallelCommandGroup(new DriveDistanceCommand(60.0), getAutoLoadCommand()).withTimeout(2),
 
-            //new TurnCommand(13.3).withTimeout(2), //was 1.5
-            new LimelightTurnCommand(-2),
+            new TurnCommand(13.3).withTimeout(2), //turn first
+            getTurnType(), //decide whether to use the limelight to correct the turn, if it's aligned or off it won't be run
+            
+            //new LimelightTurnCommand(-2).withTimeout(1.5), //then correct with limelight - this is what was being used NYC 4/9
+            
             new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
             // new ParallelCommandGroup(
             //      new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 13), 
             //      new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2700)),//was 3000 //was 4150
-            getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION), //TODO
+            
+            // getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION), - this is what was being used NYC 4/9
+            getShootType(),
+
             getAutoShootCommand(),
             new ParallelCommandGroup(
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
@@ -252,7 +277,76 @@ public class CommandComposer {
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
             new TurnCommand(-11.5).withTimeout(1.5),//red got it at -15, blue at -13.5
             //new WaitCommand(8),
-            new ParallelCommandGroup(new DriveDistanceCommand(164), getAutoLoadCommand().withTimeout(3)),
+            //new ParallelCommandGroup(, ),
+            new ParallelCommandGroup(
+                new SequentialCommandGroup(
+                    new DriveDistanceCommand(164),
+                    new TurnCommand(-8).withTimeout(.75),
+                    new TurnCommand(-11.5).withTimeout(1.5),
+                    new DriveDistanceCommand(-164, 0.9)
+
+                ),//was -157
+                new SequentialCommandGroup(
+                    getAutoLoadCommand(),
+                    getAutoLoadCommand()).withTimeout(6.5)          
+            ),
+            // //     // new ParallelCommandGroup(
+            // //     //     new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
+            // //     //     new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4050)).withTimeout(1)
+            // ),
+             new ParallelCommandGroup(
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
+                new SequentialCommandGroup(
+                //new TurnCommand(12.08).withTimeout(1)
+                new TurnCommand(10).withTimeout(1),
+                
+                //new LimelightTurnCommand(-2).withTimeout(1.5) - this is what was being used NYC 4/9
+
+                getTurnType()
+
+                )),
+            new SequentialCommandGroup( //was 28 now moving to -28
+
+                //getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION), //this is what was being used NYC 4/9
+                getShootType(),
+                
+                getAutoShootCommandNoWait()), //add in
+
+                // new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11), //take out?
+                // new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2650)).withTimeout(1), //take out?
+            // //new WaitCommand(0.5),
+
+            //getAutoShootCommandNoWait(), //take out??
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP))//,
+            //new LimelightOffCommand()
+        );
+    }
+
+    public static Command getFourBallNavx(){ //four ball auto using the navx
+        return new SequentialCommandGroup(
+            new LimelightOnCommand(),
+            new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
+            //new TurnCommand(13.3).withTimeout(1), //was 1.5
+            new ParallelCommandGroup(new DriveDistanceCommand(60.0), getAutoLoadCommand()).withTimeout(2),
+
+            new TurnCommand(13.3).withTimeout(2), //was 1.5
+            //new LimelightTurnCommand(-2),
+            new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
+            new ParallelCommandGroup(
+                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 10), //13
+                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2550)),//was 2700 //was 3000 //was 4150
+            //getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION), //TODO might need to go back in
+            getAutoShootCommand(),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
+            new TurnCommand( -15).withTimeout(1.5),//29 for red
+            //new WaitCommand(8),
+            new ParallelCommandGroup(new DriveDistanceCommand(164), getAutoLoadCommand().withTimeout(2.5)),
             new ParallelCommandGroup(
                 new DriveDistanceCommand(-164, 0.9),//was -157
                  new SequentialCommandGroup(
@@ -265,72 +359,22 @@ public class CommandComposer {
              new ParallelCommandGroup(
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
                 new SequentialCommandGroup(
-                //new TurnCommand(12.08).withTimeout(1)
-                new TurnCommand( 10).withTimeout(1),
-                new LimelightTurnCommand(-2)
+                new TurnCommand(12.08).withTimeout(1)
+                // new TurnCommand(10).withTimeout(1),
+                // new LimelightTurnCommand(-2)
                 ), //was 28 now moving to -28
-                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11), 
-                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2650)).withTimeout(1),
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 10), //11
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2550)).withTimeout(1), //2650
             // //new WaitCommand(0.5),
             getAutoShootCommandNoWait(),
-            new ParallelCommandGroup(
+             new ParallelCommandGroup(
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
-                new IntakeCommand(IntakeCommand.Operation.CMD_STOP))//,
-            //new LimelightOffCommand()
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP))
         );
     }
 
-    public static Command getFourBallNavx(){ //four ball auto using the navx
-        return new SequentialCommandGroup(
-            new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN)//,
-            //new TurnCommand(13.3).withTimeout(1), //was 1.5
-        //     new ParallelCommandGroup(new DriveDistanceCommand(60.0), getAutoLoadCommand()).withTimeout(2),
-
-        //     new TurnCommand(13.3).withTimeout(2), //was 1.5
-        //     //new LimelightTurnCommand(-2),
-        //     new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
-        //     new ParallelCommandGroup(
-        //          new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 13), 
-        //          new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2700)),//was 3000 //was 4150
-        //     //getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION), //TODO might need to go back in
-        //     getAutoShootCommand(),
-        //     new ParallelCommandGroup(
-        //         new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
-        //         new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
-        //         new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
-        //     new TurnCommand( -15).withTimeout(1.5),//29 for red
-        //     //new WaitCommand(8),
-        //     new ParallelCommandGroup(new DriveDistanceCommand(164), getAutoLoadCommand().withTimeout(2.5)),
-        //     new ParallelCommandGroup(
-        //         new DriveDistanceCommand(-164, 0.9),//was -157
-        //          new SequentialCommandGroup(
-        //              getAutoLoadCommand().withTimeout(3.5))          
-        //     ),
-        //     // //     // new ParallelCommandGroup(
-        //     // //     //     new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
-        //     // //     //     new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4050)).withTimeout(1)
-        //     // ),
-        //      new ParallelCommandGroup(
-        //         new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
-        //         new SequentialCommandGroup(
-        //         new TurnCommand(12.08).withTimeout(1)
-        //         // new TurnCommand(10).withTimeout(1),
-        //         // new LimelightTurnCommand(-2)
-        //         ), //was 28 now moving to -28
-        //         new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11), 
-        //         new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2650)).withTimeout(1),
-        //     // //new WaitCommand(0.5),
-        //     getAutoShootCommandNoWait(),
-        //      new ParallelCommandGroup(
-        //         new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
-        //         new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
-        //         new IntakeCommand(IntakeCommand.Operation.CMD_STOP))
-        // );
-        );
-    }
-
-    public static Command getTest() {
+    public static Command getFiveBallNYC() {
         return new SequentialCommandGroup(
             new LimelightOnCommand(),
             new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
@@ -349,7 +393,7 @@ public class CommandComposer {
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
-            new TurnCommand(-11.5).withTimeout(1.5),//red got it at -15, blue at -13.5
+            new TurnCommand(-10).withTimeout(1.5),//red got it at -15, blue at -13.5 //TODO NEED TO DEPLOY!!!
             //new WaitCommand(8),
             new ParallelCommandGroup(new DriveDistanceCommand(164), getAutoLoadCommand().withTimeout(3)),
             new ParallelCommandGroup(

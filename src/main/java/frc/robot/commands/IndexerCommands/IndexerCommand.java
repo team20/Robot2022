@@ -25,7 +25,8 @@ public class IndexerCommand extends CommandBase {
     //wait until a ball is ready to feed, then end
     CMD_WAIT_RTF,
     //try to move to the target position
-    CMD_STOP
+    CMD_STOP,
+    CMD_SMALL_REV
   };
 
   
@@ -60,6 +61,8 @@ public class IndexerCommand extends CommandBase {
     } else if (m_operation == Operation.CMD_REV) {
       indexerSubsystem.setPositionReverse();
       //System.out.println((byte)m_desiredIndexerState);
+    } else if (m_operation == Operation.CMD_SMALL_REV) {
+      indexerSubsystem.setPositionSmallReverse();
     }
     m_startTime = Instant.now();
     

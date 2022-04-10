@@ -145,8 +145,13 @@ public class IndexerSubsystem extends SubsystemBase implements ShuffleboardLoggi
     }
     public void setPositionReverse(){
         //System.out.println("SETTING REVERSE");
-        m_setPosition = m_neoEncoder.getPosition() + 30;
+        m_setPosition = m_neoEncoder.getPosition() - 30; //TODO this was positive before 4/9 night
         m_neoController.setReference(m_setPosition, ControlType.kPosition, 0);
+    }
+
+    public void setPositionSmallReverse() {
+        m_setPosition = m_neoEncoder.getPosition() - 10;
+        m_neoController.setReference(m_setPosition, ControlType.kPosition, 0);        
     }
 
     public void reset(){
