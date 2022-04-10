@@ -79,7 +79,7 @@ public class RobotContainer {
                 configureShuffleboard();
                 // CommandScheduler.getInstance().unregisterSubsystem(m_arduinoSubsystem);
                 m_autoChooser.addOption("5 Ball Straight", CommandComposer.getFiveBall());
-                m_autoChooser.addOption("5 Ball DO THIS ONE", CommandComposer.getTest());
+                m_autoChooser.addOption("5 Ball DO THIS ONE", CommandComposer.getFiveBallNYC());
                 m_autoChooser.addOption("Two Ball - Closest to Hangar ", CommandComposer.getTwoBallHangar());
                 m_autoChooser.addOption("Two Ball - Middle Position", CommandComposer.getTwoBallMiddlePosition()); 
                 m_autoChooser.addOption("Two Ball - Far Right Position", CommandComposer.getTwoBallFarRight()); 
@@ -101,6 +101,8 @@ public class RobotContainer {
         }
 
         private void configureButtonBindings() {
+
+                //m_flywheelSubsystem.setDefaultCommand(new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2000));
 
                 // *******************************************
                 // **************DRIVER CONTROLS**************
@@ -186,7 +188,8 @@ public class RobotContainer {
                 new JoystickButton(m_driverController, Button.kLeftBumper)
                         .whileActiveOnce(new SequentialCommandGroup(
                                 new LimelightOnCommand(), 
-                                new LimelightTurnCommand(-2),
+                                new LimelightTurnCommand(-2.25),
+                                //new IndexerCommand(IndexerCommand.Operation.CMD_SMALL_REV),
                                 CommandComposer.getPresetShootCommand(
                                 ShootCommandComposer.Operation.LIMELIGHT_REGRESSION)));
                                  
@@ -254,8 +257,15 @@ public class RobotContainer {
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kX)
                                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
                                                 .negate())
-                                .whileActiveOnce(CommandComposer.getPresetShootCommand(
-                                                ShootCommandComposer.Operation.PRESET_FENDER_LOW));
+                                .whileActiveOnce(
+                                        // new SequentialCommandGroup(
+                                        //         new IndexerCommand(IndexerCommand.Operation.CMD_SMALL_REV),
+                                        //         CommandComposer.getPresetShootCommand(
+                                        //         ShootCommandComposer.Operation.PRESET_FENDER_LOW)
+                                        // )
+                                        CommandComposer.getPresetShootCommand(
+                                                ShootCommandComposer.Operation.PRESET_FENDER_LOW)
+                                                );
 
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kX)
                                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
@@ -270,8 +280,16 @@ public class RobotContainer {
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
                                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
                                                 .negate())
-                                .whileActiveOnce(CommandComposer.getPresetShootCommand(
-                                                ShootCommandComposer.Operation.PRESET_SAFE));
+                                .whileActiveOnce(
+                                        // new SequentialCommandGroup(
+                                        //         new IndexerCommand(IndexerCommand.Operation.CMD_SMALL_REV),
+                                        //         CommandComposer.getPresetShootCommand(
+                                        //         ShootCommandComposer.Operation.PRESET_SAFE)
+                                        // )
+
+                                        CommandComposer.getPresetShootCommand(
+                                                ShootCommandComposer.Operation.PRESET_SAFE)
+                                                );
 
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kTriangle)
                                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
@@ -286,8 +304,16 @@ public class RobotContainer {
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
                         .and(new JoystickButton(m_driverController, ControllerConstants.Button.kLeftBumper)
                                 .negate())
-                        .whileActiveOnce(CommandComposer.getPresetShootCommand(
-                                ShootCommandComposer.Operation.MIN_RAMP_UP));
+                        .whileActiveOnce(
+                                        // new SequentialCommandGroup(
+                                        //         new IndexerCommand(IndexerCommand.Operation.CMD_SMALL_REV),
+                                        //         CommandComposer.getPresetShootCommand(
+                                        //         ShootCommandComposer.Operation.MIN_RAMP_UP)
+                                        // )                                
+                        
+                                CommandComposer.getPresetShootCommand(
+                                ShootCommandComposer.Operation.MIN_RAMP_UP)
+                                );
 
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)
                         .or(new JoystickButton(m_driverController, ControllerConstants.Button.kLeftBumper))
@@ -301,8 +327,16 @@ public class RobotContainer {
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kCircle)
                                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)
                                                 .negate())
-                                .whileActiveOnce(CommandComposer.getPresetShootCommand(
-                                                ShootCommandComposer.Operation.PRESET_FENDER_HIGH));
+                                .whileActiveOnce(
+                                        // new SequentialCommandGroup(
+                                        //         new IndexerCommand(IndexerCommand.Operation.CMD_SMALL_REV),
+                                        //         CommandComposer.getPresetShootCommand(
+                                        //         ShootCommandComposer.Operation.PRESET_FENDER_HIGH)
+                                        // )
+
+                                        CommandComposer.getPresetShootCommand(
+                                                ShootCommandComposer.Operation.PRESET_FENDER_HIGH)
+                                                );
                
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kCircle)
                                 .and(new JoystickButton(m_operatorController, ControllerConstants.Button.kLeftBumper)

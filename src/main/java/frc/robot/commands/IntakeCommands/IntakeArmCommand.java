@@ -49,14 +49,16 @@ public class IntakeArmCommand extends CommandBase {
     else if (m_operation==Operation.CMD_ARM_MANUAL_DOWN) {
       IntakeArmSubsystem.get().setPercentOutput(.5);
     }
-
     else if(m_operation==Operation.CMD_RESET_ENCODER){
       IntakeArmSubsystem.get().resetEncoder();
-    }else if(m_operation==Operation.CMD_ARM_MANUAL){
+    }
+    else if(m_operation==Operation.CMD_ARM_MANUAL){
       IntakeArmSubsystem.get().setPercentOutput(-.6);
-    }else if(m_operation==Operation.CMD_ARM_STOP){
+    }
+    else if(m_operation==Operation.CMD_ARM_STOP){
       IntakeArmSubsystem.get().setPercentOutput(0);
     }
+
   }
 
   // Called once the command ends or is interrupted.
