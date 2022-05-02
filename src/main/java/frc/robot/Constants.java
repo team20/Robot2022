@@ -268,6 +268,8 @@ public final class Constants {
 		public static final int kMotorPort = 14;
 		public static final boolean kInvert = true;
 		public static final int kSmartCurrentLimit = 20;
+		public static final int kPeakCurrentLimit = 30;
+		public static final int kPeakCurrentDurationMillis = 100;
 		public static final double kP = .06; // TODO: tune PID was 0.02
 		public static final double kI = 0; //0 
 		public static final double kD = 0;// 0.000_03; //was 0

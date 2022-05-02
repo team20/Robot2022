@@ -234,12 +234,22 @@ public class CommandComposer {
             return getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION);
         } else {
             return new ParallelCommandGroup(
-                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 10), 
-                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2550)              
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 9.5), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2525)              
             );
         }
     }
 
+    public static Command getShootTypeSTUY() {
+        if (LimelightSubsystem.get().isTargetVisible()) {
+            return getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION);
+        } else {
+            return new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 12), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4200)              
+            );
+        }
+    }
     public static Command getTurnType() {
         if (LimelightSubsystem.get().getXAngle() < 0 && LimelightSubsystem.get().getXAngle() > -2) {
             return new LimelightOnCommand(); //TODO another filler command?
@@ -258,7 +268,7 @@ public class CommandComposer {
             new ParallelCommandGroup(new DriveDistanceCommand(60.0), getAutoLoadCommand()).withTimeout(2),
 
             new TurnCommand(13.3).withTimeout(2), //turn first
-            getTurnType(), //decide whether to use the limelight to correct the turn, if it's aligned or off it won't be run
+            new DeferredCommand(CommandComposer::getTurnType), //decide whether to use the limelight to correct the turn, if it's aligned or off it won't be run
             
             //new LimelightTurnCommand(-2).withTimeout(1.5), //then correct with limelight - this is what was being used NYC 4/9
             
@@ -268,7 +278,7 @@ public class CommandComposer {
             //      new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2700)),//was 3000 //was 4150
             
             // getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION), - this is what was being used NYC 4/9
-            getShootType(),
+            new DeferredCommand(CommandComposer::getShootType),
 
             getAutoShootCommand(),
             new ParallelCommandGroup(
@@ -302,13 +312,13 @@ public class CommandComposer {
                 
                 //new LimelightTurnCommand(-2).withTimeout(1.5) - this is what was being used NYC 4/9
 
-                getTurnType()
+                new DeferredCommand(CommandComposer::getTurnType)
 
                 )),
             new SequentialCommandGroup( //was 28 now moving to -28
 
                 //getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION), //this is what was being used NYC 4/9
-                getShootType(),
+                new DeferredCommand(CommandComposer::getTurnType),
                 
                 getAutoShootCommandNoWait()), //add in
 
@@ -382,23 +392,29 @@ public class CommandComposer {
             new ParallelCommandGroup(new DriveDistanceCommand(60.0), getAutoLoadCommand()).withTimeout(2),
 
             //new TurnCommand(13.3).withTimeout(2), //was 1.5
-            new LimelightTurnCommand(-2),
+            // new LimelightTurnCommand(-2), //was running on 4/9
+            new TurnCommand(13.3).withTimeout(2), //turn first
+            new DeferredCommand(CommandComposer::getTurnType), //decide whether to use the limelight to correct the turn, if it's aligned or off it won't be run
+           
             new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
             // new ParallelCommandGroup(
             //      new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 13), 
             //      new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2700)),//was 3000 //was 4150
-            getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION), //TODO
+            
+            //getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION), //was running on 4/9
+            new DeferredCommand(CommandComposer::getShootType),
+
             getAutoShootCommand(),
             new ParallelCommandGroup(
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP)),
-            new TurnCommand(-10).withTimeout(1.5),//red got it at -15, blue at -13.5 //TODO NEED TO DEPLOY!!!
+            new TurnCommand(-10).withTimeout(1.5),//red got it at -15, blue at -13.5
             //new WaitCommand(8),
             new ParallelCommandGroup(new DriveDistanceCommand(164), getAutoLoadCommand().withTimeout(3)),
             new ParallelCommandGroup(
                 new SequentialCommandGroup(
-                    new TurnCommand(-22).withTimeout(1.5),
+                    new TurnCommand(-20).withTimeout(1.5), //was -22
                     new DriveDistanceCommand(-250, 0.9)            
                 ),//was -157
                  new SequentialCommandGroup(
@@ -412,24 +428,31 @@ public class CommandComposer {
                 new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
                 new SequentialCommandGroup(
                 //new TurnCommand(12.08).withTimeout(1)
-                new TurnCommand( 66).withTimeout(1),
-                new LimelightTurnCommand(-2)
+                new TurnCommand(66).withTimeout(1), //going to stop the turn after one second?
+                //new LimelightTurnCommand(-2) //was running on 4/9
+                new DeferredCommand(CommandComposer::getTurnType) //decide whether to use the limelight to correct the turn, if it's aligned or off it won't be run
+           
                 ), //was 28 now moving to -28
                 // new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11), 
                 // new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2650)
-                getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION)
+                //getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION) //was running on 4/9
+                new DeferredCommand(CommandComposer::getShootType)
+
                 ).withTimeout(2),
             // //new WaitCommand(0.5),
             getAutoShootCommandNoWait(),
+            new TurnCommand(66).withTimeout(.75), //was 1 second
             // new ParallelCommandGroup(
             //     new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
             //     new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
             //     new IntakeCommand(IntakeCommand.Operation.CMD_STOP))//,
             new ParallelCommandGroup(
-                new DriveDistanceCommand(8, 0.9),//was -157
+                new DriveDistanceCommand(24, 0.9),//was 8
                  new SequentialCommandGroup(
                      getAutoLoadCommand().withTimeout(1))          
             ),
+            new DeferredCommand(CommandComposer::getShootType),
+
              getAutoShootCommandNoWait(),
              new ParallelCommandGroup(
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
@@ -788,6 +811,34 @@ public class CommandComposer {
             new ParallelCommandGroup(
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 9.5), 
                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4250)),
+            getAutoShootCommand(),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0),
+                new IntakeCommand(IntakeCommand.Operation.CMD_STOP))
+        );
+    }
+    public static Command getStuyPulseAuto(){//go back straight and shoot
+        return new SequentialCommandGroup(
+            new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
+            new ParallelCommandGroup(new WaitCommand(5), getAutoLoadCommand().withTimeout(5)),
+            // new waitCommand(1000),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2300)),//THESE ARE FENDER HIGH PRESETS
+            getAutoShootCommand(),
+            new ParallelCommandGroup(
+                new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
+                new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 0)//,
+                // new IntakeCommand(IntakeCommand.Operation.CMD_STOP)
+                ),
+            new ParallelCommandGroup(new DriveDistanceCommand(108), getAutoLoadCommand()).withTimeout(5), 
+            new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
+            new DeferredCommand(CommandComposer::getShootTypeSTUY),
+
+            //new ParallelCommandGroup(
+                // new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 12), 
+                // new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 4200)),
             getAutoShootCommand(),
             new ParallelCommandGroup(
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 
