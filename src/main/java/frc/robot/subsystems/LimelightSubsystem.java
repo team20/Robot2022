@@ -2,14 +2,11 @@ package frc.robot.subsystems;
 
 import java.util.ArrayList;
 
-import javax.sound.sampled.SourceDataLine;
-
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.ShuffleboardLogging;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -46,7 +43,7 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
         // SmartDashboard.putBoolean("Target Visible", isTargetVisible());
         //System.out.println("is light on: " + isLightOn());
         // System.out.println("the x angle is: " + getXAngle());
-        // System.out.println("the y angle is: " + getYAngle());
+        //System.out.println("the y angle is: " + getYAngle());
 
         //System.out.println("limelight y angle" + calculateRollingAverage(getYAngle()));
 
@@ -128,7 +125,8 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
 
     }
 
-    public void configureShuffleboard() {
+    public void configureShuffleboard(boolean inCompetitionMode) { 
+        if (!inCompetitionMode) {
         ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Limelight");
         shuffleboardTab.addNumber("X Angle", () -> getXAngle()).withSize(1, 1).withPosition(0, 0)
                 .withWidget(BuiltInWidgets.kTextView);
@@ -139,6 +137,7 @@ public class LimelightSubsystem extends SubsystemBase implements ShuffleboardLog
         shuffleboardTab.addBoolean("Light On", () -> isLightOn()).withSize(1, 1).withPosition(1, 1)
                 .withWidget(BuiltInWidgets.kBooleanBox);
         //TODO: add in a y-value?
+        }
     }
 
     public double calculateRollingAverage(double updatedAngleMeasurement) {

@@ -4,6 +4,8 @@
 
 package frc.robot.commands.IntakeCommands;
 
+import java.time.Duration;
+import java.time.Instant;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeArmSubsystem;
 
@@ -16,6 +18,7 @@ public class IntakeArmCommand extends CommandBase {
     CMD_RESET_ENCODER,
     CMD_ARM_MANUAL,
     CMD_ARM_STOP,
+    CMD_ARM_MANUAL_DOWN
   }
 
   private Operation m_operation;
@@ -27,7 +30,10 @@ public class IntakeArmCommand extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+
+    System.out.println("starting arm");
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -43,22 +49,30 @@ public class IntakeArmCommand extends CommandBase {
       IntakeArmSubsystem.get().setCoastMode();
       // IntakeArmSubsystem.get().setPercentOutput(0);//TODO find speed
     } 
+    else if (m_operation==Operation.CMD_ARM_MANUAL_DOWN) {
+      IntakeArmSubsystem.get().setPercentOutput(.5);
+    }
     else if(m_operation==Operation.CMD_RESET_ENCODER){
       IntakeArmSubsystem.get().resetEncoder();
-    }else if(m_operation==Operation.CMD_ARM_MANUAL){
-      IntakeArmSubsystem.get().setPercentOutput(-.1);
-    }else if(m_operation==Operation.CMD_ARM_STOP){
+    }
+    else if(m_operation==Operation.CMD_ARM_MANUAL){
+      IntakeArmSubsystem.get().setPercentOutput(-.6);
+    }
+    else if(m_operation==Operation.CMD_ARM_STOP){
       IntakeArmSubsystem.get().setPercentOutput(0);
     }
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {   
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    // double elapsed = Duration.between(m_startTime, Instant.now()).toMillis();    
     if(m_operation == Operation.CMD_ARM_UP || m_operation == Operation.CMD_ARM_DOWN){
       return true;
     }else if(m_operation == Operation.CMD_ARM_SETTLE){

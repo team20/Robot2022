@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IndexerSubsystem;
 
 public class IndexerCommand extends CommandBase {
-  private byte m_desiredIndexerState;
+  // private byte m_desiredIndexerState;
   private Operation m_operation;
   public enum Operation{
     //advance ball(s) one pos forward
@@ -25,12 +25,12 @@ public class IndexerCommand extends CommandBase {
     //wait until a ball is ready to feed, then end
     CMD_WAIT_RTF,
     //try to move to the target position
-    CMD_TO_EXPECTED_POSITION,
-    CMD_STOP
+    CMD_STOP,
+    CMD_SMALL_REV
   };
 
   
-  private boolean m_keepBallRTF = true;
+  // private boolean m_keepBallRTF = true;
 
   private Instant m_startTime;
 
@@ -46,24 +46,23 @@ public class IndexerCommand extends CommandBase {
   public IndexerCommand(IndexerSubsystem indexerSubsystem, boolean keepBallRTF, Operation operation) {
     //save desired operation, the indexer subsystem, and whether or not we want the sensors to reflect that if we move backwards, the RTF ball will stay in the same position
     m_operation = operation;
-    m_keepBallRTF = keepBallRTF;
+    // m_keepBallRTF = keepBallRTF;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(IndexerSubsystem.get());
   }
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    //System.out.println("RUNNING INDEXER COMMAND");
     IndexerSubsystem indexerSubsystem = IndexerSubsystem.get();
     if (m_operation == Operation.CMD_ADV) {
-      m_desiredIndexerState = indexerSubsystem.getAdvanceTargetState();
       // System.out.println("Desired state: " + (byte)m_desiredIndexerState);
       indexerSubsystem.setPositionAdvance();
     } else if (m_operation == Operation.CMD_REV) {
-      m_desiredIndexerState = indexerSubsystem.getReverseTargetState(m_keepBallRTF);
       indexerSubsystem.setPositionReverse();
       //System.out.println((byte)m_desiredIndexerState);
-    } else if (m_operation == Operation.CMD_TO_EXPECTED_POSITION) {
-      m_desiredIndexerState = indexerSubsystem.getCurrTargetState();
+    } else if (m_operation == Operation.CMD_SMALL_REV) {
+      indexerSubsystem.setPositionSmallReverse();
     }
     m_startTime = Instant.now();
     
@@ -75,14 +74,10 @@ public class IndexerCommand extends CommandBase {
   public void execute() {
       IndexerSubsystem indexerSubsystem = IndexerSubsystem.get();
       //set speeds and/or target states depending on desired operations
-      if(m_operation == Operation.CMD_ADV){
-        }else if(m_operation == Operation.CMD_REV){
-      } else if(m_operation == Operation.CMD_FWD_MAN){
+      if(m_operation == Operation.CMD_FWD_MAN){
         indexerSubsystem.setSpeed(.5);
       }else if(m_operation == Operation.CMD_REV_MAN){
         indexerSubsystem.setSpeed(-.5);
-      }else if(m_operation == Operation.CMD_TO_EXPECTED_POSITION){
-        indexerSubsystem.setSpeed(indexerSubsystem.getLastSpeed());
       }else if(m_operation == Operation.CMD_STOP){
         indexerSubsystem.setSpeed(0);
       }
@@ -92,15 +87,15 @@ public class IndexerCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     //stop the motor when the command finishes
-    if(!(m_operation == Operation.CMD_FWD_MAN || m_operation == Operation.CMD_REV_MAN)){
-      IndexerSubsystem.get().setSpeed(0);
+    if(!(m_operation == Operation.CMD_FWD_MAN || m_operation == Operation.CMD_REV_MAN || m_operation == Operation.CMD_SMALL_REV)){
+      //IndexerSubsystem.get().setSpeed(0);
     }
   }
-
+ 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_operation == Operation.CMD_ADV || m_operation == Operation.CMD_REV || m_operation == Operation.CMD_TO_EXPECTED_POSITION){
+    if(m_operation == Operation.CMD_ADV || m_operation == Operation.CMD_REV){
       //amount of time elapsed since we started the command
       double elapsed = Duration.between(m_startTime, Instant.now()).toMillis();
           
@@ -116,7 +111,7 @@ public class IndexerCommand extends CommandBase {
       return true;
     } else if(m_operation == Operation.CMD_WAIT_RTF){
       return IndexerSubsystem.get().gamePieceRTF();
-    }
+    } 
     return true;
     
   }

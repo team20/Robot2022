@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+// import java.time.Duration;
+// import java.time.Instant;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
@@ -27,7 +30,7 @@ public class FlywheelSubsystem extends SubsystemBase implements ShuffleboardLogg
     private final SparkMaxPIDController m_neoController = m_neoFlywheelMaster.getPIDController();
     private final RelativeEncoder m_neoEncoderMaster = m_neoFlywheelMaster.getEncoder();
     private double m_setVelocity;
-
+    //private Instant m_startTime;
     /**
      * Initializes a new instance of the {@link FlywheelSubsystem} class.
      */
@@ -36,7 +39,7 @@ public class FlywheelSubsystem extends SubsystemBase implements ShuffleboardLogg
         s_subsystem = this;
         m_neoFlywheelMaster.restoreFactoryDefaults();
         m_neoFlywheelMaster.setInverted(FlywheelConstants.kMasterInvert);
-        m_neoFlywheelMaster.setIdleMode(IdleMode.kBrake);
+        m_neoFlywheelMaster.setIdleMode(IdleMode.kCoast);
         m_neoFlywheelMaster.enableVoltageCompensation(12);
         m_neoFlywheelMaster.setSmartCurrentLimit(FlywheelConstants.kSmartCurrentLimit);
         m_neoFlywheelMaster.setSecondaryCurrentLimit(FlywheelConstants.kPeakCurrentLimit,
@@ -44,7 +47,7 @@ public class FlywheelSubsystem extends SubsystemBase implements ShuffleboardLogg
         m_neoFlywheelMaster.setSoftLimit(SoftLimitDirection.kForward, 0.0f);
 
         m_neoFlywheelFollower.restoreFactoryDefaults();
-        m_neoFlywheelFollower.setIdleMode(IdleMode.kBrake);
+        m_neoFlywheelFollower.setIdleMode(IdleMode.kCoast);
         m_neoFlywheelFollower.enableVoltageCompensation(12);
         m_neoFlywheelFollower.setSmartCurrentLimit(FlywheelConstants.kSmartCurrentLimit);
         m_neoFlywheelFollower.setSecondaryCurrentLimit(FlywheelConstants.kPeakCurrentLimit,
@@ -64,14 +67,20 @@ public class FlywheelSubsystem extends SubsystemBase implements ShuffleboardLogg
 
     public void periodic() {
         SmartDashboard.putBoolean("Flywheel at Setpoint", atSetpoint());
-        SmartDashboard.putNumber("Flywheel Velocity", getVelocity());
-        SmartDashboard.putNumber("Flywheel Setpoint", m_setVelocity);
-        if (m_setVelocity == 0) {
+        // SmartDashboard.putNumber("Flywheel Velocity", getVelocity());
+        // SmartDashboard.putNumber("Flywheel Setpoint", m_setVelocity);
+        //essentially the end method of the flywheel velocity setpoint mode
+        if (m_setVelocity == 0 && Math.abs(m_neoEncoderMaster.getVelocity()) > 0.05) {
             m_neoFlywheelMaster.stopMotor();
         } else {
-            m_neoController.setReference(m_setVelocity, ControlType.kVelocity, 0);
+           //m_neoController.setReference(m_setVelocity, ControlType.kVelocity, 0);
+           // m_neoFlywheelMaster.set(neoBangBangController.calculate(m_neoEncoderMaster.getVelocity(), m_setVelocity));
         }
 
+    }
+
+    public void setSpeed(double reverse) {
+        m_neoFlywheelMaster.set(reverse);
     }
 
     public void incrementSpeed() {
@@ -103,20 +112,24 @@ public class FlywheelSubsystem extends SubsystemBase implements ShuffleboardLogg
      */
     public void setVelocity(double velocity) {
         //System.out.println("VELOCITY:" + velocity);
+        //m_startTime = Instant.now();
         m_setVelocity = velocity;
+        m_neoController.setReference(m_setVelocity, ControlType.kVelocity, 0);
+    }
+
+    public void setVelocityForNegatives() {
+        m_setVelocity = -5;
     }
 
     /**
      * @return Whether the flywheel is at its setpoint ABOVE 0
      */
     public boolean atSetpoint() {
-        return getSetpoint() > 0
-                ? (Math.abs(getVelocity() - getSetpoint()) / getSetpoint())
-                        * 100 < FlywheelConstants.kAllowedErrorPercent
-                : false;
+        return Math.abs(getVelocity() - getSetpoint()) < 50;
     }
 
-    public void configureShuffleboard() {
+    public void configureShuffleboard(boolean inCompetitionMode) {
+        if (!inCompetitionMode) {
         ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Flywheel");
         shuffleboardTab.addNumber("Flywheel Velocity", () -> getVelocity()).withSize(4, 2).withPosition(0, 0)
                 .withWidget(BuiltInWidgets.kGraph);
@@ -128,5 +141,6 @@ public class FlywheelSubsystem extends SubsystemBase implements ShuffleboardLogg
         // shuffleboardTab.addNumber("Setpoint", () ->
         // getSetpoint()).withWidget(BuiltInWidgets.kTextView).withSize(1,
         // 1).withPosition(5, 1);
+        }
     }
 }

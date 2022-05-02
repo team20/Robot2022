@@ -53,13 +53,7 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
         m_pidController.setIZone(SlideHookConstants.kIz);
         m_pidController.setD(SlideHookConstants.kD);
         m_pidController.setFF(SlideHookConstants.kFF);
-        m_pidController.setOutputRange(SlideHookConstants.kMinOutput, SlideHookConstants.kMaxOutput);
-
-        m_pidController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, SlideHookConstants.kSlotID);
-        m_pidController.setSmartMotionMaxAccel(SlideHookConstants.kMaxAcel, SlideHookConstants.kSlotID);
-        m_pidController.setSmartMotionMaxVelocity(SlideHookConstants.kMaxVelocity, SlideHookConstants.kSlotID);
-        m_pidController.setSmartMotionAllowedClosedLoopError(SlideHookConstants.kAllowedError, SlideHookConstants.kSlotID);
-        m_pidController.setSmartMotionMinOutputVelocity(SlideHookConstants.kMinVelocity, SlideHookConstants.kSlotID);
+        // m_pidController.setOutputRange(SlideHookConstants.kMinOutput, SlideHookConstants.kMaxOutput);
 
         resetEncoder();
     }
@@ -114,7 +108,6 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
         m_setPosition = position;
         m_pidController.setReference(position, ControlType.kPosition, SlideHookConstants.kSlotID);
     }
-
     /**
      * Zero the encoder position
      */
@@ -129,7 +122,9 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
     public void setSpeed(double speed){
       m_masterMotor.set(speed);
   }
-    public void configureShuffleboard() {
+
+    public void configureShuffleboard(boolean inCompetitionMode) {
+        if (!inCompetitionMode) {
         ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Slide Hook");
         shuffleboardTab.addNumber("Encoder Position", () -> getPosition()).withSize(4, 2).withPosition(0, 0)
                 .withWidget(BuiltInWidgets.kGraph);
@@ -138,4 +133,5 @@ public class SlideHookSubsystem extends SubsystemBase implements ShuffleboardLog
         shuffleboardTab.addBoolean("At setpoint", () -> atSetpoint()).withSize(1, 1).withPosition(0, 2)
                 .withWidget(BuiltInWidgets.kBooleanBox);
     }
+}
 }

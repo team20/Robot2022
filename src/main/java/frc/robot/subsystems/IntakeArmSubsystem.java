@@ -1,20 +1,15 @@
 package frc.robot.subsystems;
 
-import java.util.ResourceBundle.Control;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController.AccelStrategy;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeArmConstants;
 import frc.robot.ShuffleboardLogging;
@@ -51,6 +46,7 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
         m_motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         m_motor.enableVoltageCompensation(12);
         m_motor.setSmartCurrentLimit(IntakeArmConstants.kSmartCurrentLimit);
+        // m_motor.setSecondaryCurrentLimit(IntakeArmConstants.kPeakCurrentLimit,  IntakeArmConstants.kPeakCurrentDurationMillis);
 
         m_pidController.setP(IntakeArmConstants.kP);
         m_pidController.setI(IntakeArmConstants.kI);
@@ -71,15 +67,19 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
 
     public void periodic() {
         //SmartDashboard.putNumber("Arm Position", getPosition());
-        double currCurrent = m_motor.getOutputCurrent();
-        if (currCurrent > 40){
-            m_pidController.setReference(m_encoder.getPosition(), ControlType.kPosition, 0);
-            m_motor.stopMotor();
-        }else if (atSetpoint()) {
-            m_pidController.setReference(m_encoder.getPosition(), ControlType.kPosition, 0);
-            m_motor.stopMotor();
+        // double currCurrent = m_motor.getOutputCurrent();
+        // if (currCurrent > 40){
+        //     m_pidController.setReference(m_encoder.getPosition(), ControlType.kPosition, 0);
+        //     m_motor.stopMotor();
+        // }else 
+        // if (atSetpoint()) {
+        //     m_pidController.setReference(m_encoder.getPosition(), ControlType.kPosition, 0);
+        //     m_motor.stopMotor();
+        // } 
+        if(atSetpoint() && Math.abs(m_encoder.getVelocity()) > 0.05){
+            // m_pidController.setReference(m_encoder.getPosition(), ControlType.kPosition, 0);
+            //m_motor.stopMotor();
         }
-        
     }
 
     /**
@@ -166,7 +166,8 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
         setPosition(0);
     }
 
-    public void configureShuffleboard() {
+    public void configureShuffleboard(boolean inCompetitionMode) {
+        if (!inCompetitionMode) {
         ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Arm");
         shuffleboardTab.addNumber("Encoder Position", () -> getPosition()).withSize(4, 2).withPosition(0, 0)
                 .withWidget(BuiltInWidgets.kGraph);
@@ -175,4 +176,5 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
         shuffleboardTab.addBoolean("At setpoint", () -> atSetpoint()).withSize(1, 1).withPosition(0, 2)
                 .withWidget(BuiltInWidgets.kBooleanBox);
     }
+}
 }

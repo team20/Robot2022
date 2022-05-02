@@ -1,32 +1,23 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import java.sql.Driver;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Robot;
-import frc.robot.RobotContainer;
 import frc.robot.ShuffleboardLogging;
 import frc.robot.Constants.DriveConstants;
 
@@ -127,20 +118,20 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
         }
 
         public void periodic() {
+                //SmartDashboard.putNumber("the angle", getHeading());
                 // System.out.println("the angle is: " + getHeading());
-                m_odometry.update(m_gyro.getRotation2d(), getLeftEncoderPosition(),
-                                getRightEncoderPosition());
-                 if(DriverStation.isDisabled()){
-                         m_backLeft.setIdleMode(IdleMode.kCoast);
+                //SmartDashboard.putNumber("average encoder", getAverageEncoderDistance());
+                // m_odometry.update(m_gyro.getRotation2d(), getLeftEncoderPosition(),
+                //                 getRightEncoderPosition());
+                 if(DriverStation.isDisabled() && m_frontLeft.getIdleMode() == IdleMode.kBrake && !DriverStation.isAutonomous()){
                          m_frontLeft.setIdleMode(IdleMode.kCoast);
-                         m_backRight.setIdleMode(IdleMode.kCoast);
                          m_frontRight.setIdleMode(IdleMode.kCoast);
+                 
+                 } else if(DriverStation.isEnabled()&& m_frontLeft.getIdleMode() == IdleMode.kCoast){
+                         m_frontLeft.setIdleMode(IdleMode.kBrake);
+                         m_frontRight.setIdleMode(IdleMode.kBrake);
 
-                }else{
-                        m_frontLeft.setIdleMode(IdleMode.kBrake);
-                        m_frontRight.setIdleMode(IdleMode.kBrake);
-
-                }
+                 }
         }
 
         /**
@@ -222,7 +213,7 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
          * Resets gyro position to 0
          */
         public void zeroHeading() {
-                m_gyro.reset();
+                m_gyro.zeroYaw();
         }
 
         /**
@@ -280,18 +271,21 @@ public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging
         }
 
 
-        public void configureShuffleboard() {
-                ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Drive");
-                // shuffleboardTab.addNumber("Left speed", () -> m_frontLeft.get()).withSize(4, 2)
-                //                 .withPosition(0, 0).withWidget(BuiltInWidgets.kGraph);
-                // shuffleboardTab.addNumber("Right speed", () -> m_frontRight.get()).withSize(4, 2)
-                //                 .withPosition(4, 0).withWidget(BuiltInWidgets.kGraph);
-                shuffleboardTab.addNumber("Left motor speed", () -> getLeftEncoderPosition()).withSize(1, 1)
-                                .withPosition(0, 2).withWidget(BuiltInWidgets.kTextView);
-                shuffleboardTab.addNumber("Right motor speed", () -> getRightEncoderPosition()).withSize(1, 1)
-                                .withPosition(1, 2).withWidget(BuiltInWidgets.kTextView);
-                shuffleboardTab.addNumber("Heading", () -> getHeading()).withSize(1, 1).withPosition(2, 2)
-                                .withWidget(BuiltInWidgets.kTextView);
+        public void configureShuffleboard(boolean inCompetitionMode) {
+                if(!inCompetitionMode){
+                        ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Drive");
+                        // shuffleboardTab.addNumber("Left speed", () -> m_frontLeft.get()).withSize(4, 2)
+                        //                 .withPosition(0, 0).withWidget(BuiltInWidgets.kGraph);
+                        // shuffleboardTab.addNumber("Right speed", () -> m_frontRight.get()).withSize(4, 2)
+                        //                 .withPosition(4, 0).withWidget(BuiltInWidgets.kGraph);
+                        shuffleboardTab.addNumber("Left motor speed", () -> getLeftEncoderPosition()).withSize(1, 1)
+                                        .withPosition(0, 2).withWidget(BuiltInWidgets.kTextView);
+                        shuffleboardTab.addNumber("Right motor speed", () -> getRightEncoderPosition()).withSize(1, 1)
+                                        .withPosition(1, 2).withWidget(BuiltInWidgets.kTextView);
+                        shuffleboardTab.addNumber("Heading", () -> getHeading()).withSize(1, 1).withPosition(2, 2)
+                                        .withWidget(BuiltInWidgets.kTextView);
+
+                }
 
         }
 }

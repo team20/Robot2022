@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.DriveSubsystem;
@@ -25,7 +27,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+    CameraServer.startAutomaticCapture();
     m_robotContainer = new RobotContainer();
+    LiveWindow.disableAllTelemetry();
   }
 
   @Override
@@ -41,6 +45,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    System.out.println("Starting autonoumous");
     DriveSubsystem.get().resetEncoders();
     DriveSubsystem.get().zeroHeading();
     HoodSubsystem.get().resetEncoder();
@@ -61,6 +66,7 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    //DriveSubsystem.get().zeroHeading();
     if(m_aCommand != null) {
       m_aCommand.cancel();
     }

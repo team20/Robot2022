@@ -8,7 +8,6 @@ import java.time.Duration;
 import java.time.Instant;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.commands.ShooterCommands.HoodCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
@@ -29,10 +28,11 @@ public class ZeroCommand extends CommandBase {
     public void initialize() {
         m_startTime = Instant.now();
         DriveSubsystem.get().resetEncoders();
-        DriveSubsystem.get().zeroHeading();
-        HoodSubsystem.get().resetEncoder();
-        IntakeArmSubsystem.get().resetEncoder();
-        TelescopeHookSubsystem.get().resetEncoder();
+        //DriveSubsystem.get().zeroHeading();
+        // HoodSubsystem.get().resetEncoder();
+        // IntakeArmSubsystem.get().resetEncoder();
+        // TelescopeHookSubsystem.get().resetEncoder();
+        
     }
 
     // Called every time the scheduler runs while the command is scheduled.

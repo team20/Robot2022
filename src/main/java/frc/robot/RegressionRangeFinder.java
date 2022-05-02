@@ -1,24 +1,36 @@
 package frc.robot;
 
+import frc.robot.subsystems.LimelightSubsystem;
+
 public class RegressionRangeFinder extends RangeFinder{
     public double RPM;
     public double Angle;
-    public double[] values;
 
     public RegressionRangeFinder() {
-        double[] values = new double[2];
     }
 
 
-    public double[] getAngleAndRPM(double distanceToWall) {
-        // RPM THEN ANGLE
-        RPM = Math.sqrt(381575.5734*distanceToWall + 9047432.37);
-        Angle = Math.sqrt(22.74831065*distanceToWall + 85.87766489);
-        //System.out.println("RPM: " + RPM);
-        double[] ret = {Angle-12, RPM};
+    public double[] getAngleAndRPM(double limelightAngle) {
+        double angle = LimelightSubsystem.get().getYAngle();
+
+        if(angle >= -13){
+            // RPM THEN ANGLE
+
+            RPM = -16.234*limelightAngle + 2601.1; //new value for nyc
+            Angle = -0.2731*limelightAngle + 11.337;
+
+            // RPM = -17.451*limelightAngle + 2609.4;
+            // Angle = -0.2659*limelightAngle + 11.255;
+            //System.out.println("RPM: " + RPM);
+        } else{
+            // RPM THEN ANGLE
+            RPM = -82.992*limelightAngle + 1665.1;
+            Angle = -0.2659*limelightAngle + 11.255;
+            //System.out.println("ANGLE: " + Angle);
+        }
+        
+        double[] ret = {Angle, RPM};
         return ret;
     }
-
-
     
 }
