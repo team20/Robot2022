@@ -12,6 +12,7 @@ public class ArduinoSubsystem extends SubsystemBase {
 	private final DigitalOutput m_arduino = new DigitalOutput(ArduinoConstants.kAddress);
 	//private boolean m_flywheelAtSetpoint = false;
 	private boolean m_ballSeen;
+	private boolean m_limelightShooting;
 
 	/**
 	 * Initializes a new instance of the {@link ArduinoSubsystem} class.
@@ -32,6 +33,12 @@ public class ArduinoSubsystem extends SubsystemBase {
 		} else {
 			m_ballSeen = false;
 		}
+
+		// if () {
+			
+		// } else {
+
+		// }
 
 		m_arduino.set(m_ballSeen);
 	}

@@ -87,11 +87,11 @@ public class IndexerCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     //stop the motor when the command finishes
-    if(!(m_operation == Operation.CMD_FWD_MAN || m_operation == Operation.CMD_REV_MAN)){
-      IndexerSubsystem.get().setSpeed(0);
+    if(!(m_operation == Operation.CMD_FWD_MAN || m_operation == Operation.CMD_REV_MAN || m_operation == Operation.CMD_SMALL_REV)){
+      //IndexerSubsystem.get().setSpeed(0);
     }
   }
-
+ 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
@@ -111,7 +111,7 @@ public class IndexerCommand extends CommandBase {
       return true;
     } else if(m_operation == Operation.CMD_WAIT_RTF){
       return IndexerSubsystem.get().gamePieceRTF();
-    }
+    } 
     return true;
     
   }

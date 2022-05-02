@@ -46,6 +46,7 @@ public class IntakeArmSubsystem extends SubsystemBase implements ShuffleboardLog
         m_motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         m_motor.enableVoltageCompensation(12);
         m_motor.setSmartCurrentLimit(IntakeArmConstants.kSmartCurrentLimit);
+        // m_motor.setSecondaryCurrentLimit(IntakeArmConstants.kPeakCurrentLimit,  IntakeArmConstants.kPeakCurrentDurationMillis);
 
         m_pidController.setP(IntakeArmConstants.kP);
         m_pidController.setI(IntakeArmConstants.kI);
