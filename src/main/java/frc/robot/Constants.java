@@ -158,8 +158,8 @@ public final class Constants {
 		public static final double kQuickStopThreshold = .2;
 		public static final double kQuickStopAlpha = .1;
 		public static final double kBackupDistance = Units.feetToMeters(2);
-		public static final double kRampRate = .1;//1?
-		public static final double kSpeedLimitFactor = .75;
+		public static final double kRampRate = .9;//1?
+		public static final double kSpeedLimitFactor = .5;
 
 		public static final boolean kLeftSensorPhase = true; // TODO these are totally arbitrary right now and need to
 																// be checked
@@ -215,7 +215,7 @@ public final class Constants {
 		public static final int kMotorPort = 7;
 		public static final boolean kInvert = false;
 		public static final int kSmartCurrentLimit = 60;
-		public static final double kP = 0.13;//0.06;
+		public static final double kP = 0;//0.13;//0.06;
 		public static final double kI = 0;//0.0001;
 		public static final double kD = 0.0;
 		public static final double kIz = 0;
