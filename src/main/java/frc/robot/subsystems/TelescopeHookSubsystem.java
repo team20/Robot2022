@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.TelescopeHookConstants;
-import frc.robot.ShuffleboardLogging;
+import frc.robot.util.ShuffleboardLogging;
 
 public class TelescopeHookSubsystem extends SubsystemBase implements ShuffleboardLogging {
     private static TelescopeHookSubsystem s_system;

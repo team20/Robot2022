@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.util;
 
 public class LinearRangeFinder extends RangeFinder {
     //double[] m_distances = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13}; // sorted in increasing order

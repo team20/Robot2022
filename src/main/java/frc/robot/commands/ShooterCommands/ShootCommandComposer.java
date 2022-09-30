@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.LinearRangeFinder;
-import frc.robot.RangeFinder;
-import frc.robot.RegressionRangeFinder;
 import frc.robot.subsystems.LimelightSubsystem;
+import frc.robot.util.LinearRangeFinder;
+import frc.robot.util.RangeFinder;
+import frc.robot.util.RegressionRangeFinder;
 // import frc.robot.LinearRangeFinder;
 // import frc.robot.RangeFinder;
 // import frc.robot.RegressionRangeFinder;
@@ -67,7 +67,7 @@ public class ShootCommandComposer {
     }
     else if(shootClass==Operation.PRESET_FENDER_LOW){
       hoodSetpoint=11;//9.59;
-      flywheelSetpoint=1500;//1600;//2200;//was 2000
+      flywheelSetpoint=2000;//1600;//2200;//was 2000
     }
     else if(shootClass==Operation.PRESET_FENDER_HIGH){
       hoodSetpoint=0;

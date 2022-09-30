@@ -7,7 +7,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeArmConstants;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.ShuffleboardLogging;
+import frc.robot.util.ShuffleboardLogging;
 
 public class IntakeSubsystem extends SubsystemBase implements ShuffleboardLogging {
 	private static IntakeSubsystem s_intakeSubsystem;

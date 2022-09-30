@@ -3,12 +3,12 @@ package frc.robot.commands.ShooterCommands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.LinearRangeFinder;
-import frc.robot.RangeFinder;
-import frc.robot.RegressionRangeFinder;
 import frc.robot.Constants.FieldLocation;
 import frc.robot.subsystems.FlywheelSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
+import frc.robot.util.LinearRangeFinder;
+import frc.robot.util.RangeFinder;
+import frc.robot.util.RegressionRangeFinder;
 
 public class ShootSetupCommand extends CommandBase {
 

@@ -33,6 +33,7 @@ import frc.robot.commands.LimelightCommands.LimelightOnCommand;
 import frc.robot.commands.LimelightCommands.LimelightTurnCommand;
 import frc.robot.commands.ShooterCommands.*;
 import frc.robot.subsystems.*;
+import frc.robot.util.ShuffleboardLogging;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -306,14 +307,10 @@ public class RobotContainer {
                         .and(new JoystickButton(m_driverController, ControllerConstants.Button.kLeftBumper)
                                 .negate())
                         .whileActiveOnce(
-                                        new SequentialCommandGroup(
-                                                new IndexerCommand(IndexerCommand.Operation.CMD_SMALL_REV),
-                                                CommandComposer.getPresetShootCommand(
-                                                ShootCommandComposer.Operation.MIN_RAMP_UP)
-                                        )                                
+                                                              
                         
-                                // CommandComposer.getPresetShootCommand(
-                                // ShootCommandComposer.Operation.MIN_RAMP_UP)
+                                 CommandComposer.getPresetShootCommand(
+                                 ShootCommandComposer.Operation.PRESET_TARMAC)
                                 );
 
                 new JoystickButton(m_operatorController, ControllerConstants.Button.kSquare)

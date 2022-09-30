@@ -18,8 +18,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.ShuffleboardLogging;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.util.ShuffleboardLogging;
 
 public class DriveSubsystem extends SubsystemBase implements ShuffleboardLogging {	
   

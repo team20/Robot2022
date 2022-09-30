@@ -10,8 +10,8 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
-import frc.robot.ShuffleboardLogging;
 import frc.robot.Constants.IndexerConstants;
+import frc.robot.util.ShuffleboardLogging;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
