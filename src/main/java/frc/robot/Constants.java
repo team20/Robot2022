@@ -214,14 +214,14 @@ public final class Constants {
 	public static final class HoodConstants {
 		public static final int kMotorPort = 7;
 		public static final boolean kInvert = false;
-		public static final int kSmartCurrentLimit = 60;
-		public static final double kP = 0.13;//0.06;
-		public static final double kI = 0;//0.0001;
-		public static final double kD = 0.0;
-		public static final double kIz = 0;
+		public static final int kSmartCurrentLimit = 5;
+		public static final double kP = 0.03;//0.13;
+		public static final double kI = 0.00005;
+		public static final double kD = 0;
+		public static final double kIz = 1.5;
 		public static final double kFF = 0;
-		public static final double kMaxOutput = 1;
-		public static final double kMinOutput = -1;
+		public static final double kMaxOutput = 0.5;
+		public static final double kMinOutput = -0.5;
 		public static final int kSlotID = 0;
 		public static final double kMinVelocity = 0;
 		public static final double kMaxAcel = 20_000;
