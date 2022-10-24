@@ -298,7 +298,7 @@ public class CommandComposer {
                 ),//was -157
                 new SequentialCommandGroup(
                     getAutoLoadCommand(),
-                    getAutoLoadCommand()).withTimeout(6.5)          
+                    getAutoLoadCommand()).withTimeout(6.5)         
             ),
             // //     // new ParallelCommandGroup(
             // //     //     new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11.5), 
@@ -319,7 +319,7 @@ public class CommandComposer {
 
                 //getPresetShootCommand(ShootCommandComposer.Operation.LIMELIGHT_REGRESSION), //this is what was being used NYC 4/9
                 new DeferredCommand(CommandComposer::getTurnType),
-                
+                new DeferredCommand(CommandComposer::getShootType),
                 getAutoShootCommandNoWait()), //add in
 
                 // new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 11), //take out?
@@ -516,14 +516,16 @@ public class CommandComposer {
             new LimelightOnCommand(),
             new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
             //new TurnCommand(-24).withTimeout(1), //was 1.5
-            new ParallelCommandGroup(new DriveDistanceCommand(60.0), getAutoLoadCommand()).withTimeout(1),
+            new ParallelCommandGroup(new DriveDistanceCommand(60.0), getLoadCommand()).withTimeout(1.5),
 
             //new TurnCommand(-15).withTimeout(2), //was 1.5
             new LimelightTurnCommand(-2),
             new IntakeCommand(IntakeCommand.Operation.CMD_STOP),
-            new ParallelCommandGroup(
+            getPresetShootCommand(
+                            ShootCommandComposer.Operation.LIMELIGHT_REGRESSION),
+            /*new ParallelCommandGroup(
                  new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 13), 
-                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2700)),//was 3000 //was 4150
+                 new FlywheelCommand(FlywheelCommand.Operation.CMD_SET_VELOCITY, 2700)),*///was 3000 //was 4150
             getAutoShootCommand(),
             new ParallelCommandGroup(
                 new HoodCommand(HoodCommand.Operation.CMD_SET_POSITION, 0), 

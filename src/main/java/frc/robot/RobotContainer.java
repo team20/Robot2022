@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.LoggingConstants;
@@ -426,9 +427,10 @@ public class RobotContainer {
 
                 // ----------------RIGHT TRIGGER---------------
                 // ---------------Spit out a ball--------------
-
-                new JoystickButton(m_operatorController, Constants.ControllerConstants.Axis.kRightTrigger)
-                .whenHeld(CommandComposer.getSpitCommand());
+                new Trigger(()-> m_operatorController.getRawAxis(Constants.ControllerConstants.Axis.kRightTrigger)>0.1)
+                        .whenActive(CommandComposer.getSpitCommand());
+                new Trigger(()-> m_operatorController.getRawAxis(Constants.ControllerConstants.Axis.kRightTrigger)>0.1)
+                        .whenInactive(new IndexerCommand(IndexerCommand.Operation.CMD_STOP));
 
                 // ---------------RIGHT AXIS JOYSTICK---------------
 

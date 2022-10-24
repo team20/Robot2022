@@ -314,8 +314,8 @@ public final class Constants {
 	}
 
 	public static final class SlideHookConstants { //0 to -85
-		public static final int kMasterPort = 6;
-		public static final int kFollowerPort = 8;
+		public static final int kMasterPort = 8;//CHANGE TO 6
+		public static final int kFollowerPort = 6;//CHANGE TO 8
 		public static final boolean kMasterInvert = false;
 		public static final boolean kFollowerOppose = false;
 		public static final int kSmartCurrentLimit = 40;// TODO: change
