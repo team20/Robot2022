@@ -1,0 +1,241 @@
+StuyPulseAuto
+    sequential
+		arm operation ARM_DOWN
+		parallel
+			wait 5
+			autoload timeout 5
+		parallel
+			hood operation SET_POSITION 0
+			flywheel operation SET_VELOCITY 2300
+		autoshoot
+		parallel
+			hood operation SET_POSITION 0
+			flywheel operation SET_VELOCITY 0
+		parallel
+			drivedistance 108
+			autoload timeout 5
+		intake operation STOP
+		deferred CommandComposer.&getShootTypeSTUY
+		autoshoot
+		parallel
+			hood operation SET_POSITION 0
+			flywheel operation SET_VELOCITY 0
+            intake operation STOP
+
+FiveBall
+	sequential
+		limelighton
+		arm operation ARM_DOWN
+		parallel
+			drivedistance 37.0
+			autoload
+		intake operation STOP
+		presetshoot ShootCommandComposer.Operation.LIMELIGHT_REGRESSION
+		autoshoot
+		parallel
+			hood operation SET_POSITION 0
+			flywheel operation SET_VELOCITY 0
+		turn -121.68
+		parallel
+			drivedistance 172
+			autoload
+		intake operation STOP
+		turn -78
+		presetshoot ShootCommandComposer.Operation.LIMELIGHT_REGRESSION
+		autoshoot
+		parallel
+			hood operation SET_POSITION 0
+			flywheel operation SET_VELOCITY 0
+		parallel
+			drivedistance 91 
+			autoload
+		parallel
+			drivedistance -118
+			autoload
+		presetshoot ShootCommandComposer.Operation.LIMELIGHT_REGRESSION
+		autoshoot
+		parallel
+			hood operation SET_POSITION 0
+			flywheel operation SET_VELOCITY 0
+
+FiveBallNYC
+    sequential
+        limelighton 
+        arm operation ARM_DOWN
+        parallel
+            drivedistance 60.0
+            autoload timeout 2
+        turn 13.3 timeout 2
+        deferred CommandComposer.&getTurnType
+        intake operation STOP
+        deferred CommandComposer.&getShootType
+        autoshoot
+        parallel
+            hood operation SET_POSITION 0
+            flywheel operation SET_VELOCITY 0
+            intake operation STOP
+        turn -10 timeout 1.5
+        parallel
+            drivedistance 164
+            autoload timeout 3
+        parallel
+            sequential
+                turn -20 timeout 1.5
+                drivedistance -250 0.9 
+            sequential
+                autoload timeout 3.5
+        parallel timeout 2
+            intake operation STOP
+            sequential
+                turn 12.08 timeout 1
+                turn 66 timeout 1
+                deferred CommandComposer.&getTurnType
+                deferred CommandComposer.&getShootType
+        autoshootnowait 
+        turn 66 timeout 0.75
+        parallel
+            drivedistance 24 0.9
+            sequential
+                autoload timeout 1 
+        deferred CommandComposer.&getShootType
+        autoshootnowait
+        parallel
+            hood operation SET_POSITION 0
+            flywheel operation SET_VELOCITY 0
+            intake operation STOP
+
+TwoBallHangar
+    sequential
+        limelighton
+        arm operation ARM_DOWN
+        parallel
+            drivedistance 55
+            autoload
+        limelightturn -2
+        intake operation STOP
+        parallel
+            hood operation SET_POSITION 10.5 
+            flywheel operation SET_VELOCITY 2600
+        autoshoot
+        parallel
+            hood operation SET_POSITION 0 
+            flywheel operation SET_VELOCITY 0
+            intake operation STOP
+        drivedistance 9
+
+TwoBallMiddlePosition
+    sequential
+        limelighton
+        arm operation ARM_DOWN
+        parallel
+            drivedistance 60.0
+            load timeout 1.5
+        limelightturn -2
+        intake operation STOP
+        presetshoot ShootCommandComposer.Operation.LIMELIGHT_REGRESSION
+        autoshoot
+        parallel
+            hood operation SET_POSITION 0 
+            flywheel operation SET_VELOCITY 0
+            intake operation STOP
+
+TwoBallFarRight
+    sequential
+        limelighton
+        arm operation ARM_DOWN
+        parallel
+            drivedistance 40 
+            autoload timeout 2
+        limelightturn -2
+        intake operation STOP
+        parallel
+            hood operation SET_POSITION 10.5 
+            flywheel operation SET_VELOCITY 2600
+        autoshoot
+        parallel
+            hood operation SET_POSITION 0 
+            flywheel operation SET_VELOCITY 0
+            intake operation STOP
+        arm operation ARM_UP
+        wait 0.25
+        drivedistance 12
+        drivedistance -12
+        arm operation ARM_DOWN
+
+FourBallLimelight
+    sequential
+        limelighton
+        arm operation ARM_DOWN
+        parallel
+            drivedistance 60.0 
+            autoload timeout 2
+        turn 13.3 timeout 2
+        deferred CommandComposer.&getTurnType
+        limelightturn -2 timeout 1.5
+        intake operation STOP
+        deferred CommandComposer.&getShootType
+        autoshoot
+        parallel
+            hood operation SET_POSITION 0 
+            flywheel operation SET_VELOCITY 0
+            intake operation STOP
+        turn -11.5 timeout 1.5
+        parallel
+            sequential
+                drivedistance 164
+                turn -8 timeout 0.75
+                turn -11.5 timeout 1.5
+                drivedistance -164 0.9
+            sequential timeout 6.5
+                autoload
+                autoload
+        parallel
+            intake operation STOP
+            sequential
+                turn 10 timeout 1
+                deferred CommandComposer.&getTurnType
+        sequential
+            deferred CommandComposer.&getTurnType
+            deferred CommandComposer.&getShootType
+            autoshootnowait
+        parallel
+            hood operation SET_POSITION 0 
+            flywheel operation SET_VELOCITY 0
+            intake operation STOP
+
+FourBallNavx
+    sequential
+        limelighton
+        arm operation ARM_DOWN
+        parallel 
+            drivedistance 60.0 
+            autoload timeout 2
+        turn 13.3 timeout 2
+        intake operation STOP
+        parallel
+            hood operation SET_POSITION 10
+            flywheel operation SET_VELOCITY 2550
+        autoshoot
+        parallel
+            hood operation SET_POSITION 0 
+            flywheel operation SET_VELOCITY 0
+            intake operation STOP
+        turn -15 timeout 1.5
+        parallel 
+            drivedistance 164
+            autoload timeout 2.5
+        parallel
+            drivedistance -164 0.9
+            sequential
+                autoload timeout 3.5
+        parallel timeout 1
+            intake operation STOP
+            sequential
+                turn 12.08 timeout 1
+            hood operation SET_POSITION 10
+            flywheel operation SET_VELOCITY 2550
+        autoshootnowait
+        parallel
+            hood operation SET_POSITION 0
+            flywheel operation SET_VELOCITY 0
+            intake operation STOP

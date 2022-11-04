@@ -34,6 +34,7 @@ import frc.robot.commands.LimelightCommands.LimelightOnCommand;
 import frc.robot.commands.LimelightCommands.LimelightTurnCommand;
 import frc.robot.commands.ShooterCommands.*;
 import frc.robot.subsystems.*;
+import frc.robot.util.ParseJSONAuto;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -79,14 +80,17 @@ public class RobotContainer {
                 //m_limelightSubsystem.turnOffLight();
                 configureShuffleboard();
                 // CommandScheduler.getInstance().unregisterSubsystem(m_arduinoSubsystem);
-                m_autoChooser.addOption("STUYPULSE AUTO", CommandComposer.getStuyPulseAuto());
-                m_autoChooser.addOption("5 Ball Straight", CommandComposer.getFiveBall());
-                m_autoChooser.addOption("5 Ball DO THIS ONE", CommandComposer.getFiveBallNYC());
-                m_autoChooser.addOption("Two Ball - Closest to Hangar ", CommandComposer.getTwoBallHangar());
-                m_autoChooser.addOption("Two Ball - Middle Position", CommandComposer.getTwoBallMiddlePosition()); 
-                m_autoChooser.addOption("Two Ball - Far Right Position", CommandComposer.getTwoBallFarRight()); 
-                m_autoChooser.addOption("Four Ball - Limelight Aiming", CommandComposer.getFourBallLimelight());
-                m_autoChooser.addOption("Four Ball - NavX Aiming Only", CommandComposer.getFourBallNavx());
+
+                // m_autoChooser.addOption("STUYPULSE AUTO", CommandComposer.getStuyPulseAuto());
+                // m_autoChooser.addOption("5 Ball Straight", CommandComposer.getFiveBall());
+                // m_autoChooser.addOption("5 Ball DO THIS ONE", CommandComposer.getFiveBallNYC());
+                // m_autoChooser.addOption("Two Ball - Closest to Hangar ", CommandComposer.getTwoBallHangar());
+                // m_autoChooser.addOption("Two Ball - Middle Position", CommandComposer.getTwoBallMiddlePosition()); 
+                // m_autoChooser.addOption("Two Ball - Far Right Position", CommandComposer.getTwoBallFarRight()); 
+                // m_autoChooser.addOption("Four Ball - Limelight Aiming", CommandComposer.getFourBallLimelight());
+                // m_autoChooser.addOption("Four Ball - NavX Aiming Only", CommandComposer.getFourBallNavx());
+
+
                 // m_autoChooser.addOption("Test turn", new TurnCommand(30));
                 // m_autoChooser.addOption("Test shots", CommandComposer.testShots());
                 // m_autoChooser.addOption("Test drive", new DriveDistanceCommand(157));
@@ -97,6 +101,18 @@ public class RobotContainer {
                 // m_autoChooser.addOption("Two To Three Red", CommandComposer.getTwoToThreeAutoCommandRed());
                 // m_autoChooser.addOption("Two To Four", CommandComposer.getTwoToFourAutoCommand());
                 // m_autoChooser.addOption("Four To Two To Three", CommandComposer.getFourToTwoToThreeAutoCommand());
+
+
+		ParseJSONAuto.parse();
+                m_autoChooser.addOption("STUYPULSE AUTO", ParseJSONAuto.getAutoCommand("StuyPulseAuto"));
+                m_autoChooser.addOption("5 Ball Straight", ParseJSONAuto.getAutoCommand("FiveBall"));
+                m_autoChooser.addOption("5 Ball DO THIS ONE", ParseJSONAuto.getAutoCommand("FiveBallNYC"));
+                m_autoChooser.addOption("Two Ball - Closest to Hangar ", ParseJSONAuto.getAutoCommand("TwoBallHangar"));
+                m_autoChooser.addOption("Two Ball - Middle Position", ParseJSONAuto.getAutoCommand("TwoBallMiddlePosition")); 
+                m_autoChooser.addOption("Two Ball - Far Right Position", ParseJSONAuto.getAutoCommand("TwoBallFarRight")); 
+                m_autoChooser.addOption("Four Ball - Limelight Aiming", ParseJSONAuto.getAutoCommand("FourBallLimelight"));
+                m_autoChooser.addOption("Four Ball - NavX Aiming Only", ParseJSONAuto.getAutoCommand("FourBallNavx"));
+
                 SmartDashboard.putData(m_autoChooser);
 
                 configureButtonBindings();

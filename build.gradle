@@ -68,6 +68,8 @@ dependencies {
     simulationRelease wpi.sim.enableRelease()
 
     testImplementation 'junit:junit:4.12'
+    implementation 'org.codehaus.groovy:groovy-all:2.4.15'
+
 }
 
 // Simulation configuration (e.g. environment variables).

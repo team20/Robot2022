@@ -341,7 +341,6 @@ public class CommandComposer {
             new IntakeArmCommand(IntakeArmCommand.Operation.CMD_ARM_DOWN),
             //new TurnCommand(13.3).withTimeout(1), //was 1.5
             new ParallelCommandGroup(new DriveDistanceCommand(60.0), getAutoLoadCommand()).withTimeout(2),
-
             new TurnCommand(13.3).withTimeout(2), //was 1.5
             //new LimelightTurnCommand(-2),
             new IntakeCommand(IntakeCommand.Operation.CMD_STOP),

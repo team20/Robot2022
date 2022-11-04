@@ -1,0 +1,44 @@
+{
+	"CommandBindings":{
+		"sequential":"new SequentialCommandGroup()",
+		"parallel":"new ParallelCommandGroup()",
+		"arm":"new IntakeArmCommand()",
+		"hood":"new HoodCommand()",
+		"wait":"new WaitCommand()",
+		"flywheel":"new FlywheelCommand()",
+		"drivedistance":"new DriveDistanceCommand()",
+		"intake":"new IntakeCommand()",
+		"deferred":"new DeferredCommand()",
+		"autoload":"CommandComposer.getAutoLoadCommand()",
+		"autoshoot":"CommandComposer.getAutoShootCommand()",
+		"autoshootnowait":"CommandComposer.getAutoShootCommandNoWait()",
+		"presetshoot":"CommandComposer.getPresetShootCommand()",
+		"load":"CommandComposer.getLoadCommand()",
+		"limelighton":"new LimelightOnCommand()",
+		"turn":"new TurnCommand()",
+		"limelightturn":"new TurnCommand()"
+
+	},
+	"Imports":[
+		"edu.wpi.first.networktables.NetworkTableEntry",
+		"edu.wpi.first.wpilibj.shuffleboard.Shuffleboard",
+		"edu.wpi.first.wpilibj2.command.Command",
+		"edu.wpi.first.wpilibj2.command.ParallelCommandGroup",
+		"edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup",
+		"edu.wpi.first.wpilibj2.command.ParallelRaceGroup",
+		"edu.wpi.first.wpilibj2.command.SequentialCommandGroup",
+		"edu.wpi.first.wpilibj2.command.WaitCommand",
+		"frc.robot.commands.DeferredCommand",
+		"frc.robot.commands.AutoCommands.*",
+		"frc.robot.commands.ClimberCommands.*",
+		"frc.robot.commands.IndexerCommands.*",
+		"frc.robot.commands.IntakeCommands.IntakeArmCommand",
+		"frc.robot.commands.IntakeCommands.IntakeCommand",
+		"frc.robot.commands.LimelightCommands.*",
+		"frc.robot.commands.ShooterCommands.*",
+		"frc.robot.subsystems.DriveSubsystem",
+		"frc.robot.subsystems.LimelightSubsystem",
+		"frc.robot.Constants.*",
+		"frc.robot.CommandComposer"
+	]
+}
